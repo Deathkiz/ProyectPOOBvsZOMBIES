@@ -450,7 +450,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
                 // Imagen de fondo
                 JLabel imageLabel = new JLabel();
-                ImageIcon imageIcon = new ImageIcon("src/resources/Prueba.jpg");
+                ImageIcon imageIcon = new ImageIcon("src/resources/Frontyard.jpg");
                 Image scaledImage = imageIcon.getImage().getScaledInstance(WIDTH, 8*HEIGHT/10, Image.SCALE_SMOOTH);
                 imageLabel.setIcon(new ImageIcon(scaledImage));
                 imageLabel.setBounds(0, HEIGHT/10, WIDTH, 8*HEIGHT/10);

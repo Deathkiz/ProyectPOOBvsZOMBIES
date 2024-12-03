@@ -5,7 +5,7 @@ import domain.POOBvsZOMBIES;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public class POOBvsZOMBIESGUI extends JFrame {
     public static int WIDTH, HEIGHT;
@@ -75,8 +75,10 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private ArrayList<JButton> plantOptions;
     private ArrayList<JButton> zombieOptions;
 
-    private boolean active = false;
+    private boolean activePlant = false;
+    private boolean activeZombie = false;
     private String selectedPlant;
+    private String selectedZombie;
 
     public POOBvsZOMBIESGUI() {
         setTitle("PoobVsZombies");
@@ -358,7 +360,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
             button.setBorderPainted(true);
             button.setPreferredSize(new Dimension((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08)));
             zombieMenuPanel.add(button);
-            plantOptions.add(button);
+            zombieOptions.add(button);
         }
         layeredPane.add(zombieMenuPanel,JLayeredPane.DRAG_LAYER);
     }
@@ -582,44 +584,125 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
     private void prepareActionsGame(){
         for (int i = 0; i<plantOptions.size();i++){
+            final int index = i;
             JButton button = plantOptions.get(i);
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    active = true;
-                    selectedPlant = "peashooter";
+                    if (index==1){
+                        activePlant = true;
+                        selectedPlant = "sunflower";
+                    }
+                    else if (index==2){
+                        activePlant = true;
+                        selectedPlant = "peashooter";
+                    }
+                    else if (index==3){
+                        activePlant = true;
+                        selectedPlant = "ECIPlant";
+                    }
+                    else if (index==4){
+                        activePlant = true;
+                        selectedPlant = "wall-nut";
+                    }
+                    else if (index==5){
+                        activePlant = true;
+                        selectedPlant = "potatoMine";
+                    }
+                }
+            });
+        }
+
+        for (int i = 0; i<zombieOptions.size();i++){
+            final int index = i;
+            JButton button = zombieOptions.get(i);
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (index==1){
+                        activeZombie = true;
+                        selectedZombie = "basic";
+                    }
+                    else if (index==2){
+                        activeZombie = true;
+                        selectedZombie = "coneHead";
+                    }
+                    else if (index==3){
+                        activeZombie = true;
+                        selectedZombie = "bucketHead";
+                    }
+                    else if (index==4){
+                        activeZombie = true;
+                        selectedZombie = "ECIZombie";
+                    }
+                    else if (index==5){
+                        activeZombie = true;
+                        selectedZombie = "brainstein";
+                    }
                 }
             });
         }
 
         for (int i = 0; i < positions.size() ; i++){
             JButton button = positions.get(i);
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (active) {
-                        if (selectedPlant.equals("sunflower")){
+            ArrayList<Integer> numbers = new ArrayList<>(Arrays.asList(8, 17, 26, 35, 44));
+            if (numbers.contains(i)){
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (activeZombie) {
+                            if (selectedZombie.equals("basic")) {
+                                ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/PeaShooter.gif"));
+                                gifIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 0.7), (int) (button.getSize().getHeight() * 0.7), Image.SCALE_DEFAULT));
+                                button.setIcon(gifIcon);
+                                button.setText("");
+                            } else if (selectedZombie.equals("coneHead")) {
 
-                        }
-                        else if (selectedPlant.equals("peashooter")){
-                            ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/PeaShooter.gif"));
-                            gifIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth()), (int) (button.getSize().getHeight()), Image.SCALE_DEFAULT));
-                            button.setIcon(gifIcon);
-                        }
-                        else if (selectedPlant.equals("ECIPlant")){
+                            } else if (selectedZombie.equals("bucketHead")) {
 
-                        }
-                        else if (selectedPlant.equals("wall-nut")){
+                            } else if (selectedZombie.equals("ECIZombie")) {
 
-                        }
-                        else if (selectedPlant.equals("potatoMine")){
+                            } else if (selectedZombie.equals("brainstein")) {
+                                if (button.getIcon() == null){
 
+                                }
+                            }
+                            //se borre el transparente
+                            activeZombie = false;
+                            activePlant = false;
                         }
-                        //se borre el transparente
-                        active = false;
+
                     }
-                }
-            });
+                });
+            }
+            else{
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (button.getIcon() == null){
+                            if (activePlant) {
+                                if (selectedPlant.equals("sunflower")) {
+
+                                } else if (selectedPlant.equals("peashooter")) {
+                                    ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/PeaShooter.gif"));
+                                    gifIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth()*0.7), (int) (button.getSize().getHeight()*0.7), Image.SCALE_DEFAULT));
+                                    button.setIcon(gifIcon);
+                                    button.setText("");
+                                } else if (selectedPlant.equals("ECIPlant")) {
+
+                                } else if (selectedPlant.equals("wall-nut")) {
+
+                                } else if (selectedPlant.equals("potatoMine")) {
+
+                                }
+                                //se borre el transparente
+                                activePlant = false;
+                                activeZombie = false;
+                            }
+                        }
+                    }
+                });
+            }
         }
     }
 

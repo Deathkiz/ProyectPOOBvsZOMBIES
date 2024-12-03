@@ -270,7 +270,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private void createChooseButtons(){
         peaShooter = createColorButton("src/resources/peashooter.jpg", WIDTH/11, HEIGHT/5);
         sunflower = createColorButton("src/resources/sunflower.jpg", WIDTH/11, HEIGHT/5);
-        ECIPlant = createColorButton("src/resources/sunflower.jpg", WIDTH/11, HEIGHT/5);
+        ECIPlant = createColorButton("src/resources/ECIPlant.jpg", WIDTH/11, HEIGHT/5);
         wallnut = createColorButton("src/resources/wallnut.jpg", WIDTH/11, HEIGHT/5);
         potatoMine = createColorButton("src/resources/potatoMine.jpg", WIDTH/11, HEIGHT/5);
         zombie = createColorButton("src/resources/zombie.jpg", WIDTH/11, HEIGHT/5);

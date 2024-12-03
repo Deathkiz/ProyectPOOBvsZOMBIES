@@ -668,10 +668,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
                                 }
                             }
                             //se borre el transparente
-                            activeZombie = false;
-                            activePlant = false;
                         }
-
+                        activeZombie = false;
+                        activePlant = false;
                     }
                 });
             }
@@ -696,9 +695,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
                                 }
                                 //se borre el transparente
-                                activePlant = false;
-                                activeZombie = false;
                             }
+                            activePlant = false;
+                            activeZombie = false;
                         }
                     }
                 });

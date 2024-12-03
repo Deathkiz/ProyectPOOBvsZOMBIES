@@ -3,6 +3,7 @@ package presentation;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class POOBvsZOMBIESGUI extends JFrame {
     public static int WIDTH, HEIGHT;
@@ -66,6 +67,11 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
     private int offsetX, offsetY;
 
+    private JLayeredPane layeredPane;
+    private JPanel gridPanel;
+    private ArrayList<JButton> positions;
+
+
     public POOBvsZOMBIESGUI() {
         setTitle("PoobVsZombies");
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -88,6 +94,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
         frameForMvM();
         createChooseButtons();
         frameChoose();
+        prepareGame();
     }
 
     private void prepareElementsStart() {
@@ -266,18 +273,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
     }
 
-    private void prepareActions() {
-        prepareActionsStart();
-        prepareActionsMenuButtons();
-
-    }
-
-    private void game(){
-        // Configurar el layout principal
-        setLayout(null);
-
-        // Crear el JLayeredPane
-        JLayeredPane layeredPane = new JLayeredPane();
+    private void prepareGame(){
+        positions = new ArrayList<>();
+        layeredPane = new JLayeredPane();
         layeredPane.setBounds(0, 0, WIDTH, HEIGHT); // Ocupa toda la ventana
         layeredPane.setLayout(null); // Layout absoluto
 
@@ -290,19 +288,30 @@ public class POOBvsZOMBIESGUI extends JFrame {
         layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
 
         // Malla de botones
-        JPanel gridPanel = new JPanel(new GridLayout(5, 9));
+        gridPanel = new JPanel(new GridLayout(5, 9));
         gridPanel.setOpaque(false); // Fondo transparente
         gridPanel.setBounds((int) (WIDTH*0.05), (int) (HEIGHT*0.11), (int) (WIDTH*0.9), (int) (HEIGHT*0.85)); // Ocupa toda la ventana
-
         for (int i = 0; i < 45; i++) {
-            JButton button = new JButton("B" + (i + 1));
-            button.setContentAreaFilled(false); // Fondo transparente
-            button.setBorderPainted(true); // Borde visible
+            JButton button = new JButton("B");
+            button.setContentAreaFilled(false);
+            button.setBorderPainted(false);
             gridPanel.add(button);
+            positions.add(button);
         }
+    }
+
+    private void prepareActions() {
+        prepareActionsStart();
+        prepareActionsMenuButtons();
+
+    }
+
+    private void game(){
+        // Configurar el layout principal
+        setLayout(null);
+
         layeredPane.add(gridPanel, JLayeredPane.PALETTE_LAYER);
 
-        // Botón móvil
         JButton movableButton = new JButton("Drag Me!");
         movableButton.setBounds(150, 100, 100, 30);
         layeredPane.add(movableButton, JLayeredPane.DRAG_LAYER);

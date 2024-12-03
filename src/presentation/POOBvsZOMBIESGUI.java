@@ -64,6 +64,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private boolean usageECIZombie = true;
     private boolean usageBrainstain = true;
 
+    private int offsetX, offsetY;
+
     public POOBvsZOMBIESGUI() {
         setTitle("PoobVsZombies");
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -271,7 +273,63 @@ public class POOBvsZOMBIESGUI extends JFrame {
     }
 
     private void game(){
+        // Configurar el layout principal
+        setLayout(null);
 
+        // Crear el JLayeredPane
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setBounds(0, 0, WIDTH, HEIGHT); // Ocupa toda la ventana
+        layeredPane.setLayout(null); // Layout absoluto
+
+        // Imagen de fondo
+        JLabel imageLabel = new JLabel();
+        ImageIcon imageIcon = new ImageIcon("src/resources/Frontyard.jpg");
+        Image scaledImage = imageIcon.getImage().getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+        imageLabel.setIcon(new ImageIcon(scaledImage));
+        imageLabel.setBounds(0, 0, WIDTH, HEIGHT);
+        layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
+
+        // Malla de botones
+        JPanel gridPanel = new JPanel(new GridLayout(5, 9));
+        gridPanel.setOpaque(false); // Fondo transparente
+        gridPanel.setBounds((int) (WIDTH*0.05), (int) (HEIGHT*0.11), (int) (WIDTH*0.9), (int) (HEIGHT*0.85)); // Ocupa toda la ventana
+
+        for (int i = 0; i < 45; i++) {
+            JButton button = new JButton("B" + (i + 1));
+            button.setContentAreaFilled(false); // Fondo transparente
+            button.setBorderPainted(true); // Borde visible
+            gridPanel.add(button);
+        }
+        layeredPane.add(gridPanel, JLayeredPane.PALETTE_LAYER);
+
+        // Botón móvil
+        JButton movableButton = new JButton("Drag Me!");
+        movableButton.setBounds(150, 100, 100, 30);
+        layeredPane.add(movableButton, JLayeredPane.DRAG_LAYER);
+
+        // Listener para mover el botón
+        movableButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                offsetX = e.getX(); // Guardar el desplazamiento inicial
+                offsetY = e.getY();
+            }
+        });
+
+        movableButton.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                // Calcular la nueva posición
+                int newX = movableButton.getX() + e.getX() - offsetX;
+                int newY = movableButton.getY() + e.getY() - offsetY;
+                movableButton.setLocation(newX, newY);
+            }
+        });
+
+        // Agregar el JLayeredPane a la ventana
+        add(layeredPane);
+
+        setVisible(true);
     }
 
     private void prepareActionsStart() {
@@ -439,66 +497,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 choose.dispose();
                 getContentPane().removeAll();
-
-                // Configurar el layout principal
-                setLayout(new BorderLayout());
-
-                // Crear el JLayeredPane
-                JLayeredPane layeredPane = new JLayeredPane();
-                layeredPane.setPreferredSize(new Dimension(WIDTH, 8*HEIGHT/10)); // Tamaño del panel central
-                layeredPane.setLayout(null); // Layout absoluto para movimiento libre
-
-                // Imagen de fondo
-                JLabel imageLabel = new JLabel();
-                ImageIcon imageIcon = new ImageIcon("src/resources/Frontyard.jpg");
-                Image scaledImage = imageIcon.getImage().getScaledInstance(WIDTH, 8*HEIGHT/10, Image.SCALE_SMOOTH);
-                imageLabel.setIcon(new ImageIcon(scaledImage));
-                imageLabel.setBounds(0, HEIGHT/10, WIDTH, 8*HEIGHT/10);
-                layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
-
-                // Malla de botones
-                JPanel gridPanel = new JPanel(new GridLayout(5, 10, 5, 5));
-                gridPanel.setOpaque(false); // Fondo transparente
-                gridPanel.setBounds(0, HEIGHT/10, WIDTH, 8*HEIGHT/10); // Ajustar posición dentro del JLayeredPane
-
-                for (int i = 0; i < 50; i++) {
-                    JButton button = new JButton("B" + (i + 1));
-                    button.setContentAreaFilled(false); // Fondo transparente
-                    button.setBorderPainted(true); // Borde visible
-                    gridPanel.add(button);
-                }
-                layeredPane.add(gridPanel, JLayeredPane.PALETTE_LAYER);
-
-                // Botón móvil
-                JButton movableButton = new JButton("Drag Me!");
-                movableButton.setBounds(150, 100, 100, 30); // Posición inicial del botón
-                layeredPane.add(movableButton, JLayeredPane.DRAG_LAYER);
-
-                // Listener para mover el botón
-                movableButton.addMouseMotionListener(new MouseMotionAdapter() {
-                    private int offsetX, offsetY; // Desplazamiento del clic
-
-                    @Override
-                    public void mouseDragged(MouseEvent e) {
-                        int newX = e.getXOnScreen() - offsetX;
-                        int newY = e.getYOnScreen() - offsetY;
-                        movableButton.setLocation(newX, newY);
-                    }
-                });
-
-                // Agregar el JLayeredPane al centro del BorderLayout
-                add(layeredPane, BorderLayout.CENTER);
-
-                // Agregar un panel inferior con botones adicionales
-                JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-                JButton exampleButton1 = new JButton("Example 1");
-                JButton exampleButton2 = new JButton("Example 2");
-                JButton exampleButton3 = new JButton("Example 3");
-                bottomPanel.add(exampleButton1);
-                bottomPanel.add(exampleButton2);
-                bottomPanel.add(exampleButton3);
-                add(bottomPanel, BorderLayout.SOUTH);
-
+                game();
                 revalidate();
                 repaint();
             }

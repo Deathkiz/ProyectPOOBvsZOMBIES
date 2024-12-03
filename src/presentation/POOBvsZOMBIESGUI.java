@@ -1,5 +1,7 @@
 package presentation;
 
+import domain.POOBvsZOMBIES;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -67,10 +69,14 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
     private int offsetX, offsetY;
 
+    private POOBvsZOMBIES GAME;
     private JLayeredPane layeredPane;
-    private JPanel gridPanel;
     private ArrayList<JButton> positions;
+    private ArrayList<JButton> plantOptions;
+    private ArrayList<JButton> zombieOptions;
 
+    private boolean active = false;
+    private String selectedPlant;
 
     public POOBvsZOMBIESGUI() {
         setTitle("PoobVsZombies");
@@ -276,8 +282,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private void prepareGame(){
         positions = new ArrayList<>();
         layeredPane = new JLayeredPane();
-        layeredPane.setBounds(0, 0, WIDTH, HEIGHT); // Ocupa toda la ventana
-        layeredPane.setLayout(null); // Layout absoluto
+        layeredPane.setBounds(0, 0, WIDTH, HEIGHT);
+        layeredPane.setLayout(null);
 
         // Imagen de fondo
         JLabel imageLabel = new JLabel();
@@ -287,10 +293,24 @@ public class POOBvsZOMBIESGUI extends JFrame {
         imageLabel.setBounds(0, 0, WIDTH, HEIGHT);
         layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
 
+        JLabel imageLabel1 = new JLabel();
+        ImageIcon imageIcon1 = new ImageIcon("src/resources/plantMenu.jpg");
+        Image scaledImage1 = imageIcon1.getImage().getScaledInstance((int) (WIDTH*0.5), (int) (HEIGHT*0.1), Image.SCALE_SMOOTH);
+        imageLabel1.setIcon(new ImageIcon(scaledImage1));
+        imageLabel1.setBounds(0, 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
+        layeredPane.add(imageLabel1, JLayeredPane.POPUP_LAYER);
+
+        JLabel imageLabel2 = new JLabel();
+        ImageIcon imageIcon2 = new ImageIcon("src/resources/plantMenu.jpg");
+        Image scaledImage2 = imageIcon2.getImage().getScaledInstance((int) (WIDTH*0.5), (int) (HEIGHT*0.1), Image.SCALE_SMOOTH);
+        imageLabel2.setIcon(new ImageIcon(scaledImage2));
+        imageLabel2.setBounds((int) (WIDTH*0.5), 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
+        layeredPane.add(imageLabel2, JLayeredPane.POPUP_LAYER);
+
         // Malla de botones
-        gridPanel = new JPanel(new GridLayout(5, 9));
+        JPanel gridPanel = new JPanel(new GridLayout(5, 9));
         gridPanel.setOpaque(false); // Fondo transparente
-        gridPanel.setBounds((int) (WIDTH*0.05), (int) (HEIGHT*0.11), (int) (WIDTH*0.9), (int) (HEIGHT*0.85)); // Ocupa toda la ventana
+        gridPanel.setBounds((int) (WIDTH*0.05), (int) (HEIGHT*0.11), (int) (WIDTH*0.9), (int) (HEIGHT*0.85));
         for (int i = 0; i < 45; i++) {
             JButton button = new JButton("B");
             button.setContentAreaFilled(false);
@@ -298,46 +318,61 @@ public class POOBvsZOMBIESGUI extends JFrame {
             gridPanel.add(button);
             positions.add(button);
         }
+        layeredPane.add(gridPanel, JLayeredPane.PALETTE_LAYER);
+
+        plantOptions = new ArrayList<>();
+        JPanel plantMenuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,(int) (WIDTH*0.009),(int) (HEIGHT*0.01)));
+        plantMenuPanel.setOpaque(false); // Fondo transparente
+        plantMenuPanel.setBounds(0, 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
+        for (int i = 0; i < 9; i++) {
+            if (i == 1) {
+                // Insertar espacio adicional antes del segundo botón
+                JPanel spacer = new JPanel();
+                spacer.setOpaque(false); // Fondo transparente
+                spacer.setPreferredSize(new Dimension((int) (WIDTH*0.005), 1)); // Ancho del espacio extra
+                plantMenuPanel.add(spacer);
+            }
+            JButton button = new JButton("B");
+            button.setContentAreaFilled(false);
+            button.setBorderPainted(true);
+            button.setPreferredSize(new Dimension((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08)));
+            plantMenuPanel.add(button);
+            plantOptions.add(button);
+        }
+        layeredPane.add(plantMenuPanel,JLayeredPane.DRAG_LAYER);
+
+        zombieOptions = new ArrayList<>();
+        JPanel zombieMenuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,(int) (WIDTH*0.009),(int) (HEIGHT*0.01)));
+        zombieMenuPanel.setOpaque(false); // Fondo transparente
+        zombieMenuPanel.setBounds((int) (WIDTH*0.5), 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
+        for (int i = 0; i < 9; i++) {
+            if (i == 1) {
+                // Insertar espacio adicional antes del segundo botón
+                JPanel spacer = new JPanel();
+                spacer.setOpaque(false); // Fondo transparente
+                spacer.setPreferredSize(new Dimension((int) (WIDTH*0.005), 1)); // Ancho del espacio extra
+                zombieMenuPanel.add(spacer);
+            }
+            JButton button = new JButton("B");
+            button.setContentAreaFilled(false);
+            button.setBorderPainted(true);
+            button.setPreferredSize(new Dimension((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08)));
+            zombieMenuPanel.add(button);
+            plantOptions.add(button);
+        }
+        layeredPane.add(zombieMenuPanel,JLayeredPane.DRAG_LAYER);
     }
 
     private void prepareActions() {
         prepareActionsStart();
         prepareActionsMenuButtons();
-
+        prepareActionsGame();
     }
 
     private void game(){
         // Configurar el layout principal
         setLayout(null);
-
-        layeredPane.add(gridPanel, JLayeredPane.PALETTE_LAYER);
-
-        JButton movableButton = new JButton("Drag Me!");
-        movableButton.setBounds(150, 100, 100, 30);
-        layeredPane.add(movableButton, JLayeredPane.DRAG_LAYER);
-
-        // Listener para mover el botón
-        movableButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                offsetX = e.getX(); // Guardar el desplazamiento inicial
-                offsetY = e.getY();
-            }
-        });
-
-        movableButton.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                // Calcular la nueva posición
-                int newX = movableButton.getX() + e.getX() - offsetX;
-                int newY = movableButton.getY() + e.getY() - offsetY;
-                movableButton.setLocation(newX, newY);
-            }
-        });
-
-        // Agregar el JLayeredPane a la ventana
         add(layeredPane);
-
         setVisible(true);
     }
 
@@ -539,6 +574,49 @@ public class POOBvsZOMBIESGUI extends JFrame {
                         ((ColorButton) button).setBackgroundColor(Color.GREEN); // Cambia a verde
                     } else {
                         ((ColorButton) button).setBackgroundColor(Color.RED); // Cambia a rojo
+                    }
+                }
+            });
+        }
+    }
+
+    private void prepareActionsGame(){
+        for (int i = 0; i<plantOptions.size();i++){
+            JButton button = plantOptions.get(i);
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    active = true;
+                    selectedPlant = "peashooter";
+                }
+            });
+        }
+
+        for (int i = 0; i < positions.size() ; i++){
+            JButton button = positions.get(i);
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (active) {
+                        if (selectedPlant.equals("sunflower")){
+
+                        }
+                        else if (selectedPlant.equals("peashooter")){
+                            ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/PeaShooter.gif"));
+                            gifIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth()), (int) (button.getSize().getHeight()), Image.SCALE_DEFAULT));
+                            button.setIcon(gifIcon);
+                        }
+                        else if (selectedPlant.equals("ECIPlant")){
+
+                        }
+                        else if (selectedPlant.equals("wall-nut")){
+
+                        }
+                        else if (selectedPlant.equals("potatoMine")){
+
+                        }
+                        //se borre el transparente
+                        active = false;
                     }
                 }
             });

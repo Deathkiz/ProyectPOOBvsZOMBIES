@@ -439,20 +439,71 @@ public class POOBvsZOMBIESGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 choose.dispose();
                 getContentPane().removeAll();
-                principalPanel = new JLayeredPane();
-                principalPanel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-                principalPanel.setMaximumSize(new Dimension(WIDTH, HEIGHT));
-                principalPanel.setMinimumSize(new Dimension(WIDTH, HEIGHT));
-                ImageIcon imageBackground = new ImageIcon("src/resources/Prueba.jpg");
-                Image scaledImage = setSizeImageBackground(imageBackground);
-                background.setIcon(new ImageIcon(scaledImage));
-                principalPanel.add(background, Integer.valueOf(0));
-                add(principalPanel);
+
+                // Configurar el layout principal
+                setLayout(new BorderLayout());
+
+                // Crear el JLayeredPane
+                JLayeredPane layeredPane = new JLayeredPane();
+                layeredPane.setPreferredSize(new Dimension(WIDTH, 8*HEIGHT/10)); // Tamaño del panel central
+                layeredPane.setLayout(null); // Layout absoluto para movimiento libre
+
+                // Imagen de fondo
+                JLabel imageLabel = new JLabel();
+                ImageIcon imageIcon = new ImageIcon("src/resources/Prueba.jpg");
+                Image scaledImage = imageIcon.getImage().getScaledInstance(WIDTH, 8*HEIGHT/10, Image.SCALE_SMOOTH);
+                imageLabel.setIcon(new ImageIcon(scaledImage));
+                imageLabel.setBounds(0, HEIGHT/10, WIDTH, 8*HEIGHT/10);
+                layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
+
+                // Malla de botones
+                JPanel gridPanel = new JPanel(new GridLayout(5, 10, 5, 5));
+                gridPanel.setOpaque(false); // Fondo transparente
+                gridPanel.setBounds(0, HEIGHT/10, WIDTH, 8*HEIGHT/10); // Ajustar posición dentro del JLayeredPane
+
+                for (int i = 0; i < 50; i++) {
+                    JButton button = new JButton("B" + (i + 1));
+                    button.setContentAreaFilled(false); // Fondo transparente
+                    button.setBorderPainted(true); // Borde visible
+                    gridPanel.add(button);
+                }
+                layeredPane.add(gridPanel, JLayeredPane.PALETTE_LAYER);
+
+                // Botón móvil
+                JButton movableButton = new JButton("Drag Me!");
+                movableButton.setBounds(150, 100, 100, 30); // Posición inicial del botón
+                layeredPane.add(movableButton, JLayeredPane.DRAG_LAYER);
+
+                // Listener para mover el botón
+                movableButton.addMouseMotionListener(new MouseMotionAdapter() {
+                    private int offsetX, offsetY; // Desplazamiento del clic
+
+                    @Override
+                    public void mouseDragged(MouseEvent e) {
+                        int newX = e.getXOnScreen() - offsetX;
+                        int newY = e.getYOnScreen() - offsetY;
+                        movableButton.setLocation(newX, newY);
+                    }
+                });
+
+                // Agregar el JLayeredPane al centro del BorderLayout
+                add(layeredPane, BorderLayout.CENTER);
+
+                // Agregar un panel inferior con botones adicionales
+                JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+                JButton exampleButton1 = new JButton("Example 1");
+                JButton exampleButton2 = new JButton("Example 2");
+                JButton exampleButton3 = new JButton("Example 3");
+                bottomPanel.add(exampleButton1);
+                bottomPanel.add(exampleButton2);
+                bottomPanel.add(exampleButton3);
+                add(bottomPanel, BorderLayout.SOUTH);
+
                 revalidate();
                 repaint();
-
             }
         });
+
         cancelarChoose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

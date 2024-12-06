@@ -131,9 +131,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
     }
 
     private void prepareElementsButtons() {
-        PvPButton = new JButton("PvP");
-        PvMButton = new JButton("PvM");
-        MvMButton = new JButton("MvM");
+        PvPButton = new JButton();
+        PvMButton = new JButton();
+        MvMButton = new JButton();
         aceptarPvP = new JButton("Accept");
         aceptarPvM = new JButton("Accept");
         aceptarMvM = new JButton("Accept");
@@ -167,33 +167,51 @@ public class POOBvsZOMBIESGUI extends JFrame {
     }
 
     private void preparePvPButton() {
-        PvPButton.setBounds(WIDTH / 7, HEIGHT / 2, WIDTH / 7, HEIGHT / 6);
-        PvPButton.setHorizontalTextPosition(SwingConstants.CENTER);
-        PvPButton.setVerticalTextPosition(SwingConstants.CENTER);
-        PvPButton.setFont(new Font("Arial", Font.BOLD, 16));
+        PvPButton.setBounds( (int) (4.05*(WIDTH / 9)), (int) (1.44*(HEIGHT / 3.5)), (int) (WIDTH / 3.3), (int) (HEIGHT / 7.5));
+        ImageIcon imagePvPButton = new ImageIcon(getClass().getResource("/resources/ButtonPvP.png"));
+        Image resizedimagePvPButton = imagePvPButton.getImage().getScaledInstance((int) (WIDTH / 3.3), (int) (HEIGHT / 7.5), Image.SCALE_SMOOTH);
+        PvPButton.setIcon(new ImageIcon((resizedimagePvPButton)));
+        ImageIcon imagePvPButtonRollover = new ImageIcon(getClass().getResource("/resources/ButtonPvPRollover.png"));
+        Image resizedimagePvPButtonRollover = imagePvPButtonRollover.getImage().getScaledInstance((int) (WIDTH / 3.3), (int) (HEIGHT / 7.5), Image.SCALE_SMOOTH);
+        PvPButton.setIcon(new ImageIcon((resizedimagePvPButton)));
+        PvPButton.setPressedIcon(new ImageIcon((resizedimagePvPButton)));
+        PvPButton.setRolloverIcon(new ImageIcon(resizedimagePvPButtonRollover));
         PvPButton.setForeground(Color.BLACK);
         PvPButton.setContentAreaFilled(false);
         PvPButton.setFocusPainted(false);
+        PvPButton.setBorderPainted(false);
     }
 
     private void preparePvMButton() {
-        PvMButton.setBounds( 3*(WIDTH / 7), HEIGHT / 2, WIDTH / 7, HEIGHT / 6);
-        PvMButton.setHorizontalTextPosition(SwingConstants.CENTER);
-        PvMButton.setVerticalTextPosition(SwingConstants.CENTER);
-        PvMButton.setFont(new Font("Arial", Font.BOLD, 16));
+        PvMButton.setBounds( (int) (3.8*(WIDTH / 9)), (int) (HEIGHT / 3.5), (int) (WIDTH / 2.83), (int) (HEIGHT / 7.5));
+        ImageIcon imagePvMButton = new ImageIcon(getClass().getResource("/resources/ButtonPvM.png"));
+        Image resizedimagePvMButton = imagePvMButton.getImage().getScaledInstance((int) (WIDTH / 2.83), (int) (HEIGHT / 7.5), Image.SCALE_SMOOTH);
+        PvMButton.setIcon(new ImageIcon((resizedimagePvMButton)));
+        ImageIcon imagePvMButtonRollover = new ImageIcon(getClass().getResource("/resources/ButtonPvMRollover.png"));
+        Image resizedimagePvMButtonRollover = imagePvMButtonRollover.getImage().getScaledInstance((int) (WIDTH / 2.83), (int) (HEIGHT / 7.5), Image.SCALE_SMOOTH);
+        PvMButton.setIcon(new ImageIcon((resizedimagePvMButton)));
+        PvMButton.setPressedIcon(new ImageIcon((resizedimagePvMButton)));
         PvMButton.setForeground(Color.BLACK);
         PvMButton.setContentAreaFilled(false);
         PvMButton.setFocusPainted(false);
-    }
+        PvMButton.setBorderPainted(false);
+        PvMButton.setRolloverIcon(new ImageIcon(resizedimagePvMButtonRollover));
 
+
+    }
     private void prepareMvMButton() {
-        MvMButton.setBounds( 5*(WIDTH / 7), HEIGHT / 2, WIDTH / 7, HEIGHT / 6);
-        MvMButton.setHorizontalTextPosition(SwingConstants.CENTER);
-        MvMButton.setVerticalTextPosition(SwingConstants.CENTER);
-        MvMButton.setFont(new Font("Arial", Font.BOLD, 16));
+        MvMButton.setBounds((int) (4.2*(WIDTH / 9)), (int) (1.9*(HEIGHT / 3.5)), (int) (WIDTH / 3.7), (int) (HEIGHT / 7));
+        ImageIcon imageMvMButton = new ImageIcon(getClass().getResource("/resources/ButtonMvM.png"));
+        Image resizedimageMvMButton = imageMvMButton.getImage().getScaledInstance((int) (WIDTH / 3.7), (int) (HEIGHT / 7), Image.SCALE_SMOOTH);
+        MvMButton.setIcon(new ImageIcon((resizedimageMvMButton)));
+        ImageIcon imageMvMButtonRollover = new ImageIcon(getClass().getResource("/resources/ButtonMvMRollover.png"));
+        Image resizedimageMvMButtonRollover = imageMvMButtonRollover.getImage().getScaledInstance((int) (WIDTH / 3.7), (int) (HEIGHT / 7), Image.SCALE_SMOOTH);
+        MvMButton.setRolloverIcon(new ImageIcon((resizedimageMvMButtonRollover)));
+        MvMButton.setPressedIcon(new ImageIcon((resizedimageMvMButton)));
         MvMButton.setForeground(Color.BLACK);
         MvMButton.setContentAreaFilled(false);
         MvMButton.setFocusPainted(false);
+        MvMButton.setBorderPainted(false);
     }
 
     private void frameForPvP(){
@@ -400,8 +418,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 PvMButton.setVisible(true);
                 PvPButton.setVisible(true);
                 MvMButton.setVisible(true);
-                background.setIcon(null);
-                background.setBackground(Color.green);
+                ImageIcon imageBackground = new ImageIcon(getClass().getResource("/resources/Menu.jpg"));
+                Image resizedImageBackground = imageBackground.getImage().getScaledInstance(WIDTH, HEIGHT,Image.SCALE_DEFAULT);
+                background.setIcon(new ImageIcon(resizedImageBackground));
                 background.setOpaque(true);
                 revalidate();
                 repaint();

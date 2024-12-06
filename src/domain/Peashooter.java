@@ -21,8 +21,7 @@ public class Peashooter extends Plant{
                 while (true) {
                     long currentTime = System.nanoTime(); // Obtener el tiempo actual en nanosegundos
                     if (currentTime - lastActionTime >= ACTION_INTERVAL) {
-                        System.out.println("El Peashooter está disparando...");
-
+                        Peashooter.this.run();
                         lastActionTime = currentTime;
                     }
                 }
@@ -34,7 +33,7 @@ public class Peashooter extends Plant{
     }
 
     private void run(){
-
+        System.out.println("El Peashooter está disparando...");
     }
 
     public void dead(){

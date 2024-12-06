@@ -722,7 +722,6 @@ public class POOBvsZOMBIESGUI extends JFrame {
                         (int) (button.getSize().getHeight() * 0.7),
                         Image.SCALE_DEFAULT));
                 button.setIcon(gifIcon);
-                button.setText("");
             }
         }
     }

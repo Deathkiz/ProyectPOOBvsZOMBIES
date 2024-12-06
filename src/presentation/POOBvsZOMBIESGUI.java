@@ -1,6 +1,6 @@
 package presentation;
 
-import domain.POOBvsZOMBIES;
+import domain.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,6 +71,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
     private POOBvsZOMBIES GAME;
     private JLayeredPane layeredPane;
+    private JPanel hitboxSystem;
     private ArrayList<JButton> positions;
     private ArrayList<JButton> plantOptions;
     private ArrayList<JButton> zombieOptions;
@@ -79,6 +80,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private boolean activeZombie = false;
     private String selectedPlant;
     private String selectedZombie;
+    private ImageIcon imageIcon;
+    private JLabel imageLabel;
 
     public POOBvsZOMBIESGUI() {
         setTitle("PoobVsZombies");
@@ -287,40 +290,46 @@ public class POOBvsZOMBIESGUI extends JFrame {
         layeredPane.setBounds(0, 0, WIDTH, HEIGHT);
         layeredPane.setLayout(null);
 
-        // Imagen de fondo
-        JLabel imageLabel = new JLabel();
-        ImageIcon imageIcon = new ImageIcon("src/resources/Frontyard.jpg");
-        Image scaledImage = imageIcon.getImage().getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
-        imageLabel.setIcon(new ImageIcon(scaledImage));
-        imageLabel.setBounds(0, 0, WIDTH, HEIGHT);
-        layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
+        hitboxSystem = new JPanel();
+        hitboxSystem.setBackground(Color.WHITE);
+        hitboxSystem.setBounds(0, 0, WIDTH, HEIGHT);
+        layeredPane.add(hitboxSystem, JLayeredPane.DEFAULT_LAYER);
 
         JLabel imageLabel1 = new JLabel();
         ImageIcon imageIcon1 = new ImageIcon("src/resources/plantMenu.jpg");
         Image scaledImage1 = imageIcon1.getImage().getScaledInstance((int) (WIDTH*0.5), (int) (HEIGHT*0.1), Image.SCALE_SMOOTH);
         imageLabel1.setIcon(new ImageIcon(scaledImage1));
         imageLabel1.setBounds(0, 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
-        layeredPane.add(imageLabel1, JLayeredPane.POPUP_LAYER);
+        layeredPane.add(imageLabel1, JLayeredPane.PALETTE_LAYER);
 
         JLabel imageLabel2 = new JLabel();
         ImageIcon imageIcon2 = new ImageIcon("src/resources/plantMenu.jpg");
         Image scaledImage2 = imageIcon2.getImage().getScaledInstance((int) (WIDTH*0.5), (int) (HEIGHT*0.1), Image.SCALE_SMOOTH);
         imageLabel2.setIcon(new ImageIcon(scaledImage2));
         imageLabel2.setBounds((int) (WIDTH*0.5), 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
-        layeredPane.add(imageLabel2, JLayeredPane.POPUP_LAYER);
+        layeredPane.add(imageLabel2, JLayeredPane.PALETTE_LAYER);
 
         // Malla de botones
         JPanel gridPanel = new JPanel(new GridLayout(5, 9));
         gridPanel.setOpaque(false); // Fondo transparente
         gridPanel.setBounds((int) (WIDTH*0.05), (int) (HEIGHT*0.11), (int) (WIDTH*0.9), (int) (HEIGHT*0.85));
         for (int i = 0; i < 45; i++) {
-            JButton button = new JButton("B");
+            JButton button = new JButton("");
             button.setContentAreaFilled(false);
             button.setBorderPainted(false);
             gridPanel.add(button);
             positions.add(button);
         }
         layeredPane.add(gridPanel, JLayeredPane.PALETTE_LAYER);
+
+        // Imagen de fondo
+        JLabel imageLabel = new JLabel();
+        ImageIcon imageIcon = new ImageIcon("src/resources/Frontyard.jpg");
+        Image scaledImage = imageIcon.getImage().getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+        imageLabel.setIcon(new ImageIcon(scaledImage));
+        imageLabel.setBounds(0, 0, WIDTH, HEIGHT);
+        layeredPane.add(imageLabel, JLayeredPane.PALETTE_LAYER);
+
 
         plantOptions = new ArrayList<>();
         JPanel plantMenuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,(int) (WIDTH*0.009),(int) (HEIGHT*0.01)));
@@ -341,7 +350,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
             plantMenuPanel.add(button);
             plantOptions.add(button);
         }
-        layeredPane.add(plantMenuPanel,JLayeredPane.DRAG_LAYER);
+        layeredPane.add(plantMenuPanel,JLayeredPane.POPUP_LAYER);
+
+
 
         zombieOptions = new ArrayList<>();
         JPanel zombieMenuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,(int) (WIDTH*0.009),(int) (HEIGHT*0.01)));
@@ -362,7 +373,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
             zombieMenuPanel.add(button);
             zombieOptions.add(button);
         }
-        layeredPane.add(zombieMenuPanel,JLayeredPane.DRAG_LAYER);
+        layeredPane.add(zombieMenuPanel,JLayeredPane.POPUP_LAYER);
     }
 
     private void prepareActions() {
@@ -376,6 +387,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
         setLayout(null);
         add(layeredPane);
         setVisible(true);
+        GAME = new POOBvsZOMBIES(10,10);
+
+
     }
 
     private void prepareActionsStart() {
@@ -582,30 +596,28 @@ public class POOBvsZOMBIESGUI extends JFrame {
         }
     }
 
-    private void prepareActionsGame(){
-        for (int i = 0; i<plantOptions.size();i++){
+    private void prepareActionsGame() {
+        // Acción para los botones de plantas
+        for (int i = 0; i < plantOptions.size(); i++) {
             final int index = i;
             JButton button = plantOptions.get(i);
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (index==1){
+                    // Establecer planta activa y seleccionada según el índice
+                    if (index == 1) {
                         activePlant = true;
                         selectedPlant = "sunflower";
-                    }
-                    else if (index==2){
+                    } else if (index == 2) {
                         activePlant = true;
                         selectedPlant = "peashooter";
-                    }
-                    else if (index==3){
+                    } else if (index == 3) {
                         activePlant = true;
                         selectedPlant = "ECIPlant";
-                    }
-                    else if (index==4){
+                    } else if (index == 4) {
                         activePlant = true;
                         selectedPlant = "wall-nut";
-                    }
-                    else if (index==5){
+                    } else if (index == 5) {
                         activePlant = true;
                         selectedPlant = "potatoMine";
                     }
@@ -613,29 +625,27 @@ public class POOBvsZOMBIESGUI extends JFrame {
             });
         }
 
-        for (int i = 0; i<zombieOptions.size();i++){
+        // Acción para los botones de zombis
+        for (int i = 0; i < zombieOptions.size(); i++) {
             final int index = i;
             JButton button = zombieOptions.get(i);
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (index==1){
+                    // Establecer zombi activo y seleccionado según el índice
+                    if (index == 1) {
                         activeZombie = true;
                         selectedZombie = "basic";
-                    }
-                    else if (index==2){
+                    } else if (index == 2) {
                         activeZombie = true;
                         selectedZombie = "coneHead";
-                    }
-                    else if (index==3){
+                    } else if (index == 3) {
                         activeZombie = true;
                         selectedZombie = "bucketHead";
-                    }
-                    else if (index==4){
+                    } else if (index == 4) {
                         activeZombie = true;
                         selectedZombie = "ECIZombie";
-                    }
-                    else if (index==5){
+                    } else if (index == 5) {
                         activeZombie = true;
                         selectedZombie = "brainstein";
                     }
@@ -643,67 +653,87 @@ public class POOBvsZOMBIESGUI extends JFrame {
             });
         }
 
-        for (int i = 0; i < positions.size() ; i++){
+        // Acción para los botones de posiciones
+        for (int i = 0; i < positions.size(); i++) {
+            final int index = i;
             JButton button = positions.get(i);
-            ArrayList<Integer> numbers = new ArrayList<>(Arrays.asList(8, 17, 26, 35, 44));
-            if (numbers.contains(i)){
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
+            ArrayList<Integer> zombiePositions = new ArrayList<>(Arrays.asList(8, 17, 26, 35, 44));
+
+            // Acción general para el botón
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Obtener fila y columna de la posición
+                    int row = index / 9;
+                    int column = index % 9;
+
+                    // Acción si es un zombi
+                    if (zombiePositions.contains(index)) {
                         if (activeZombie) {
-                            if (selectedZombie.equals("basic")) {
-                                ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/PeaShooter.gif"));
-                                gifIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 0.7), (int) (button.getSize().getHeight() * 0.7), Image.SCALE_DEFAULT));
-                                button.setIcon(gifIcon);
-                                button.setText("");
-                            } else if (selectedZombie.equals("coneHead")) {
-
-                            } else if (selectedZombie.equals("bucketHead")) {
-
-                            } else if (selectedZombie.equals("ECIZombie")) {
-
-                            } else if (selectedZombie.equals("brainstein")) {
-                                if (button.getIcon() == null){
-
-                                }
-                            }
-                            //se borre el transparente
+                            handleZombieAction(button); // Manejar acción del zombi
                         }
-                        activeZombie = false;
-                        activePlant = false;
                     }
-                });
-            }
-            else{
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (button.getIcon() == null){
-                            if (activePlant) {
-                                if (selectedPlant.equals("sunflower")) {
-
-                                } else if (selectedPlant.equals("peashooter")) {
-                                    ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/PeaShooter.gif"));
-                                    gifIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth()*0.7), (int) (button.getSize().getHeight()*0.7), Image.SCALE_DEFAULT));
-                                    button.setIcon(gifIcon);
-                                    button.setText("");
-                                } else if (selectedPlant.equals("ECIPlant")) {
-
-                                } else if (selectedPlant.equals("wall-nut")) {
-
-                                } else if (selectedPlant.equals("potatoMine")) {
-
-                                }
-                                //se borre el transparente
-                            }
-                        }
-                        activePlant = false;
-                        activeZombie = false;
+                    // Acción si es una planta
+                    else if (activePlant) {
+                        handlePlantAction(button, row, column); // Manejar acción de la planta
                     }
-                });
+
+                    // Resetear flags después de realizar la acción
+                    activeZombie = false;
+                    activePlant = false;
+                }
+            });
+        }
+    }
+
+
+    private void handleZombieAction(JButton button) {
+        if ("basic".equals(selectedZombie)) {
+            // Lógica para zombi básico
+        } else if ("coneHead".equals(selectedZombie)) {
+            // Lógica para coneHead
+        } else if ("bucketHead".equals(selectedZombie)) {
+            // Lógica para bucketHead
+        } else if ("ECIZombie".equals(selectedZombie)) {
+            // Lógica para ECIZombie
+        } else if ("brainstein".equals(selectedZombie)) {
+            if (button.getIcon() == null) {
+                ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/PeaShooter.gif"));
+                gifIcon = new ImageIcon(gifIcon.getImage().getScaledInstance(
+                        (int) (button.getSize().getWidth() * 0.7),
+                        (int) (button.getSize().getHeight() * 0.7),
+                        Image.SCALE_DEFAULT));
+                button.setIcon(gifIcon);
+                button.setText("");
             }
         }
     }
+
+
+    private void handlePlantAction(JButton button, int row, int column) {
+        if ("sunflower".equals(selectedPlant)) {
+            // Lógica para sunflower
+            GAME.createPlant(selectedPlant,row,column);
+        } else if ("peashooter".equals(selectedPlant)) {
+            if (button.getIcon() == null) {
+                ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/PeaShooter.gif"));
+                ImageIcon buttonIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 0.7), (int) (button.getSize().getHeight() * 0.7), Image.SCALE_DEFAULT));
+                button.setIcon(buttonIcon);
+                GAME.createPlant(selectedPlant,row,column);
+            }
+        } else if ("ECIPlant".equals(selectedPlant)) {
+            // Lógica para ECIPlant
+            GAME.createPlant(selectedPlant,row,column);
+        } else if ("wall-nut".equals(selectedPlant)) {
+            // Lógica para wall-nut
+            GAME.createPlant(selectedPlant,row,column);
+        } else if ("potatoMine".equals(selectedPlant)) {
+            // Lógica para potatoMine
+            GAME.createPlant(selectedPlant,row,column);
+        }
+    }
+
+
 
     private Image setSizeImageBackground(ImageIcon imagePrincipal) {
         Image image = imagePrincipal.getImage();
@@ -715,7 +745,6 @@ public class POOBvsZOMBIESGUI extends JFrame {
         Image image = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ColorButton(new ImageIcon(image)); // Return ColorButton instance
     }
-
 
     public static void main(String[] args) {
         POOBvsZOMBIESGUI game = new POOBvsZOMBIESGUI();

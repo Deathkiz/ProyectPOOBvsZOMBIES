@@ -1,5 +1,8 @@
 package domain;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class Peashooter extends Plant{
 
     public Peashooter(){
@@ -10,10 +13,6 @@ public class Peashooter extends Plant{
 
     public void attack(){
 
-    }
-
-    public void damage(int recive){
-        super.hp -= recive;
     }
 
     public void dead(){

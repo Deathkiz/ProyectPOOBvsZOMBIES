@@ -711,25 +711,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
 
     private void handlePlantAction(JButton button, int row, int column) {
-        if ("sunflower".equals(selectedPlant)) {
-            // Lógica para sunflower
-            GAME.createPlant(selectedPlant,row,column);
-        } else if ("peashooter".equals(selectedPlant)) {
-            if (button.getIcon() == null) {
-                ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/PeaShooter.gif"));
-                ImageIcon buttonIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 0.7), (int) (button.getSize().getHeight() * 0.7), Image.SCALE_DEFAULT));
-                button.setIcon(buttonIcon);
-                GAME.createPlant(selectedPlant,row,column);
-            }
-        } else if ("ECIPlant".equals(selectedPlant)) {
-            // Lógica para ECIPlant
-            GAME.createPlant(selectedPlant,row,column);
-        } else if ("wall-nut".equals(selectedPlant)) {
-            // Lógica para wall-nut
-            GAME.createPlant(selectedPlant,row,column);
-        } else if ("potatoMine".equals(selectedPlant)) {
-            // Lógica para potatoMine
-            GAME.createPlant(selectedPlant,row,column);
+        if (button.getIcon() == null) {
+            GAME.createPlant(selectedPlant,row,column,button);
         }
     }
 

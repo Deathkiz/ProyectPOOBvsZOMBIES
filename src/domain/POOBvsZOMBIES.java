@@ -20,12 +20,13 @@ public class POOBvsZOMBIES {
 
     public void zombieDamage(int damage){}
 
-    public void createPlant(String type, int row, int column){
+    public void createPlant(String type, int row, int column,JButton button){
         if (type.equals("peashooter")){
-            plants[row][column] = new Peashooter();
+            plants[row][column] = new Peashooter(button);
+
         }
         else if (type.equals("sunflower")){
-            plants[row][column] = new Sunflower();
+            plants[row][column] = new Sunflower(button);
         }
 
 

@@ -92,7 +92,6 @@ public class POOBvsZOMBIESGUI extends JFrame {
         HEIGHT = dm.getHeight();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(MAXIMIZED_BOTH);
-        setResizable(false);
         prepareElements();
         prepareActions();
     }
@@ -712,7 +711,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
     private void handlePlantAction(JButton button, int row, int column) {
         if (button.getIcon() == null) {
-            GAME.createPlant(selectedPlant,row,column,button);
+            GAME.createPlant(selectedPlant,row,column,button,layeredPane);
         }
     }
 

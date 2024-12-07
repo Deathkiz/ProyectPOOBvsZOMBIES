@@ -703,7 +703,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                     // Acción si es un zombi
                     if (zombiePositions.contains(index)) {
                         if (activeZombie) {
-                            handleZombieAction(button); // Manejar acción del zombi
+                            handleZombieAction(button, row); // Manejar acción del zombi
                         }
                     }
                     // Acción si es una planta
@@ -720,9 +720,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
     }
 
 
-    private void handleZombieAction(JButton button) {
+    private void handleZombieAction(JButton button,int row) {
         if ("basic".equals(selectedZombie)) {
-            // Lógica para zombi básico
+            GAME.createZombie(selectedZombie, row, button, layeredPane);
         } else if ("coneHead".equals(selectedZombie)) {
             // Lógica para coneHead
         } else if ("bucketHead".equals(selectedZombie)) {

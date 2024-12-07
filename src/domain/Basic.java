@@ -32,7 +32,6 @@ public class Basic extends Zombie{
             @Override
             public void run() {
                 while (true) {
-
                     movement(LONG);
                     try {
                         Thread.sleep(50);

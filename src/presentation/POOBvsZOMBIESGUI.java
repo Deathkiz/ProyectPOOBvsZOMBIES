@@ -372,7 +372,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 spacer.setPreferredSize(new Dimension((int) (WIDTH*0.005), 1)); // Ancho del espacio extra
                 plantMenuPanel.add(spacer);
             }
-            JButton button = new JButton("B");
+            JButton button = new JButton("");
             button.setContentAreaFilled(false);
             button.setBorderPainted(true);
             button.setPreferredSize(new Dimension((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08)));
@@ -631,6 +631,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
         for (int i = 0; i < plantOptions.size(); i++) {
             final int index = i;
             JButton button = plantOptions.get(i);
+
+            // Evento para clic normal
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -654,6 +656,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 }
             });
         }
+
 
         // Acción para los botones de zombis
         for (int i = 0; i < zombieOptions.size(); i++) {

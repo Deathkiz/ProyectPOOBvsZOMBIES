@@ -33,15 +33,19 @@ public class Peashooter extends Plant{
 
                     long currentPeaTime = System.nanoTime();
                     if (currentPeaTime - lastPeaMove >= speed) {
+                        ArrayList<pea> eliminate = new ArrayList<>();
                         for (pea p : peas) {
                             if (p.getX() > layeredPane.getWidth()) {
-                                p.remove();
-                                peas.remove(p);
+                                eliminate.add(p);
                             } else {
                                 p.forward();
                             }
                         }
                         lastPeaMove = System.nanoTime();
+                        for (pea p : eliminate){
+                            p.remove();
+                            peas.remove(p);
+                        }
                     }
                 }
             }

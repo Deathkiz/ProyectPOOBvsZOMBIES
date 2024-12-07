@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Sunflower extends Plant{
-    private long lastActionTime = 0;
+    private long lastActionTime;
     private static final long ACTION_INTERVAL = 1000000000;
 
     public Sunflower(JButton button, JLayeredPane layeredPane){
@@ -19,6 +19,7 @@ public class Sunflower extends Plant{
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                lastActionTime = System.nanoTime();
                 while (true) {
                     long currentTime = System.nanoTime(); // Obtener el tiempo actual en nanosegundos
                     if (currentTime - lastActionTime >= 25*ACTION_INTERVAL) {

@@ -167,12 +167,12 @@ public class POOBvsZOMBIESGUI extends JFrame {
     }
 
     private void preparePvPButton() {
-        PvPButton.setBounds( (int) (4.05*(WIDTH / 9)), (int) (1.44*(HEIGHT / 3.5)), (int) (WIDTH / 3.3), (int) (HEIGHT / 7.5));
+        PvPButton.setBounds( (int) (4.05*(WIDTH / 9)), (int) (1.46*(HEIGHT / 3.5)), (int) (WIDTH / 3.3), (int) (HEIGHT / 8));
         ImageIcon imagePvPButton = new ImageIcon(getClass().getResource("/resources/ButtonPvP.png"));
-        Image resizedimagePvPButton = imagePvPButton.getImage().getScaledInstance((int) (WIDTH / 3.3), (int) (HEIGHT / 7.5), Image.SCALE_SMOOTH);
+        Image resizedimagePvPButton = imagePvPButton.getImage().getScaledInstance((int) (WIDTH / 3.3), (int) (HEIGHT / 8), Image.SCALE_SMOOTH);
         PvPButton.setIcon(new ImageIcon((resizedimagePvPButton)));
         ImageIcon imagePvPButtonRollover = new ImageIcon(getClass().getResource("/resources/ButtonPvPRollover.png"));
-        Image resizedimagePvPButtonRollover = imagePvPButtonRollover.getImage().getScaledInstance((int) (WIDTH / 3.3), (int) (HEIGHT / 7.5), Image.SCALE_SMOOTH);
+        Image resizedimagePvPButtonRollover = imagePvPButtonRollover.getImage().getScaledInstance((int) (WIDTH / 3.3), (int) (HEIGHT / 8), Image.SCALE_SMOOTH);
         PvPButton.setIcon(new ImageIcon((resizedimagePvPButton)));
         PvPButton.setPressedIcon(new ImageIcon((resizedimagePvPButton)));
         PvPButton.setRolloverIcon(new ImageIcon(resizedimagePvPButtonRollover));
@@ -183,7 +183,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
     }
 
     private void preparePvMButton() {
-        PvMButton.setBounds( (int) (3.8*(WIDTH / 9)), (int) (HEIGHT / 3.5), (int) (WIDTH / 2.83), (int) (HEIGHT / 7.5));
+        PvMButton.setBounds( (int) (3.8*(WIDTH / 9)), (int) (HEIGHT / 3.5), (int) (WIDTH / 2.83), (int) (HEIGHT / 7.2));
         ImageIcon imagePvMButton = new ImageIcon(getClass().getResource("/resources/ButtonPvM.png"));
         Image resizedimagePvMButton = imagePvMButton.getImage().getScaledInstance((int) (WIDTH / 2.83), (int) (HEIGHT / 7.5), Image.SCALE_SMOOTH);
         PvMButton.setIcon(new ImageIcon((resizedimagePvMButton)));
@@ -264,7 +264,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
         choose = new JFrame();
         choose.setSize(WIDTH / 2, HEIGHT / 2);
         choose.setLocationRelativeTo(null);
+
         JPanel panelChoose = new JPanel(new BorderLayout());
+
 
         JPanel panelGrid = new JPanel(new GridLayout(2,5,10,10));
         panelGrid.add(sunflower);
@@ -278,26 +280,36 @@ public class POOBvsZOMBIESGUI extends JFrame {
         panelGrid.add(ECIZombie);
         panelGrid.add(Brainstain);
         panelChoose.add(panelGrid,BorderLayout.CENTER);
+        panelGrid.setBackground(Color.decode("#582d17"));
 
+        panelChoose.setBackground(Color.decode("#582d17"));
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        aceptarChoose.setBackground(Color.decode("#6a3821"));
+        aceptarChoose.setForeground(Color.decode("#c79242"));
+        cancelarChoose.setBackground(Color.decode("#6a3821"));
+        cancelarChoose.setForeground(Color.decode("#c79242"));
+        aceptarChoose.setBorderPainted(false);
+        cancelarChoose.setBorderPainted(false);
+
         buttonPanel.add(aceptarChoose);
         buttonPanel.add(cancelarChoose);
+        buttonPanel.setBackground(Color.decode("#924e2a"));
         panelChoose.add(buttonPanel, BorderLayout.SOUTH);
-
+        panelChoose.setBackground(Color.decode("#582d17"));
         choose.add(panelChoose);
     }
 
     private void createChooseButtons(){
-        peaShooter = createColorButton("src/resources/peashooter.jpg", WIDTH/11, HEIGHT/5);
-        sunflower = createColorButton("src/resources/sunflower.jpg", WIDTH/11, HEIGHT/5);
-        ECIPlant = createColorButton("src/resources/ECIPlant.jpg", WIDTH/11, HEIGHT/5);
-        wallnut = createColorButton("src/resources/wallnut.jpg", WIDTH/11, HEIGHT/5);
-        potatoMine = createColorButton("src/resources/potatoMine.jpg", WIDTH/11, HEIGHT/5);
-        zombie = createColorButton("src/resources/zombie.jpg", WIDTH/11, HEIGHT/5);
-        zombieConehead = createColorButton("src/resources/conehead.jpg", WIDTH/11, HEIGHT/5);
-        zombieBuckethead = createColorButton("src/resources/buckethead.jpg", WIDTH/11, HEIGHT/5);
-        ECIZombie = createColorButton("src/resources/sunflower.jpg", WIDTH/11, HEIGHT/5);
-        Brainstain = createColorButton("src/resources/sunflower.jpg", WIDTH/11, HEIGHT/5);
+        peaShooter = createColorButton("src/resources/peashooterSeedPacket.jpg", WIDTH/12, HEIGHT/6);
+        sunflower = createColorButton("src/resources/SunflowerSeedPacket.jpg", WIDTH/12, HEIGHT/6);
+        ECIPlant = createColorButton("src/resources/ECIPlantSeedPacket.jpg", WIDTH/12, HEIGHT/6);
+        wallnut = createColorButton("src/resources/Wall-nutSeedPacket.jpg", WIDTH/12, HEIGHT/6);
+        potatoMine = createColorButton("src/resources/PotatoMineSeedPacket.jpg", WIDTH/12, HEIGHT/6);
+        zombie = createColorButton("src/resources/ZombieSeedPacket.jpg", WIDTH/12, HEIGHT/6);
+        zombieConehead = createColorButton("src/resources/ConeHeadSeedPacket.jpg", WIDTH/12, HEIGHT/6);
+        zombieBuckethead = createColorButton("src/resources/BucketheadSeedPacket.jpg", WIDTH/12, HEIGHT/6);
+        ECIZombie = createColorButton("src/resources/ZombieSeedPacket.jpg", WIDTH/12, HEIGHT/6);
+        Brainstain = createColorButton("src/resources/ZombieSeedPacket.jpg", WIDTH/12, HEIGHT/6);
 
     }
 
@@ -320,7 +332,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
         layeredPane.add(imageLabel1, JLayeredPane.PALETTE_LAYER);
 
         JLabel imageLabel2 = new JLabel();
-        ImageIcon imageIcon2 = new ImageIcon("src/resources/plantMenu.jpg");
+        ImageIcon imageIcon2 = new ImageIcon("src/resources/zombieMenu.jpg");
         Image scaledImage2 = imageIcon2.getImage().getScaledInstance((int) (WIDTH*0.5), (int) (HEIGHT*0.1), Image.SCALE_SMOOTH);
         imageLabel2.setIcon(new ImageIcon(scaledImage2));
         imageLabel2.setBounds((int) (WIDTH*0.5), 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
@@ -605,9 +617,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
                     // Cambia el color de fondo basado en el estado de uso
                     if (usageFlags[index]) {
-                        ((ColorButton) button).setBackgroundColor(Color.GREEN); // Cambia a verde
+                        ((ColorButton) button).setBackgroundColor(Color.decode("#144806")); // Cambia a verde
                     } else {
-                        ((ColorButton) button).setBackgroundColor(Color.RED); // Cambia a rojo
+                        ((ColorButton) button).setBackgroundColor(Color.decode("#480707")); // Cambia a rojo
                     }
                 }
             });

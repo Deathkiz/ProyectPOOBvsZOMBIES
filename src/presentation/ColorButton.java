@@ -4,11 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 
 class ColorButton extends JButton {
-    private Color bgColor = Color.GREEN;
+    private Color bgColor = Color.decode("#144806");
 
     public ColorButton(Icon icon) {
         super(icon);
         setContentAreaFilled(false);
+        setBorderPainted(false);
     }
 
     @Override

@@ -31,9 +31,8 @@ public class Basic extends Zombie{
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                long lastActionTime = System.nanoTime();
                 while (true) {
-                    long currentTime = System.nanoTime();// Obtener el tiempo actual en nanosegundos
+
                     movement(LONG);
                     try {
                         Thread.sleep(50);

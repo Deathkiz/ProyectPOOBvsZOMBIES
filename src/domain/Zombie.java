@@ -15,4 +15,6 @@ public abstract class Zombie {
     public int getHp(){return hp;}
 
     public int getCost(){return cost;}
+
+
 }

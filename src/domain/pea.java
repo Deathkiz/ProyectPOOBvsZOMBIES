@@ -8,14 +8,14 @@ public class pea {
     private ImageIcon image;
     private int attack;
     private JLayeredPane layeredPane;
+    private boolean running;
 
     public pea(int attack, JLayeredPane layeredPane, JButton button) {
         this.attack = attack;
         this.layeredPane = layeredPane;
+
         // Obtener la posición absoluta del botón
         Point buttonLocationOnScreen = button.getLocationOnScreen();
-
-        // Obtener la posición absoluta del JLayeredPane
         Point layeredPaneLocationOnScreen = layeredPane.getLocationOnScreen();
 
         // Calcular la posición relativa del botón dentro del JLayeredPane
@@ -38,14 +38,13 @@ public class pea {
         // Configurar las dimensiones y posición del JLabel
         label.setBounds(labelX, labelY, labelWidth, labelHeight);
 
-        // Agregar el JLabel al JLayeredPane en la capa DRAG_LAYER
+        // Agregar el JLabel al JLayeredPane en la capa MODAL_LAYER
         layeredPane.add(label, JLayeredPane.MODAL_LAYER);
         layeredPane.revalidate();
         layeredPane.repaint();
     }
 
-
-    public void forward(){
+    public void forward() {
         int currentX = label.getX();
         int currentY = label.getY();
         // Calcular la nueva posición (mover hacia la derecha)
@@ -53,8 +52,18 @@ public class pea {
         // Actualizar la posición del JLabel
         label.setBounds(newX, currentY, label.getWidth(), label.getHeight());
         layeredPane.repaint();
-
     }
 
-    public int getX(){ return label.getX();}
+    public void remove() {
+        SwingUtilities.invokeLater(() -> {
+            layeredPane.remove(label);
+            layeredPane.revalidate();
+            layeredPane.repaint();
+        });
+    }
+
+    public int getX() {
+        return label.getX();
+    }
 }
+

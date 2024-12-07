@@ -69,6 +69,7 @@ public class sun {
                     Thread.sleep(2);
                 }
                 button.setVisible(false);
+                Thread.currentThread().interrupt();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

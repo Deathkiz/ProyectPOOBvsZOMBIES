@@ -5,8 +5,6 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Peashooter extends Plant{
-    private long lastActionTime = 0;
-    private long lastPeaAction = 0;
     private static final long speed = 1000000;
     private static final long ACTION_INTERVAL = 1500000000;
     private ArrayList<pea> peas;
@@ -24,25 +22,26 @@ public class Peashooter extends Plant{
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                long lastActionTime = System.nanoTime();
+                long lastPeaMove = System.nanoTime();
                 while (true) {
-                    long currentTime = System.nanoTime(); // Obtener el tiempo actual en nanosegundos
+                    long currentTime = System.nanoTime();// Obtener el tiempo actual en nanosegundos
                     if (currentTime - lastActionTime >= ACTION_INTERVAL) {
                         attack();
                         lastActionTime = currentTime;
                     }
-                    long peaTimer = System.nanoTime();
-                    pea outOfBounds = null;
-                    if (peaTimer - lastPeaAction >= speed){
-                        for (pea p:peas){
-                            p.forward();
-                            if (p.getX() > layeredPane.getWidth()){
-                                outOfBounds = p;
+
+                    long currentPeaTime = System.nanoTime();
+                    if (currentPeaTime - lastPeaMove >= speed) {
+                        for (pea p : peas) {
+                            if (p.getX() > layeredPane.getWidth()) {
+                                p.remove();
+                                peas.remove(p);
+                            } else {
+                                p.forward();
                             }
-                            lastPeaAction = peaTimer;
                         }
-                        if (outOfBounds != null){
-                            peas.remove(outOfBounds);
-                        }
+                        lastPeaMove = System.nanoTime();
                     }
                 }
             }

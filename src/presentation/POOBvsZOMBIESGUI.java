@@ -345,7 +345,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
         for (int i = 0; i < 45; i++) {
             JButton button = new JButton("");
             button.setContentAreaFilled(false);
-            button.setBorderPainted(false);
+            //button.setBorderPainted(false);
             gridPanel.add(button);
             positions.add(button);
         }
@@ -666,20 +666,16 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // Establecer zombi activo y seleccionado según el índice
+                    activeZombie = true;
                     if (index == 1) {
-                        activeZombie = true;
                         selectedZombie = "basic";
                     } else if (index == 2) {
-                        activeZombie = true;
                         selectedZombie = "coneHead";
                     } else if (index == 3) {
-                        activeZombie = true;
                         selectedZombie = "bucketHead";
                     } else if (index == 4) {
-                        activeZombie = true;
                         selectedZombie = "ECIZombie";
                     } else if (index == 5) {
-                        activeZombie = true;
                         selectedZombie = "brainstein";
                     }
                 }
@@ -689,7 +685,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
         // Acción para los botones de posiciones
         for (int i = 0; i < positions.size(); i++) {
             final int index = i;
-            JButton button = positions.get(i);
+            final JButton button = positions.get(i);
             ArrayList<Integer> zombiePositions = new ArrayList<>(Arrays.asList(8, 17, 26, 35, 44));
 
             // Acción general para el botón
@@ -703,7 +699,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                     // Acción si es un zombi
                     if (zombiePositions.contains(index)) {
                         if (activeZombie) {
-                            handleZombieAction(button); // Manejar acción del zombi
+                            handleZombieAction(button, row); // Manejar acción del zombi
                         }
                     }
                     // Acción si es una planta
@@ -720,9 +716,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
     }
 
 
-    private void handleZombieAction(JButton button) {
+    private void handleZombieAction(JButton button, int row) {
         if ("basic".equals(selectedZombie)) {
-            // Lógica para zombi básico
+            GAME.createZombie(selectedZombie, row, button, layeredPane);
         } else if ("coneHead".equals(selectedZombie)) {
             // Lógica para coneHead
         } else if ("bucketHead".equals(selectedZombie)) {
@@ -731,10 +727,10 @@ public class POOBvsZOMBIESGUI extends JFrame {
             // Lógica para ECIZombie
         } else if ("brainstein".equals(selectedZombie)) {
             if (button.getIcon() == null) {
-                ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/PeaShooter.gif"));
+                ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/zombie.gif"));
                 gifIcon = new ImageIcon(gifIcon.getImage().getScaledInstance(
-                        (int) (button.getSize().getWidth() * 0.7),
-                        (int) (button.getSize().getHeight() * 0.7),
+                        (int) (button.getSize().getWidth()*1.3),
+                        (int) (button.getSize().getHeight()*1.3),
                         Image.SCALE_DEFAULT));
                 button.setIcon(gifIcon);
             }

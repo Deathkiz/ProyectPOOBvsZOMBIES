@@ -18,7 +18,7 @@ public class Peashooter extends Plant{
         ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/PeaShooter.gif"));
         ImageIcon buttonIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 0.7), (int) (button.getSize().getHeight() * 0.7), Image.SCALE_DEFAULT));
         button.setIcon(buttonIcon);
-
+        createHitbox();
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {

@@ -453,7 +453,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 else if (frameMvM.isVisible()){
                     frameMvM.dispose();
                 }
-                modeMachine = 2;
+                modeMachine = 0;
                 modePlants = 2;
                 framePvP.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                 framePvP.setVisible(true);

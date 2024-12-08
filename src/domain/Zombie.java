@@ -7,7 +7,8 @@ public abstract class Zombie {
     protected int hp;
     protected int cost;
     protected JLayeredPane layeredPane;
-    protected Rectangle[][] hitboxs;
+    protected Rectangle[] hitboxs;
+    protected Rectangle hitbox;
 
 
     public void damage(int damage){hp -= damage;}

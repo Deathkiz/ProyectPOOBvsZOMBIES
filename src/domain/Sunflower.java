@@ -8,7 +8,7 @@ public class Sunflower extends Plant{
     private static final long ACTION_INTERVAL = 1000000000;
 
     public Sunflower(JButton button, JLayeredPane layeredPane){
-        super.hp = 100;
+        super.hp = 300;
         super.cost = 50;
         super.button = button;
         super.layeredPane = layeredPane;
@@ -22,6 +22,10 @@ public class Sunflower extends Plant{
             public void run() {
                 lastActionTime = System.nanoTime();
                 while (true) {
+                    if (hp <= 0){
+                        dead();
+                        Thread.interrupted();
+                    }
                     long currentTime = System.nanoTime(); // Obtener el tiempo actual en nanosegundos
                     if (currentTime - lastActionTime >= 25*ACTION_INTERVAL) {
                         createSun();
@@ -38,5 +42,10 @@ public class Sunflower extends Plant{
 
     private void createSun(){
         new sun(layeredPane,button);
+    }
+
+    private void dead(){
+        button.setIcon(null);
+        hitbox = null;
     }
 }

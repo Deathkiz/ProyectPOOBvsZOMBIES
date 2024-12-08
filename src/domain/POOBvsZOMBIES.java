@@ -9,7 +9,7 @@ public class POOBvsZOMBIES {
     private ArrayList<Zombie>[] zombies;
     private int suns;
     private int brains;
-    private Rectangle[][] hitboxs;
+    private Rectangle[][] plantHitboxs;
 
     public POOBvsZOMBIES(int suns, int brains){
         plants = new Plant[5][8];
@@ -19,7 +19,7 @@ public class POOBvsZOMBIES {
         }
         this.suns = suns;
         this.brains = brains;
-        hitboxs = new Rectangle[5][8];
+        plantHitboxs = new Rectangle[5][8];
     }
 
     public void plantDamage(int row, int column, int damage){plants[row][column].damage(damage);}
@@ -29,11 +29,11 @@ public class POOBvsZOMBIES {
     public void createPlant(String type, int row, int column,JButton button,JLayeredPane layeredPane){
         if (type.equals("peashooter")){
             plants[row][column] = new Peashooter(button,layeredPane);
-            hitboxs[row][column] = plants[row][column].getHitbox();
+            plantHitboxs[row][column] = plants[row][column].getHitbox();
         }
         else if (type.equals("sunflower")){
             plants[row][column] = new Sunflower(button, layeredPane);
-            hitboxs[row][column] = plants[row][column].getHitbox();
+            plantHitboxs[row][column] = plants[row][column].getHitbox();
         }
 
 
@@ -45,7 +45,7 @@ public class POOBvsZOMBIES {
 
     public void createZombie(String type, int row, JButton button,JLayeredPane layeredPane){
         if (type.equals("basic")){
-            zombies[row].add(new Basic(button,layeredPane, hitboxs));
+            zombies[row].add(new Basic(button,layeredPane, plantHitboxs[row],plants[row]));
         }
         else if (type.equals("coneHead")){
             //zombies[row].add(new ConeHead(button,layeredPane));

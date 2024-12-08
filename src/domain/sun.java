@@ -40,43 +40,37 @@ public class sun {
     }
 
     private void moveToPosition(int targetX, int targetY) {
-        Thread movementThread = new Thread(() -> {
-            try {
-                // Obtener la posición actual del botón
-                int currentX = button.getX();
-                int currentY = button.getY();
+        // Usar un arreglo para hacer que las variables sean "final"
+        int[] position = {button.getX(), button.getY()}; // [currentX, currentY]
 
-                // Calcular la dirección (incrementos por paso)
-                int stepX = targetX > currentX ? 1 : -1; // Dirección en X
-                int stepY = targetY > currentY ? 1 : -1; // Dirección en Y
+        // Calcular la dirección (incrementos por paso)
+        int stepX = targetX > position[0] ? 1 : -1; // Dirección en X
+        int stepY = targetY > position[1] ? 1 : -1; // Dirección en Y
 
-                // Movimiento hasta alcanzar el objetivo
-                while (currentX != targetX || currentY != targetY) {
-                    if (currentX != targetX) {
-                        currentX += stepX; // Mover en X
-                    }
-                    if (currentY != targetY) {
-                        currentY += stepY; // Mover en Y
-                    }
+        // Temporizador para manejar el movimiento
+        Timer timer = new Timer(1, null);
 
-                    // Actualizar la posición del botón
-                    button.setBounds(currentX, currentY, button.getWidth(), button.getHeight());
-
-                    // Repintar el JLayeredPane
-                    layeredPane.repaint();
-
-                    // Esperar un breve intervalo (~16 ms para 60 FPS)
-                    Thread.sleep(2);
-                }
+        timer.addActionListener(e -> {
+            // Verificar si el objetivo ha sido alcanzado
+            if (position[0] == targetX && position[1] == targetY) {
+                ((Timer) e.getSource()).stop(); // Detener el temporizador
                 button.setVisible(false);
-                Thread.currentThread().interrupt();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                return;
             }
+
+            // Actualizar la posición
+            if (position[0] != targetX) {
+                position[0] += stepX;
+            }
+            if (position[1] != targetY) {
+                position[1] += stepY;
+            }
+
+            // Mover el botón y repintar el panel
+            button.setBounds(position[0], position[1], button.getWidth(), button.getHeight());
+            layeredPane.repaint();
         });
 
-        // Iniciar el hilo
-        movementThread.start();
+        timer.start(); // Iniciar el temporizador
     }
-
 }

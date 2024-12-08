@@ -8,12 +8,14 @@ public class pea {
     private ImageIcon image;
     private int attack;
     private JLayeredPane layeredPane;
-    private boolean running;
+    private Rectangle hitbox;
+    private int distance;
+    private boolean outOfBonds;
 
     public pea(int attack, JLayeredPane layeredPane, JButton button) {
         this.attack = attack;
         this.layeredPane = layeredPane;
-
+        this.outOfBonds = false;
         // Obtener la posición absoluta del botón
         Point buttonLocationOnScreen = button.getLocationOnScreen();
         Point layeredPaneLocationOnScreen = layeredPane.getLocationOnScreen();
@@ -21,6 +23,7 @@ public class pea {
         // Calcular la posición relativa del botón dentro del JLayeredPane
         int relativeX = buttonLocationOnScreen.x - layeredPaneLocationOnScreen.x;
         int relativeY = buttonLocationOnScreen.y - layeredPaneLocationOnScreen.y;
+        distance = layeredPane.getWidth()/200;
 
         // Tamaño del botón
         Dimension buttonSize = button.getSize();
@@ -39,7 +42,7 @@ public class pea {
         label.setBounds(labelX, labelY, labelWidth, labelHeight);
 
         // Agregar el JLabel al JLayeredPane en la capa MODAL_LAYER
-        layeredPane.add(label, JLayeredPane.MODAL_LAYER);
+        layeredPane.add(label, JLayeredPane.DRAG_LAYER);
         layeredPane.revalidate();
         layeredPane.repaint();
     }
@@ -48,10 +51,17 @@ public class pea {
         int currentX = label.getX();
         int currentY = label.getY();
         // Calcular la nueva posición (mover hacia la derecha)
-        int newX = currentX + 1;
+        int newX = currentX + distance;
         // Actualizar la posición del JLabel
         label.setBounds(newX, currentY, label.getWidth(), label.getHeight());
         layeredPane.repaint();
+        if (getX() > layeredPane.getWidth()){
+            outOfBonds = true;
+        }
+    }
+
+    public boolean outOfBonds(){
+        return outOfBonds;
     }
 
     public void remove() {

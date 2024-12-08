@@ -17,5 +17,7 @@ public abstract class Zombie {
 
     public int getCost(){return cost;}
 
+    public abstract void update();
+
 
 }

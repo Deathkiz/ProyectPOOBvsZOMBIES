@@ -2,20 +2,25 @@ package domain;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
-public class pea {
+public class Pea {
     private JLabel label;
     private ImageIcon image;
     private int attack;
     private JLayeredPane layeredPane;
-    private Rectangle hitbox;
     private int distance;
     private boolean outOfBonds;
+    private Rectangle hitbox;
+    private ArrayList<Zombie> zombies;
 
-    public pea(int attack, JLayeredPane layeredPane, JButton button) {
+
+    public Pea(int attack, JLayeredPane layeredPane, JButton button, ArrayList<Zombie> zombies) {
         this.attack = attack;
         this.layeredPane = layeredPane;
         this.outOfBonds = false;
+        this.zombies = zombies;
+        this.hitbox = new Rectangle();
         // Obtener la posición absoluta del botón
         Point buttonLocationOnScreen = button.getLocationOnScreen();
         Point layeredPaneLocationOnScreen = layeredPane.getLocationOnScreen();
@@ -40,7 +45,7 @@ public class pea {
 
         // Configurar las dimensiones y posición del JLabel
         label.setBounds(labelX, labelY, labelWidth, labelHeight);
-
+        hitbox.setBounds(labelX, labelY, labelWidth, labelHeight);
         // Agregar el JLabel al JLayeredPane en la capa MODAL_LAYER
         layeredPane.add(label, JLayeredPane.DRAG_LAYER);
         layeredPane.revalidate();
@@ -54,10 +59,13 @@ public class pea {
         int newX = currentX + distance;
         // Actualizar la posición del JLabel
         label.setBounds(newX, currentY, label.getWidth(), label.getHeight());
+        hitbox.setBounds(newX,hitbox.y,hitbox.width,hitbox.height);
         layeredPane.repaint();
         if (getX() > layeredPane.getWidth()){
             outOfBonds = true;
         }
+        attack();
+
     }
 
     public boolean outOfBonds(){
@@ -70,6 +78,20 @@ public class pea {
             layeredPane.revalidate();
             layeredPane.repaint();
         });
+    }
+
+    public void attack(){
+        Zombie zombie1 = null;
+        for (int i = 0; i < zombies.size(); i++) {
+            Rectangle hitbox = zombies.get(i).getHitbox();
+            if (this.hitbox.intersects(hitbox)) {
+                zombie1 = zombies.get(i);
+                zombie1.damage(attack);
+                remove();
+                outOfBonds = true;
+                break;
+            }
+        }
     }
 
     public int getX() {

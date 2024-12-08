@@ -8,7 +8,10 @@ public abstract class Zombie {
     protected int cost;
     protected JLayeredPane layeredPane;
     protected Rectangle[] hitboxs;
+    protected Plant[] plants;
     protected Rectangle hitbox;
+    protected String icon;
+    protected long deadTime;
 
 
     public void damage(int damage){hp -= damage;}
@@ -17,7 +20,15 @@ public abstract class Zombie {
 
     public int getCost(){return cost;}
 
+    public Rectangle getHitbox() {return hitbox;}
+
     public abstract void update();
 
+    public abstract void die();
 
+    public long getDeadTime(){return deadTime;}
+
+    public abstract void remove();
+
+    public String getIcon(){return icon;};
 }

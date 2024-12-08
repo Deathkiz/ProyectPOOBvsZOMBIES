@@ -10,12 +10,12 @@ public class POOBvsZOMBIES {
     private int suns;
     private int brains;
     private Rectangle[][] plantHitboxs;
-    private ArrayList<pea>[] peas;
+    private ArrayList<Pea>[] peas;
 
     public POOBvsZOMBIES(int suns, int brains) {
         plants = new Plant[5][8];
         zombies = (ArrayList<Zombie>[]) new ArrayList[5];
-        peas = (ArrayList<pea>[]) new ArrayList[5];
+        peas = (ArrayList<Pea>[]) new ArrayList[5];
         for (int i = 0; i < 5; i++) {
             zombies[i] = new ArrayList<>();
             peas[i] = new ArrayList<>();
@@ -46,12 +46,18 @@ public class POOBvsZOMBIES {
             // Manejar los zombies de la fila
             for (Zombie zombie : zombies[rowIndex]) {
                 if (zombie != null) {
-                    // Lógica para mover o atacar con los zombies
                     zombie.update();
+                    long currentTime = System.currentTimeMillis();
+                    if (zombie.getHp() <= 0 && !(zombie.getIcon().equals("dead"))){
+                        zombie.die();
+                    }
+                    else if (zombie.getHp() <= 0 && currentTime-zombie.getDeadTime() > 2400){
+                        zombie.remove();
+                    }
                 }
             }
-            ArrayList<pea> eliminate = new ArrayList<>();
-            for (pea p: peas[rowIndex]){
+            ArrayList<Pea> eliminate = new ArrayList<>();
+            for (Pea p: peas[rowIndex]){
                 if (p != null) {
                     if (p.outOfBonds()){
                         eliminate.add(p);
@@ -61,7 +67,7 @@ public class POOBvsZOMBIES {
                     }
                 }
             }
-            for (pea p: eliminate){
+            for (Pea p: eliminate){
                 p.remove();
                 peas[rowIndex].remove(p);
             }
@@ -82,11 +88,16 @@ public class POOBvsZOMBIES {
 
     public void createPlant(String type, int row, int column,JButton button,JLayeredPane layeredPane){
         if (type.equals("peashooter")){
-            plants[row][column] = new Peashooter(button,layeredPane,peas[row]);
+            plants[row][column] = new Peashooter(button,layeredPane,peas[row],zombies[row]);
             plantHitboxs[row][column] = plants[row][column].getHitbox();
         }
         else if (type.equals("sunflower")){
             plants[row][column] = new Sunflower(button, layeredPane);
+            plantHitboxs[row][column] = plants[row][column].getHitbox();
+        }
+
+        else if (type.equals("wall-nut")){
+            plants[row][column] = new Wallnut(button, layeredPane);
             plantHitboxs[row][column] = plants[row][column].getHitbox();
         }
 

@@ -5,13 +5,13 @@ import java.awt.*;
 
 public class Basic extends Zombie{
     private JLabel label;
+    private JLabel head;
     private boolean attack;
-    private String icon;
     private int distance;
-    private Plant[] plants;
     private ImageIcon walkingIcon;
     private ImageIcon attackIcon;
-    private ImageIcon dieIcon;
+    private ImageIcon bodyDieIcon;
+    private ImageIcon headDieIcon;
     private long lastMovement;
     private long lastAttack;
 
@@ -20,18 +20,20 @@ public class Basic extends Zombie{
         super.cost = 100;
         super.layeredPane = layeredPane;
         super.hitboxs = hitboxs;
-        this.plants = plants;
+        super.plants = plants;
         this.distance = layeredPane.getWidth()/600;
         this.attack = false;
-        this.icon = "caminando";
+        super.icon = "caminando";
         this.lastMovement = System.currentTimeMillis();
         this.lastAttack = System.currentTimeMillis();
         ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/zombie.gif"));
         this.walkingIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
         ImageIcon attackIcon = new ImageIcon(getClass().getResource("/resources/zombieAttack.gif"));
         this.attackIcon = new ImageIcon(attackIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
-        ImageIcon dieIcon = new ImageIcon(getClass().getResource("/resources/zombieAttack.gif"));
-        this.dieIcon = new ImageIcon(dieIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
+        ImageIcon dieIcon = new ImageIcon(getClass().getResource("/resources/zombieDie.gif"));
+        this.bodyDieIcon = new ImageIcon(dieIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
+        ImageIcon headDieIcon = new ImageIcon(getClass().getResource("/resources/zombieHead.gif"));
+        this.headDieIcon = new ImageIcon(headDieIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
 
         this.label = new JLabel(walkingIcon);
         Point buttonLocationOnScreen = button.getLocationOnScreen();
@@ -42,45 +44,47 @@ public class Basic extends Zombie{
         int y = (int) (relativeY - height / 3);
         label.setBounds(layeredPane.getWidth(), y, width, height);
         super.hitbox = new Rectangle((int) (layeredPane.getWidth() + width * 0.7), relativeY, (int) width / 2, button.getHeight());
-        layeredPane.add(label, JLayeredPane.DRAG_LAYER);
+        layeredPane.add(label, JLayeredPane.MODAL_LAYER);
         layeredPane.repaint();
         }
 
 
     public void update() {
-        int position = -1;
-        for (int i = 0; i<hitboxs.length && position<0;i++){
-            if (hitboxs[i] != null){
-                if (hitboxs[i].intersects(hitbox)){
-                    attack = true;
-                    position = i;
+        if (hp>0){
+            int position = -1;
+            for (int i = 0; i<hitboxs.length && position<0;i++){
+                if (hitboxs[i] != null){
+                    if (hitboxs[i].intersects(hitbox)){
+                        attack = true;
+                        position = i;
+                    }
                 }
             }
-        }
 
-        if (attack && icon.equals("caminando")) {
-            label.setIcon(attackIcon);
-            icon = "atacando";
-        } else if ((!attack) && icon.equals("atacando")) {
-            label.setIcon(walkingIcon);
-            icon = "caminando";
-        }
+            if (attack && icon.equals("caminando")) {
+                label.setIcon(attackIcon);
+                icon = "atacando";
+            } else if ((!attack) && icon.equals("atacando")) {
+                label.setIcon(walkingIcon);
+                icon = "caminando";
+            }
 
-        long currentTime;
-        if (position >= 0) {
-            currentTime = System.currentTimeMillis();
-            if (currentTime-lastAttack >= 500){
-                attackZombie(position);
-                lastAttack = currentTime;
+            long currentTime;
+            if (position >= 0) {
+                currentTime = System.currentTimeMillis();
+                if (currentTime-lastAttack >= 500){
+                    attackZombie(position);
+                    lastAttack = currentTime;
+                }
+            } else {
+                currentTime = System.currentTimeMillis();
+                if (currentTime-lastMovement >= 100){
+                    movement(distance);
+                    lastMovement = currentTime;
+                }
             }
-        } else {
-            currentTime = System.currentTimeMillis();
-            if (currentTime-lastMovement >= 100){
-                movement(distance);
-                lastMovement = currentTime;
-            }
+            attack = false;
         }
-        attack = false;
     }
 
     public void movement(long LONG){
@@ -100,4 +104,27 @@ public class Basic extends Zombie{
             hitboxs[position] = null;
         }
     }
+
+    public void die(){
+        deadTime = System.currentTimeMillis();
+        hitbox = new Rectangle(0,0,0,0);
+        label.setIcon(bodyDieIcon);
+        icon = "dead";
+        head =new JLabel();
+        head.setBounds(label.getBounds());
+        head.setIcon(headDieIcon);
+        layeredPane.add(head,JLayeredPane.MODAL_LAYER);
+    }
+
+    public void remove() {
+        if (label != null) {
+            layeredPane.remove(label);
+        }
+        if (head != null) {
+            layeredPane.remove(head);
+        }
+        layeredPane.repaint();
+    }
+
+    public String getIcon(){return icon;}
 }

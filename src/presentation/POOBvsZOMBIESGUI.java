@@ -346,6 +346,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
             JButton button = new JButton("");
             button.setContentAreaFilled(false);
             button.setBorderPainted(false);
+            button.setFocusPainted(false);
             gridPanel.add(button);
             positions.add(button);
         }
@@ -365,18 +366,17 @@ public class POOBvsZOMBIESGUI extends JFrame {
         plantMenuPanel.setOpaque(false); // Fondo transparente
         plantMenuPanel.setBounds(0, 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
         for (int i = 0; i < 9; i++) {
-            if (i == 1) {
-                // Insertar espacio adicional antes del segundo botón
+            JButton button = new JButton("");
+            button.setContentAreaFilled(false);
+            int buttonWidth = (int) (WIDTH * 0.4 / 8);
+            int buttonHeight = (int) (HEIGHT * 0.08);
+            button.setBorderPainted(false);
+            button.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+            if (i==1){
                 JPanel spacer = new JPanel();
                 spacer.setOpaque(false); // Fondo transparente
                 spacer.setPreferredSize(new Dimension((int) (WIDTH*0.005), 1)); // Ancho del espacio extra
                 plantMenuPanel.add(spacer);
-            }
-            JButton button = new JButton("");
-            button.setContentAreaFilled(false);
-            button.setBorderPainted(true);
-            button.setPreferredSize(new Dimension((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08)));
-            if (i==1){
                 ImageIcon image = new ImageIcon("src/resources/SunflowerSeedPacket.jpg");
                 Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
                 button.setIcon(new ImageIcon(buton1));
@@ -384,9 +384,13 @@ public class POOBvsZOMBIESGUI extends JFrame {
             plantMenuPanel.add(button);
             plantOptions.add(button);
         }
-        layeredPane.add(plantMenuPanel,JLayeredPane.POPUP_LAYER);
+        layeredPane.add(plantMenuPanel,JLayeredPane.MODAL_LAYER);
 
-
+        JLabel sunLabel = new JLabel();
+        sunLabel.setText(String.valueOf(100));
+        sunLabel.setBounds((int) (WIDTH*0.4/16),(int)(HEIGHT*0.075),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.08*0.25));
+        sunLabel.setOpaque(false);
+        layeredPane.add(sunLabel,JLayeredPane.POPUP_LAYER);
 
         zombieOptions = new ArrayList<>();
         JPanel zombieMenuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,(int) (WIDTH*0.009),(int) (HEIGHT*0.01)));
@@ -407,7 +411,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
             zombieMenuPanel.add(button);
             zombieOptions.add(button);
         }
-        layeredPane.add(zombieMenuPanel,JLayeredPane.POPUP_LAYER);
+        layeredPane.add(zombieMenuPanel,JLayeredPane.MODAL_LAYER);
     }
 
     private void prepareActions() {

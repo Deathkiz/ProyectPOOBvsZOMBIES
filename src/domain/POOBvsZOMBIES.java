@@ -8,23 +8,26 @@ import java.util.Arrays;
 public class POOBvsZOMBIES {
     private JLayeredPane layeredPane;
     private Plant[][] plants;
-    private ArrayList<Zombie>[] zombies;
-    private int suns;
-    private int brains;
     private Rectangle[][] plantHitboxs;
     private ArrayList<Pea>[] peas;
+    private ArrayList<Sun>[] activeSuns;
+    private ArrayList<Zombie>[] zombies;
     private LawnMower[] LawnMowers;
+    private int suns;
+    private int brains;
     private long StartTime;
 
     public POOBvsZOMBIES(int suns, int brains, ArrayList<JButton> positions,JLayeredPane layeredPane) {
         this.layeredPane = layeredPane;
         plants = new Plant[5][8];
         LawnMowers = new LawnMower[5];
+        activeSuns = (ArrayList<Sun>[]) new ArrayList[5];
         zombies = (ArrayList<Zombie>[]) new ArrayList[5];
         peas = (ArrayList<Pea>[]) new ArrayList[5];
         for (int i = 0; i < 5; i++) {
             zombies[i] = new ArrayList<>();
             peas[i] = new ArrayList<>();
+            activeSuns[i] = new ArrayList<>();
         }
 
         this.suns = suns;
@@ -47,14 +50,23 @@ public class POOBvsZOMBIES {
     private void handleRow(int rowIndex) {
         while (true) {
             // Manejar las plantas de la fila
-            for (Plant plant : plants[rowIndex]) {
+            ArrayList<int[]> eliminatePlants = new ArrayList<>();
+            for (int i = 0; i < plants[rowIndex].length; i++) {
+                Plant plant = plants[rowIndex][i];
                 if (plant != null) {
                     // Lógica para actualizar la planta (disparar, regenerar, etc.)
                     plant.update();
+                    if (plant.getHp() <= 0) {
+                        plant.die();
+                        eliminatePlants.add(new int[]{rowIndex, i}); // Agregar la posición de la planta a eliminar
+                    }
                 }
             }
+            for (int[] position:eliminatePlants){
+                plants[position[0]][position[1]] = null;
+            }
 
-            // Manejar los zombies de la fila
+            ArrayList<Zombie> eliminateZombie = new ArrayList<>();
             for (Zombie zombie : zombies[rowIndex]) {
                 if (zombie != null) {
                     zombie.update();
@@ -64,27 +76,48 @@ public class POOBvsZOMBIES {
                     }
                     else if (zombie.getHp() <= 0 && currentTime-zombie.getDeadTime() > 2400){
                         zombie.remove();
+                        eliminateZombie.add(zombie);
                     }
                 }
             }
-            ArrayList<Pea> eliminate = new ArrayList<>();
+            zombies[rowIndex].removeAll(eliminateZombie);
+
+
+            ArrayList<Pea> peasToEliminate = new ArrayList<>();
             for (Pea p: peas[rowIndex]){
                 if (p != null) {
                     if (p.outOfBonds()){
-                        eliminate.add(p);
+                        peasToEliminate.add(p);
                     }
                     else {
                         p.forward();
                     }
                 }
             }
-            for (Pea p: eliminate){
-                p.remove();
-                peas[rowIndex].remove(p);
+            peas[rowIndex].removeAll(peasToEliminate);
+
+            ArrayList<Sun> sunsToRemove = new ArrayList<>();
+            for (Sun sun : activeSuns[rowIndex]) {
+                if (sun.getActive()) {
+                    sun.moveToPosition(10, 10);
+                    if (sun.getInPosition()) {
+                        sunsToRemove.add(sun);
+                        sun.remove();
+                        suns += sun.getSuns();
+                    }
+                }
             }
+            activeSuns[rowIndex].removeAll(sunsToRemove);
 
-            LawnMowers[rowIndex].update();
-
+            if (LawnMowers[rowIndex] != null){
+                if(LawnMowers[rowIndex].getOutOfBonds()){
+                    LawnMowers[rowIndex].remove();
+                    LawnMowers[rowIndex] = null;
+                }
+                else {
+                    LawnMowers[rowIndex].update();
+                }
+            }
 
             try {
                 Thread.sleep(10); // Ajusta el intervalo de actualización según sea necesario
@@ -105,7 +138,7 @@ public class POOBvsZOMBIES {
             plantHitboxs[row][column] = plants[row][column].getHitbox();
         }
         else if (type.equals("sunflower")){
-            plants[row][column] = new Sunflower(button, layeredPane);
+            plants[row][column] = new Sunflower(button, layeredPane,activeSuns[row]);
             plantHitboxs[row][column] = plants[row][column].getHitbox();
         }
 
@@ -129,7 +162,7 @@ public class POOBvsZOMBIES {
             //zombies[row].add(new ConeHead(button,layeredPane));
         }
         else if (type.equals("bucketHead")){
-            //zombies[row].add(new BucketHead(button,layeredPane));
+            zombies[row].add(new BucketHead(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));
         }
         else if (type.equals("brainstein")){
             //zombies[row].add(new Brainstein(button,layeredPane));

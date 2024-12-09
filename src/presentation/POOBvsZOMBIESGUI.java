@@ -724,7 +724,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
         } else if ("coneHead".equals(selectedZombie)) {
             // Lógica para coneHead
         } else if ("bucketHead".equals(selectedZombie)) {
-            // Lógica para bucketHead
+            GAME.createZombie(selectedZombie, row, button);
         } else if ("ECIZombie".equals(selectedZombie)) {
             // Lógica para ECIZombie
         } else if ("brainstein".equals(selectedZombie)) {

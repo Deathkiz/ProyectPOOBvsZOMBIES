@@ -87,4 +87,6 @@ public class LawnMower {
             layeredPane.repaint();
         });
     }
+
+    public boolean getOutOfBonds(){return outOfBonds;}
 }

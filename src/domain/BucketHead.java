@@ -3,7 +3,7 @@ package domain;
 import javax.swing.*;
 import java.awt.*;
 
-public class Basic extends Zombie{
+public class BucketHead extends Zombie{
     private JLabel label;
     private JLabel head;
     private boolean attack;
@@ -15,9 +15,9 @@ public class Basic extends Zombie{
     private long lastMovement;
     private long lastAttack;
 
-    public Basic(JButton button, JLayeredPane layeredPane, Rectangle[] hitboxs,Plant[] plants,LawnMower lawnMower) {
-        super.hp = 100;
-        super.cost = 100;
+    public BucketHead(JButton button, JLayeredPane layeredPane, Rectangle[] hitboxs, Plant[] plants, LawnMower lawnMower) {
+        super.hp = 700;
+        super.cost = 200;
         super.layeredPane = layeredPane;
         super.hitboxs = hitboxs;
         super.plants = plants;
@@ -27,9 +27,9 @@ public class Basic extends Zombie{
         super.lawnMower = lawnMower;
         this.lastMovement = System.currentTimeMillis();
         this.lastAttack = System.currentTimeMillis();
-        ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/zombie.gif"));
+        ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/BucketheadZombie.gif"));
         this.walkingIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
-        ImageIcon attackIcon = new ImageIcon(getClass().getResource("/resources/zombieAttack.gif"));
+        ImageIcon attackIcon = new ImageIcon(getClass().getResource("/resources/BucketheadZombieAttack.gif"));
         this.attackIcon = new ImageIcon(attackIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
         ImageIcon dieIcon = new ImageIcon(getClass().getResource("/resources/zombieDie.gif"));
         this.bodyDieIcon = new ImageIcon(dieIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
@@ -47,7 +47,7 @@ public class Basic extends Zombie{
         super.hitbox = new Rectangle((int) (layeredPane.getWidth() + width * 0.7), relativeY, (int) width / 5, button.getHeight());
         layeredPane.add(label, JLayeredPane.DRAG_LAYER);
         layeredPane.repaint();
-        }
+    }
 
 
     public void update() {

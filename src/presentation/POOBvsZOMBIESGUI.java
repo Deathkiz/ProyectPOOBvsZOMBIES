@@ -490,7 +490,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
         add(layeredPane);
         setVisible(true);
         GAME = new POOBvsZOMBIES(150,250,positions,layeredPane,sunLabel,brainLabel);
-        int gameDuration = 1000;
+        int gameDuration = 10000;
 
         // Crear un temporizador para finalizar el juego
         javax.swing.Timer timer = new javax.swing.Timer(gameDuration, new ActionListener() {

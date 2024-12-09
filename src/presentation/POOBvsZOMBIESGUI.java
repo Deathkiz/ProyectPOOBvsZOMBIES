@@ -176,7 +176,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
         try {
             Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/resources/Fonts/Hotel W00 Black.ttf"));
-            sizedFont = customFont.deriveFont(Font.PLAIN, 12);
+            sizedFont = customFont.deriveFont(Font.PLAIN, (int) (HEIGHT*0.08*0.25));
         } catch (FontFormatException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -416,14 +416,12 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
                 button.setIcon(new ImageIcon(buton1));
             }
-
             plantMenuPanel.add(button);
             plantOptions.add(button);
         }
         layeredPane.add(plantMenuPanel,JLayeredPane.MODAL_LAYER);
 
         sunLabel = new JLabel();
-        sunLabel.setText(String.valueOf(100));
         sunLabel.setBounds((int) (WIDTH*0.4/16),(int)(HEIGHT*0.075),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.08*0.25));
         sunLabel.setOpaque(false);
         sunLabel.setFont(sizedFont);
@@ -474,7 +472,6 @@ public class POOBvsZOMBIESGUI extends JFrame {
         layeredPane.add(zombieMenuPanel,JLayeredPane.MODAL_LAYER);
 
         brainLabel = new JLabel();
-        brainLabel.setText(String.valueOf(10000));
         brainLabel.setForeground(Color.decode("#1d1401"));
         brainLabel.setBounds((int) ((WIDTH*0.4/16)+ WIDTH/2),(int)(HEIGHT*0.075),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.08*0.25));
         brainLabel.setOpaque(false);
@@ -493,16 +490,13 @@ public class POOBvsZOMBIESGUI extends JFrame {
         setLayout(null);
         add(layeredPane);
         setVisible(true);
-        GAME = new POOBvsZOMBIES(10,10,positions,layeredPane);
-
-
+        GAME = new POOBvsZOMBIES(150,250,positions,layeredPane,sunLabel,brainLabel);
     }
 
     private void prepareActionsStart() {
         background.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                background.setIcon(null);
                 background.removeMouseListener(this);
                 PvMButton.setVisible(true);
                 PvPButton.setVisible(true);

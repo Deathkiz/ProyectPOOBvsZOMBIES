@@ -19,7 +19,6 @@ public class ConeHead extends Zombie{
 
     public ConeHead(JButton button, JLayeredPane layeredPane, Rectangle[] hitboxs, Plant[] plants, LawnMower lawnMower) {
         super.hp = 380;
-        super.cost = 150;
         super.layeredPane = layeredPane;
         super.hitboxs = hitboxs;
         super.plants = plants;

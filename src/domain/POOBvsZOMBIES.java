@@ -14,11 +14,16 @@ public class POOBvsZOMBIES {
     private ArrayList<Zombie>[] zombies;
     private LawnMower[] LawnMowers;
     private int suns;
+    private JLabel sunLabel;
     private int brains;
-    private long StartTime;
+    private JLabel brainLabel;
+    private final long autoGenerate = 10000;
+    private long lastgenerate;
 
-    public POOBvsZOMBIES(int suns, int brains, ArrayList<JButton> positions,JLayeredPane layeredPane) {
+    public POOBvsZOMBIES(int suns, int brains, ArrayList<JButton> positions,JLayeredPane layeredPane,JLabel sunLabel, JLabel brainLabel) {
         this.layeredPane = layeredPane;
+        this.brainLabel = brainLabel;
+        this.sunLabel = sunLabel;
         plants = new Plant[5][8];
         LawnMowers = new LawnMower[5];
         activeSuns = (ArrayList<Sun>[]) new ArrayList[5];
@@ -29,6 +34,7 @@ public class POOBvsZOMBIES {
             peas[i] = new ArrayList<>();
             activeSuns[i] = new ArrayList<>();
         }
+        lastgenerate = System.currentTimeMillis();
 
         this.suns = suns;
         this.brains = brains;
@@ -119,6 +125,15 @@ public class POOBvsZOMBIES {
                 }
             }
 
+            long currentTime = System.currentTimeMillis();
+            if (currentTime-lastgenerate > autoGenerate){
+                suns += 25;
+                brains += 50;
+                lastgenerate = currentTime;
+            }
+            sunLabel.setText(String.valueOf(suns));
+            brainLabel.setText(String.valueOf(brains));
+
             try {
                 Thread.sleep(10); // Ajusta el intervalo de actualización según sea necesario
             } catch (InterruptedException e) {
@@ -129,18 +144,31 @@ public class POOBvsZOMBIES {
     }
 
     public void createPlant(String type, int row, int column,JButton button){
-        if (type.equals("peashooter")){
+        if (type.equals("peashooter") && suns >= 100){
             plants[row][column] = new Peashooter(button,layeredPane,peas[row],zombies[row]);
             plantHitboxs[row][column] = plants[row][column].getHitbox();
+            suns -= 100;
         }
-        else if (type.equals("sunflower")){
+        else if (type.equals("sunflower") && suns >= 50){
             plants[row][column] = new Sunflower(button, layeredPane,activeSuns[row]);
             plantHitboxs[row][column] = plants[row][column].getHitbox();
+            suns -= 50;
         }
 
-        else if (type.equals("wall-nut")){
+        else if (type.equals("wall-nut") && suns >= 50){
             plants[row][column] = new Wallnut(button, layeredPane);
             plantHitboxs[row][column] = plants[row][column].getHitbox();
+            suns -= 50;
+        }
+        else if (type.equals("potatoMine") && suns >= 25){
+            //plants[row][column] = new PotatoMine(button, layeredPane);
+            //plantHitboxs[row][column] = plants[row][column].getHitbox();
+            //suns -= 25;
+        }
+        else if (type.equals("ECIPlant") && suns >= 75){
+            //plants[row][column] = new ECIPlant(button, layeredPane);
+            //plantHitboxs[row][column] = plants[row][column].getHitbox();
+            //suns -= 75;
         }
 
 
@@ -151,20 +179,25 @@ public class POOBvsZOMBIES {
     }
 
     public void createZombie(String type, int row, JButton button){
-        if (type.equals("basic")){
-            zombies[row].add(new Basic(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));
+        if (type.equals("basic") && brains >= 100) {
+            zombies[row].add(new Basic(button, layeredPane, plantHitboxs[row], plants[row], LawnMowers[row]));
+            brains -= 100;
         }
-        else if (type.equals("coneHead")){
+        else if (type.equals("coneHead") && brains>=150){
             zombies[row].add(new ConeHead(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));
+            brains -= 150;
         }
-        else if (type.equals("bucketHead")){
+        else if (type.equals("bucketHead") && brains>=200){
             zombies[row].add(new BucketHead(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));
+            brains -= 200;
         }
-        else if (type.equals("brainstein")){
-            //zombies[row].add(new Brainstein(button,layeredPane));
+        else if (type.equals("brainstein") && brains>=50){
+            //zombies[row].add(new BucketHead(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));
+            //brains -= 200;
         }
-        else if (type.equals("ECIZombie")){
-            //zombies[row].add(new ECIZombie(button,layeredPane));
+        else if (type.equals("ECIZombie") && brains>=250){
+            //zombies[row].add(new BucketHead(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));
+            //brains -= 200;
         }
 
     }

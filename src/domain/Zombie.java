@@ -5,7 +5,6 @@ import java.awt.*;
 
 public abstract class Zombie {
     protected int hp;
-    protected int cost;
     protected JLayeredPane layeredPane;
     protected Rectangle[] hitboxs;
     protected Plant[] plants;
@@ -20,8 +19,6 @@ public abstract class Zombie {
     public void setHp(int hp){this.hp = hp;}
 
     public int getHp(){return hp;}
-
-    public int getCost(){return cost;}
 
     public Rectangle getHitbox() {return hitbox;}
 

@@ -5,7 +5,6 @@ import java.awt.*;
 
 public abstract class Plant {
     protected int hp;
-    protected int cost;
     protected JLayeredPane layeredPane;
     protected JButton button;
     protected Rectangle hitbox;
@@ -13,8 +12,6 @@ public abstract class Plant {
     public void damage(int damage){hp -= damage;}
 
     public int getHp(){return hp;}
-
-    public int getCost(){return cost;}
 
     public void createHitbox(){
         Point buttonLocationOnScreen = button.getLocationOnScreen();

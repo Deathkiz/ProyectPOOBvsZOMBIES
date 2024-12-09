@@ -43,7 +43,7 @@ public class LawnMower {
         // Configurar las dimensiones y posición del JLabel
         label.setBounds(labelX, labelY, labelWidth, labelHeight);
         hitbox.setBounds(labelX, labelY, labelWidth, labelHeight);
-        layeredPane.add(label, JLayeredPane.DRAG_LAYER);
+        layeredPane.add(label, JLayeredPane.POPUP_LAYER);
         layeredPane.revalidate();
         layeredPane.repaint();
     }

@@ -4,12 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Sunflower extends Plant{
+public class PotatoMine extends Plant{
     private long lastActionTime;
     private static final long ACTION_INTERVAL = 25000;
     private ArrayList<Sun> suns;
 
-    public Sunflower(JButton button, JLayeredPane layeredPane, ArrayList<Sun> suns) {
+    public PotatoMine(JButton button, JLayeredPane layeredPane, ArrayList<Sun> suns) {
         super.hp = 300;
         super.button = button;
         super.layeredPane = layeredPane;
@@ -22,17 +22,9 @@ public class Sunflower extends Plant{
         this.lastActionTime = System.currentTimeMillis();
     }
 
+
+    @Override
     public void update() {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastActionTime >= ACTION_INTERVAL) {
-            lastActionTime = currentTime;
-            createSun();
-        }
 
     }
-
-    private void createSun(){
-        suns.add(new Sun(25,layeredPane,button));
-    }
-
 }

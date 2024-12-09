@@ -19,7 +19,6 @@ public class BucketHead extends Zombie{
 
     public BucketHead(JButton button, JLayeredPane layeredPane, Rectangle[] hitboxs, Plant[] plants, LawnMower lawnMower) {
         super.hp = 800;
-        super.cost = 200;
         super.layeredPane = layeredPane;
         super.hitboxs = hitboxs;
         super.plants = plants;

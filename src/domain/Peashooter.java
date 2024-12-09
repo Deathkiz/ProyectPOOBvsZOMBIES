@@ -14,7 +14,6 @@ public class Peashooter extends Plant{
 
     public Peashooter(JButton button, JLayeredPane layeredPane, ArrayList<Pea> rowPeas, ArrayList<Zombie> zombies) {
         super.hp = 300;
-        super.cost = 100;
         super.layeredPane = layeredPane;
         super.button = button;
         this.Peas = rowPeas;
@@ -36,6 +35,8 @@ public class Peashooter extends Plant{
     }
 
     private void attack(){
-        Peas.add(new Pea(20,layeredPane,button,zombies));
+        if (!zombies.isEmpty()) {
+            Peas.add(new Pea(20, layeredPane, button, zombies));
+        }
     }
 }

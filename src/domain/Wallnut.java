@@ -11,7 +11,6 @@ public class Wallnut extends Plant{
 
     public Wallnut(JButton button, JLayeredPane layeredPane){
         super.hp = 4000;
-        super.cost = 50;
         super.button = button;
         super.layeredPane = layeredPane;
         icon = "normal";

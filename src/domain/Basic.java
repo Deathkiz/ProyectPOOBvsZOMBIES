@@ -44,7 +44,7 @@ public class Basic extends Zombie{
         int height = walkingIcon.getIconHeight();
         int y = (int) (relativeY - height / 3);
         label.setBounds(layeredPane.getWidth(), y, width, height);
-        super.hitbox = new Rectangle((int) (layeredPane.getWidth() + width * 0.7), relativeY, (int) width / 2, button.getHeight());
+        super.hitbox = new Rectangle((int) (layeredPane.getWidth() + width * 0.7), relativeY, (int) width / 5, button.getHeight());
         layeredPane.add(label, JLayeredPane.MODAL_LAYER);
         layeredPane.repaint();
         }

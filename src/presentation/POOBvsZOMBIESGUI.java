@@ -81,7 +81,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private String selectedPlant;
     private String selectedZombie;
     private ImageIcon imageIcon;
-    private JLabel imageLabel;
+    private JLabel sunLabel;
+    private JLabel brainLabel;
 
     public POOBvsZOMBIESGUI() {
         setTitle("PoobVsZombies");
@@ -386,7 +387,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
         }
         layeredPane.add(plantMenuPanel,JLayeredPane.MODAL_LAYER);
 
-        JLabel sunLabel = new JLabel();
+        sunLabel = new JLabel();
         sunLabel.setText(String.valueOf(100));
         sunLabel.setBounds((int) (WIDTH*0.4/16),(int)(HEIGHT*0.075),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.08*0.25));
         sunLabel.setOpaque(false);
@@ -412,6 +413,12 @@ public class POOBvsZOMBIESGUI extends JFrame {
             zombieOptions.add(button);
         }
         layeredPane.add(zombieMenuPanel,JLayeredPane.MODAL_LAYER);
+
+        brainLabel = new JLabel();
+        brainLabel.setText(String.valueOf(100));
+        brainLabel.setBounds((int) ((WIDTH*0.4/16)+ WIDTH/2),(int)(HEIGHT*0.075),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.08*0.25));
+        brainLabel.setOpaque(false);
+        layeredPane.add(brainLabel,JLayeredPane.POPUP_LAYER);
     }
 
     private void prepareActions() {

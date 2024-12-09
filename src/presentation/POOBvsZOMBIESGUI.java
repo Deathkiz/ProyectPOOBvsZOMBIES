@@ -486,12 +486,27 @@ public class POOBvsZOMBIESGUI extends JFrame {
     }
 
     private void game(){
-        // Configurar el layout principal
         setLayout(null);
         add(layeredPane);
         setVisible(true);
         GAME = new POOBvsZOMBIES(150,250,positions,layeredPane,sunLabel,brainLabel);
+        int gameDuration = 1000;
+
+        // Crear un temporizador para finalizar el juego
+        javax.swing.Timer timer = new javax.swing.Timer(gameDuration, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GAME.endGame();
+                getContentPane().removeAll();
+                revalidate();
+                repaint();
+            }
+        });
+        timer.setRepeats(false); // Solo ejecuta la acción una vez
+        timer.start();
+
     }
+
 
     private void prepareActionsStart() {
         background.addMouseListener(new MouseAdapter() {
@@ -705,6 +720,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    if(index == 0){
+                        GAME.pauseGame();
+                    }
                     // Establecer planta activa y seleccionada según el índice
                     if (index == 1) {
                         activePlant = true;
@@ -734,6 +752,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    if (index == 0){
+                        GAME.resumeGame();
+                    }
                     // Establecer zombi activo y seleccionado según el índice
                     if (index == 1) {
                         activeZombie = true;

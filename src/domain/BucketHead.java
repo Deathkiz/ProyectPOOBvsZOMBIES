@@ -10,13 +10,15 @@ public class BucketHead extends Zombie{
     private int distance;
     private ImageIcon walkingIcon;
     private ImageIcon attackIcon;
+    private ImageIcon walkingBucketLessIcon;
+    private ImageIcon attackBucketLessIcon;
     private ImageIcon bodyDieIcon;
     private ImageIcon headDieIcon;
     private long lastMovement;
     private long lastAttack;
 
     public BucketHead(JButton button, JLayeredPane layeredPane, Rectangle[] hitboxs, Plant[] plants, LawnMower lawnMower) {
-        super.hp = 700;
+        super.hp = 800;
         super.cost = 200;
         super.layeredPane = layeredPane;
         super.hitboxs = hitboxs;
@@ -31,6 +33,10 @@ public class BucketHead extends Zombie{
         this.walkingIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
         ImageIcon attackIcon = new ImageIcon(getClass().getResource("/resources/BucketheadZombieAttack.gif"));
         this.attackIcon = new ImageIcon(attackIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
+        ImageIcon withoutBucket = new ImageIcon(getClass().getResource("/resources/zombie.gif"));
+        this.walkingBucketLessIcon = new ImageIcon(withoutBucket.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
+        ImageIcon attackWithoutBucket = new ImageIcon(getClass().getResource("/resources/zombieAttack.gif"));
+        this.attackBucketLessIcon = new ImageIcon(attackWithoutBucket.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
         ImageIcon dieIcon = new ImageIcon(getClass().getResource("/resources/zombieDie.gif"));
         this.bodyDieIcon = new ImageIcon(dieIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
         ImageIcon headDieIcon = new ImageIcon(getClass().getResource("/resources/zombieHead.gif"));
@@ -51,7 +57,7 @@ public class BucketHead extends Zombie{
 
 
     public void update() {
-        if (hp>0){
+        if (hp>100){
             int position = -1;
             for (int i = 0; i<hitboxs.length && position<0;i++){
                 if (hitboxs[i] != null){
@@ -62,12 +68,53 @@ public class BucketHead extends Zombie{
                 }
             }
 
-            if (attack && icon.equals("caminando")) {
+            if (attack && !icon.equals("atacando")) {
                 label.setIcon(attackIcon);
                 icon = "atacando";
-            } else if ((!attack) && icon.equals("atacando")) {
+            } else if ((!attack) && !icon.equals("caminando")) {
                 label.setIcon(walkingIcon);
                 icon = "caminando";
+            }
+
+            long currentTime;
+            if (position >= 0) {
+                currentTime = System.currentTimeMillis();
+                if (currentTime-lastAttack >= 500){
+                    attackZombie(position);
+                    lastAttack = currentTime;
+                }
+            } else {
+                currentTime = System.currentTimeMillis();
+                if (currentTime-lastMovement >= 100){
+                    movement(distance);
+                    lastMovement = currentTime;
+                }
+            }
+
+            if (lawnMower!= null){
+                if (hitbox.intersects(lawnMower.getHitbox())){
+                    lawnMower.activate();
+                }
+            }
+            attack = false;
+        }
+        else if (hp>0){
+            int position = -1;
+            for (int i = 0; i<hitboxs.length && position<0;i++){
+                if (hitboxs[i] != null){
+                    if (hitboxs[i].intersects(hitbox)){
+                        attack = true;
+                        position = i;
+                    }
+                }
+            }
+
+            if (attack && !icon.equals("atacandoSinCubeta")) {
+                label.setIcon(attackBucketLessIcon);
+                icon = "atacandoSinCubeta";
+            } else if ((!attack) && !icon.equals("caminandoSinCubeta")) {
+                label.setIcon(walkingBucketLessIcon);
+                icon = "caminandoSinCubeta";
             }
 
             long currentTime;

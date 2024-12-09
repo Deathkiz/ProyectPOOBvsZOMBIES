@@ -735,11 +735,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
 
     private void handleZombieAction(JButton button,int row) {
-        if ("basic".equals(selectedZombie)) {
-            GAME.createZombie(selectedZombie, row, button);
-        } else if ("coneHead".equals(selectedZombie)) {
-            // Lógica para coneHead
-        } else if ("bucketHead".equals(selectedZombie)) {
+        if ("basic".equals(selectedZombie) || "coneHead".equals(selectedZombie) || "bucketHead".equals(selectedZombie)) {
             GAME.createZombie(selectedZombie, row, button);
         } else if ("ECIZombie".equals(selectedZombie)) {
             // Lógica para ECIZombie

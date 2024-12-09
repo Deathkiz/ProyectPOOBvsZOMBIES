@@ -3,21 +3,23 @@ package domain;
 import javax.swing.*;
 import java.awt.*;
 
-public class Basic extends Zombie{
+public class ConeHead extends Zombie{
     private JLabel label;
     private JLabel head;
     private boolean attack;
     private int distance;
     private ImageIcon walkingIcon;
     private ImageIcon attackIcon;
+    private ImageIcon walkingBucketLessIcon;
+    private ImageIcon attackBucketLessIcon;
     private ImageIcon bodyDieIcon;
     private ImageIcon headDieIcon;
     private long lastMovement;
     private long lastAttack;
 
-    public Basic(JButton button, JLayeredPane layeredPane, Rectangle[] hitboxs,Plant[] plants,LawnMower lawnMower) {
-        super.hp = 100;
-        super.cost = 100;
+    public ConeHead(JButton button, JLayeredPane layeredPane, Rectangle[] hitboxs, Plant[] plants, LawnMower lawnMower) {
+        super.hp = 380;
+        super.cost = 150;
         super.layeredPane = layeredPane;
         super.hitboxs = hitboxs;
         super.plants = plants;
@@ -27,10 +29,14 @@ public class Basic extends Zombie{
         super.lawnMower = lawnMower;
         this.lastMovement = System.currentTimeMillis();
         this.lastAttack = System.currentTimeMillis();
-        ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/zombie.gif"));
+        ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/ConeheadZombie.gif"));
         this.walkingIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
-        ImageIcon attackIcon = new ImageIcon(getClass().getResource("/resources/zombieAttack.gif"));
+        ImageIcon attackIcon = new ImageIcon(getClass().getResource("/resources/ConeheadZombieAttack.gif"));
         this.attackIcon = new ImageIcon(attackIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
+        ImageIcon withoutBucket = new ImageIcon(getClass().getResource("/resources/zombie.gif"));
+        this.walkingBucketLessIcon = new ImageIcon(withoutBucket.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
+        ImageIcon attackWithoutBucket = new ImageIcon(getClass().getResource("/resources/zombieAttack.gif"));
+        this.attackBucketLessIcon = new ImageIcon(attackWithoutBucket.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
         ImageIcon dieIcon = new ImageIcon(getClass().getResource("/resources/zombieDie.gif"));
         this.bodyDieIcon = new ImageIcon(dieIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
         ImageIcon headDieIcon = new ImageIcon(getClass().getResource("/resources/zombieHead.gif"));
@@ -47,11 +53,11 @@ public class Basic extends Zombie{
         super.hitbox = new Rectangle((int) (layeredPane.getWidth() + width * 0.7), relativeY, (int) width / 5, button.getHeight());
         layeredPane.add(label, JLayeredPane.DRAG_LAYER);
         layeredPane.repaint();
-        }
+    }
 
 
     public void update() {
-        if (hp>0){
+        if (hp>100){
             int position = -1;
             for (int i = 0; i<hitboxs.length && position<0;i++){
                 if (hitboxs[i] != null){
@@ -84,6 +90,48 @@ public class Basic extends Zombie{
                     lastMovement = currentTime;
                 }
             }
+
+            if (lawnMower!= null){
+                if (hitbox.intersects(lawnMower.getHitbox())){
+                    lawnMower.activate();
+                }
+            }
+            attack = false;
+        }
+        else if (hp>0){
+            int position = -1;
+            for (int i = 0; i<hitboxs.length && position<0;i++){
+                if (hitboxs[i] != null){
+                    if (hitboxs[i].intersects(hitbox)){
+                        attack = true;
+                        position = i;
+                    }
+                }
+            }
+
+            if (attack && !icon.equals("atacandoSinCono")) {
+                label.setIcon(attackBucketLessIcon);
+                icon = "atacandoSinCono";
+            } else if ((!attack) && !icon.equals("caminandoSinCono")) {
+                label.setIcon(walkingBucketLessIcon);
+                icon = "caminandoSinCono";
+            }
+
+            long currentTime;
+            if (position >= 0) {
+                currentTime = System.currentTimeMillis();
+                if (currentTime-lastAttack >= 500){
+                    attackZombie(position);
+                    lastAttack = currentTime;
+                }
+            } else {
+                currentTime = System.currentTimeMillis();
+                if (currentTime-lastMovement >= 100){
+                    movement(distance);
+                    lastMovement = currentTime;
+                }
+            }
+
             if (lawnMower!= null){
                 if (hitbox.intersects(lawnMower.getHitbox())){
                     lawnMower.activate();

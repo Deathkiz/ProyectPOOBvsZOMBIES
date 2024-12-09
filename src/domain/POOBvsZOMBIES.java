@@ -155,7 +155,7 @@ public class POOBvsZOMBIES {
             zombies[row].add(new Basic(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));
         }
         else if (type.equals("coneHead")){
-            //zombies[row].add(new ConeHead(button,layeredPane));
+            zombies[row].add(new ConeHead(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));
         }
         else if (type.equals("bucketHead")){
             zombies[row].add(new BucketHead(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));

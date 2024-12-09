@@ -5,6 +5,8 @@ import domain.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class POOBvsZOMBIESGUI extends JFrame {
@@ -84,6 +86,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private JLabel sunLabel;
     private JLabel brainLabel;
 
+    private Font sizedFont;
+
     public POOBvsZOMBIESGUI() {
         setTitle("PoobVsZombies");
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -105,7 +109,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
         frameForMvM();
         createChooseButtons();
         frameChoose();
+        fontOfSunsBrains();
         prepareGame();
+
     }
 
     private void prepareElementsStart() {
@@ -166,7 +172,15 @@ public class POOBvsZOMBIESGUI extends JFrame {
         preparePvMButton();
         prepareMvMButton();
     }
+    private void fontOfSunsBrains(){
 
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/resources/Fonts/Hotel W00 Black.ttf"));
+            sizedFont = customFont.deriveFont(Font.PLAIN, 12);
+        } catch (FontFormatException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private void preparePvPButton() {
         PvPButton.setBounds( (int) (4.05*(WIDTH / 9)), (int) (1.46*(HEIGHT / 3.5)), (int) (WIDTH / 3.3), (int) (HEIGHT / 8));
         ImageIcon imagePvPButton = new ImageIcon(getClass().getResource("/resources/ButtonPvP.png"));
@@ -382,6 +396,27 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
                 button.setIcon(new ImageIcon(buton1));
             }
+            if (i== 2){
+                ImageIcon image = new ImageIcon("src/resources/PeashooterSeedPacket.jpg");
+                Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(buton1));
+            }
+            if (i== 3){
+                ImageIcon image = new ImageIcon("src/resources/ECIPlantSeedPacket.jpg");
+                Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(buton1));
+            }
+            if (i== 4){
+                ImageIcon image = new ImageIcon("src/resources/Wall-nutSeedPacket.jpg");
+                Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(buton1));
+            }
+            if (i== 5){
+                ImageIcon image = new ImageIcon("src/resources/PotatoMineSeedPacket.jpg");
+                Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(buton1));
+            }
+
             plantMenuPanel.add(button);
             plantOptions.add(button);
         }
@@ -391,6 +426,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
         sunLabel.setText(String.valueOf(100));
         sunLabel.setBounds((int) (WIDTH*0.4/16),(int)(HEIGHT*0.075),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.08*0.25));
         sunLabel.setOpaque(false);
+        sunLabel.setFont(sizedFont);
+        sunLabel.setForeground(Color.decode("#1d1401"));
         layeredPane.add(sunLabel,JLayeredPane.POPUP_LAYER);
 
         zombieOptions = new ArrayList<>();
@@ -398,26 +435,50 @@ public class POOBvsZOMBIESGUI extends JFrame {
         zombieMenuPanel.setOpaque(false); // Fondo transparente
         zombieMenuPanel.setBounds((int) (WIDTH*0.5), 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
         for (int i = 0; i < 9; i++) {
-            if (i == 1) {
-                // Insertar espacio adicional antes del segundo botón
+            JButton button = new JButton();
+            button.setContentAreaFilled(false);
+            button.setBorderPainted(false);
+            button.setPreferredSize(new Dimension((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08)));
+            if (i==1){
                 JPanel spacer = new JPanel();
                 spacer.setOpaque(false); // Fondo transparente
                 spacer.setPreferredSize(new Dimension((int) (WIDTH*0.005), 1)); // Ancho del espacio extra
                 zombieMenuPanel.add(spacer);
+                ImageIcon image = new ImageIcon("src/resources/ZombieSeedPacket.jpg");
+                Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(buton1));
             }
-            JButton button = new JButton("B");
-            button.setContentAreaFilled(false);
-            button.setBorderPainted(true);
-            button.setPreferredSize(new Dimension((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08)));
+            if (i== 2){
+                ImageIcon image = new ImageIcon("src/resources/ConeHeadSeedPacket.jpg");
+                Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(buton1));
+            }
+            if (i== 3){
+                ImageIcon image = new ImageIcon("src/resources/BucketheadSeedPacket.jpg");
+                Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(buton1));
+            }
+            if (i== 4){
+                ImageIcon image = new ImageIcon("src/resources/ZombieSeedPacket.jpg");
+                Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(buton1));
+            }
+            if (i== 5){
+                ImageIcon image = new ImageIcon("src/resources/ZombieSeedPacket.jpg");
+                Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(buton1));
+            }
             zombieMenuPanel.add(button);
             zombieOptions.add(button);
         }
         layeredPane.add(zombieMenuPanel,JLayeredPane.MODAL_LAYER);
 
         brainLabel = new JLabel();
-        brainLabel.setText(String.valueOf(100));
+        brainLabel.setText(String.valueOf(10000));
+        brainLabel.setForeground(Color.decode("#1d1401"));
         brainLabel.setBounds((int) ((WIDTH*0.4/16)+ WIDTH/2),(int)(HEIGHT*0.075),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.08*0.25));
         brainLabel.setOpaque(false);
+        brainLabel.setFont(sizedFont);
         layeredPane.add(brainLabel,JLayeredPane.POPUP_LAYER);
     }
 

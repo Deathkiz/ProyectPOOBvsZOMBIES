@@ -42,8 +42,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private String namePlayer11;
     private String namePlayer1;
     private String namePlayer2;
-    private int modeMachine = 2;
-    private int modePlants = 2;
+    private int modeMachine = 0;
+    private int modePlants = 0;
 
     private JFrame choose;
     private ColorButton peaShooter;
@@ -416,7 +416,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
         setLayout(null);
         add(layeredPane);
         setVisible(true);
-        GAME = new POOBvsZOMBIES(10,10);
+        GAME = new POOBvsZOMBIES(10,10,positions,layeredPane);
 
 
     }
@@ -454,7 +454,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                     frameMvM.dispose();
                 }
                 modeMachine = 0;
-                modePlants = 2;
+                modePlants = 0;
                 framePvP.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                 framePvP.setVisible(true);
             }
@@ -490,8 +490,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 else if (frameMvM.isVisible()){
                     frameMvM.dispose();
                 }
-                modeMachine = 2;
-                modePlants = 2;
+                modeMachine = 0;
+                modePlants = 0;
                 framePvM.setVisible(true);
             }
         });
@@ -535,8 +535,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 else if (frameMvM.isVisible()){
                     frameMvM.dispose();
                 }
-                modeMachine = 2;
-                modePlants = 2;
+                modeMachine = 0;
+                modePlants = 0;
                 frameMvM.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                 frameMvM.setVisible(true);
 
@@ -631,8 +631,6 @@ public class POOBvsZOMBIESGUI extends JFrame {
         for (int i = 0; i < plantOptions.size(); i++) {
             final int index = i;
             JButton button = plantOptions.get(i);
-
-            // Evento para clic normal
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -722,7 +720,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
     private void handleZombieAction(JButton button,int row) {
         if ("basic".equals(selectedZombie)) {
-            GAME.createZombie(selectedZombie, row, button, layeredPane);
+            GAME.createZombie(selectedZombie, row, button);
         } else if ("coneHead".equals(selectedZombie)) {
             // Lógica para coneHead
         } else if ("bucketHead".equals(selectedZombie)) {
@@ -744,7 +742,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
     private void handlePlantAction(JButton button, int row, int column) {
         if (button.getIcon() == null) {
-            GAME.createPlant(selectedPlant,row,column,button,layeredPane);
+            GAME.createPlant(selectedPlant,row,column,button);
         }
     }
 

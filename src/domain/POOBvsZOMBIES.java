@@ -3,17 +3,23 @@ package domain;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class POOBvsZOMBIES {
+    private JLayeredPane layeredPane;
     private Plant[][] plants;
     private ArrayList<Zombie>[] zombies;
     private int suns;
     private int brains;
     private Rectangle[][] plantHitboxs;
     private ArrayList<Pea>[] peas;
+    private LawnMower[] LawnMowers;
+    private long StartTime;
 
-    public POOBvsZOMBIES(int suns, int brains) {
+    public POOBvsZOMBIES(int suns, int brains, ArrayList<JButton> positions,JLayeredPane layeredPane) {
+        this.layeredPane = layeredPane;
         plants = new Plant[5][8];
+        LawnMowers = new LawnMower[5];
         zombies = (ArrayList<Zombie>[]) new ArrayList[5];
         peas = (ArrayList<Pea>[]) new ArrayList[5];
         for (int i = 0; i < 5; i++) {
@@ -24,6 +30,11 @@ public class POOBvsZOMBIES {
         this.suns = suns;
         this.brains = brains;
         plantHitboxs = new Rectangle[5][8];
+        ArrayList<Integer> buttonPosition = new ArrayList<>(Arrays.asList(0, 9, 18, 27, 36));
+        for (int i = 0; i < 5; i++) {
+            JButton button = positions.get(buttonPosition.get(i));
+            LawnMowers[i] = new LawnMower(layeredPane,button,zombies[i]);
+        }
 
         // Crear un hilo por fila para manejar tanto plantas como zombies
         for (int i = 0; i < 5; i++) {
@@ -72,6 +83,8 @@ public class POOBvsZOMBIES {
                 peas[rowIndex].remove(p);
             }
 
+            LawnMowers[rowIndex].update();
+
 
             try {
                 Thread.sleep(10); // Ajusta el intervalo de actualización según sea necesario
@@ -86,7 +99,7 @@ public class POOBvsZOMBIES {
 
     public void zombieDamage(int damage){}
 
-    public void createPlant(String type, int row, int column,JButton button,JLayeredPane layeredPane){
+    public void createPlant(String type, int row, int column,JButton button){
         if (type.equals("peashooter")){
             plants[row][column] = new Peashooter(button,layeredPane,peas[row],zombies[row]);
             plantHitboxs[row][column] = plants[row][column].getHitbox();
@@ -108,9 +121,9 @@ public class POOBvsZOMBIES {
         plants[row][column] = null;
     }
 
-    public void createZombie(String type, int row, JButton button,JLayeredPane layeredPane){
+    public void createZombie(String type, int row, JButton button){
         if (type.equals("basic")){
-            zombies[row].add(new Basic(button,layeredPane, plantHitboxs[row],plants[row]));
+            zombies[row].add(new Basic(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));
         }
         else if (type.equals("coneHead")){
             //zombies[row].add(new ConeHead(button,layeredPane));

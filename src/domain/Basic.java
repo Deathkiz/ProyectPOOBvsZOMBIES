@@ -15,7 +15,7 @@ public class Basic extends Zombie{
     private long lastMovement;
     private long lastAttack;
 
-    public Basic(JButton button, JLayeredPane layeredPane, Rectangle[] hitboxs,Plant[] plants) {
+    public Basic(JButton button, JLayeredPane layeredPane, Rectangle[] hitboxs,Plant[] plants,LawnMower lawnMower) {
         super.hp = 100;
         super.cost = 100;
         super.layeredPane = layeredPane;
@@ -24,6 +24,7 @@ public class Basic extends Zombie{
         this.distance = layeredPane.getWidth()/600;
         this.attack = false;
         super.icon = "caminando";
+        super.lawnMower = lawnMower;
         this.lastMovement = System.currentTimeMillis();
         this.lastAttack = System.currentTimeMillis();
         ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/zombie.gif"));
@@ -82,6 +83,10 @@ public class Basic extends Zombie{
                     movement(distance);
                     lastMovement = currentTime;
                 }
+            }
+
+            if (hitbox.intersects(lawnMower.getHitbox())){
+                lawnMower.activate();
             }
             attack = false;
         }

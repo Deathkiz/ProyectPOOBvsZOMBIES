@@ -9,12 +9,15 @@ public abstract class Zombie {
     protected JLayeredPane layeredPane;
     protected Rectangle[] hitboxs;
     protected Plant[] plants;
+    protected LawnMower lawnMower;
     protected Rectangle hitbox;
     protected String icon;
     protected long deadTime;
 
 
     public void damage(int damage){hp -= damage;}
+
+    public void setHp(int hp){this.hp = hp;}
 
     public int getHp(){return hp;}
 

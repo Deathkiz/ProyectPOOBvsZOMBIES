@@ -128,10 +128,6 @@ public class POOBvsZOMBIES {
         }
     }
 
-    public void plantDamage(int row, int column, int damage){plants[row][column].damage(damage);}
-
-    public void zombieDamage(int damage){}
-
     public void createPlant(String type, int row, int column,JButton button){
         if (type.equals("peashooter")){
             plants[row][column] = new Peashooter(button,layeredPane,peas[row],zombies[row]);

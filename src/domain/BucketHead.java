@@ -85,8 +85,10 @@ public class BucketHead extends Zombie{
                 }
             }
 
-            if (hitbox.intersects(lawnMower.getHitbox())){
-                lawnMower.activate();
+            if (lawnMower!= null){
+                if (hitbox.intersects(lawnMower.getHitbox())){
+                    lawnMower.activate();
+                }
             }
             attack = false;
         }

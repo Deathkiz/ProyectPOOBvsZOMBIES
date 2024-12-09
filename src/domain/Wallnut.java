@@ -34,6 +34,5 @@ public class Wallnut extends Plant{
             button.setIcon(superCracked);
             icon = "superCracked";
         }
-
     }
 }

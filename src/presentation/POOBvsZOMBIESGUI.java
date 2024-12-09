@@ -376,6 +376,11 @@ public class POOBvsZOMBIESGUI extends JFrame {
             button.setContentAreaFilled(false);
             button.setBorderPainted(true);
             button.setPreferredSize(new Dimension((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08)));
+            if (i==1){
+                ImageIcon image = new ImageIcon("src/resources/SunflowerSeedPacket.jpg");
+                Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(buton1));
+            }
             plantMenuPanel.add(button);
             plantOptions.add(button);
         }
@@ -739,14 +744,11 @@ public class POOBvsZOMBIESGUI extends JFrame {
         }
     }
 
-
     private void handlePlantAction(JButton button, int row, int column) {
         if (button.getIcon() == null) {
             GAME.createPlant(selectedPlant,row,column,button);
         }
     }
-
-
 
     private Image setSizeImageBackground(ImageIcon imagePrincipal) {
         Image image = imagePrincipal.getImage();

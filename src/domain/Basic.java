@@ -84,9 +84,10 @@ public class Basic extends Zombie{
                     lastMovement = currentTime;
                 }
             }
-
-            if (hitbox.intersects(lawnMower.getHitbox())){
-                lawnMower.activate();
+            if (lawnMower!= null){
+                if (hitbox.intersects(lawnMower.getHitbox())){
+                    lawnMower.activate();
+                }
             }
             attack = false;
         }

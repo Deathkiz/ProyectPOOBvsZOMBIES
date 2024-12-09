@@ -38,6 +38,5 @@ public abstract class Plant {
 
     public void die(){
         button.setIcon(null);
-        hitbox.setBounds(0,0,0,0);
     }
 }

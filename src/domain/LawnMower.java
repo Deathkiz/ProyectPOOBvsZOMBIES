@@ -44,8 +44,6 @@ public class LawnMower {
         label.setBounds(labelX, labelY, labelWidth, labelHeight);
         hitbox.setBounds(labelX, labelY, labelWidth, labelHeight);
         layeredPane.add(label, JLayeredPane.POPUP_LAYER);
-        layeredPane.revalidate();
-        layeredPane.repaint();
     }
 
     public void update(){

@@ -4,21 +4,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Pea {
+public class Pea extends Projectile{
     private JLabel label;
     private ImageIcon image;
-    private int attack;
     private JLayeredPane layeredPane;
     private int distance;
-    private boolean outOfBonds;
     private Rectangle hitbox;
     private ArrayList<Zombie> zombies;
 
 
     public Pea(int attack, JLayeredPane layeredPane, JButton button, ArrayList<Zombie> zombies) {
-        this.attack = attack;
+        super.attack = attack;
         this.layeredPane = layeredPane;
-        this.outOfBonds = false;
+        super.outOfBonds = false;
         this.zombies = zombies;
         this.hitbox = new Rectangle();
         // Obtener la posición absoluta del botón
@@ -48,10 +46,9 @@ public class Pea {
         hitbox.setBounds(labelX, labelY, labelWidth, labelHeight);
         // Agregar el JLabel al JLayeredPane en la capa MODAL_LAYER
         layeredPane.add(label, JLayeredPane.DRAG_LAYER);
-        layeredPane.revalidate();
-        layeredPane.repaint();
     }
 
+    @Override
     public void forward() {
         int currentX = label.getX();
         int currentY = label.getY();
@@ -65,11 +62,6 @@ public class Pea {
             outOfBonds = true;
         }
         attack();
-
-    }
-
-    public boolean outOfBonds(){
-        return outOfBonds;
     }
 
     public void remove() {

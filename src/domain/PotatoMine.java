@@ -24,7 +24,7 @@ public class PotatoMine extends Plant{
 
 
     @Override
-    public void update() {
+    public void update(long currentTime) {
 
     }
 }

@@ -45,11 +45,10 @@ public class Basic extends Zombie{
         label.setBounds(layeredPane.getWidth(), y, width, height);
         super.hitbox = new Rectangle((int) (layeredPane.getWidth() + width * 0.7), relativeY, (int) width / 5, button.getHeight());
         layeredPane.add(label, JLayeredPane.DRAG_LAYER);
-        layeredPane.repaint();
         }
 
 
-    public void update() {
+    public void update(long currentTime) {
         if (hp>0){
             int position = -1;
             for (int i = 0; i<hitboxs.length && position<0;i++){
@@ -69,7 +68,6 @@ public class Basic extends Zombie{
                 icon = "caminando";
             }
 
-            long currentTime;
             if (position >= 0) {
                 currentTime = System.currentTimeMillis();
                 if (currentTime-lastAttack >= 500){
@@ -77,7 +75,6 @@ public class Basic extends Zombie{
                     lastAttack = currentTime;
                 }
             } else {
-                currentTime = System.currentTimeMillis();
                 if (currentTime-lastMovement >= 100){
                     movement(distance);
                     lastMovement = currentTime;
@@ -97,8 +94,8 @@ public class Basic extends Zombie{
         label.setBounds((int) (label.getX()-LONG),label.getY(), (int) label.getSize().getWidth(), (int) label.getSize().getHeight());
         layeredPane.repaint();
     }
-    public int getX(){
-        return label.getX();
+
+    public int getX(){return label.getX();
     }
 
     public void attackZombie(int position){

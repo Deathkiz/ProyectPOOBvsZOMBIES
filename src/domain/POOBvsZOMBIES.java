@@ -9,34 +9,32 @@ public class POOBvsZOMBIES {
     private JLayeredPane layeredPane;
     private Plant[][] plants;
     private Rectangle[][] plantHitboxs;
-    private ArrayList<Pea>[] peas;
-    private ArrayList<Sun>[] activeSuns;
     private ArrayList<Zombie>[] zombies;
+    private ArrayList<Projectile>[] projectiles;
+    private ArrayList<Collectable>[] collectables;
     private LawnMower[] LawnMowers;
+    private int[][] rows;
+    private int maxWidth;
     private int suns;
-    private JLabel sunLabel;
     private int brains;
-    private JLabel brainLabel;
     private final long autoGenerate = 10000;
     private long lastgenerate;
     private volatile boolean paused;
     private volatile boolean gameOver;
 
-    public POOBvsZOMBIES(int suns, int brains, ArrayList<JButton> positions,JLayeredPane layeredPane,JLabel sunLabel, JLabel brainLabel) {
-        this.layeredPane = layeredPane;
-        this.brainLabel = brainLabel;
-        this.sunLabel = sunLabel;
+    public POOBvsZOMBIES(int suns, int brains, ArrayList<JButton> positions,JLayeredPane principalPane) {
+        this.layeredPane = principalPane;
         this.gameOver = false;
         this.paused = false;
         plants = new Plant[5][8];
         LawnMowers = new LawnMower[5];
-        activeSuns = (ArrayList<Sun>[]) new ArrayList[5];
+        collectables = (ArrayList<Collectable>[]) new ArrayList[5];
         zombies = (ArrayList<Zombie>[]) new ArrayList[5];
-        peas = (ArrayList<Pea>[]) new ArrayList[5];
+        projectiles = (ArrayList<Projectile>[]) new ArrayList[5];
         for (int i = 0; i < 5; i++) {
             zombies[i] = new ArrayList<>();
-            peas[i] = new ArrayList<>();
-            activeSuns[i] = new ArrayList<>();
+            projectiles[i] = new ArrayList<>();
+            collectables[i] = new ArrayList<>();
         }
         lastgenerate = System.currentTimeMillis();
 
@@ -46,124 +44,106 @@ public class POOBvsZOMBIES {
         ArrayList<Integer> buttonPosition = new ArrayList<>(Arrays.asList(0, 9, 18, 27, 36));
         for (int i = 0; i < 5; i++) {
             JButton button = positions.get(buttonPosition.get(i));
-            LawnMowers[i] = new LawnMower(layeredPane,button,zombies[i]);
-        }
-
-        // Crear un hilo por fila para manejar tanto plantas como zombies
-        for (int i = 0; i < 5; i++) {
-            int rowIndex = i; // Necesario para usar en lambda
-            Thread rowThread = new Thread(() -> handleRow(rowIndex));
-            rowThread.start();
+            LawnMowers[i] = new LawnMower(layeredPane, button, zombies[i]);
         }
     }
 
-    private void handleRow(int rowIndex) {
-        while (true) {
-            synchronized (this) {
-                while (paused && !gameOver) {
-                    try {
-                        wait(); // Espera a que el juego sea reanudado o finalizado
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                        return;
-                    }
-                }
-                if (gameOver) {
-                    break; // Salir del bucle si el juego ha terminado
-                }
-            }
-            // Manejar las plantas de la fila
-            ArrayList<int[]> eliminatePlants = new ArrayList<>();
-            for (int i = 0; i < plants[rowIndex].length; i++) {
-                Plant plant = plants[rowIndex][i];
-                if (plant != null) {
-                    plant.update();
-                    if (plant.getHp() <= 0) {
-                        plant.die();
-                        eliminatePlants.add(new int[]{rowIndex, i}); // Agregar la posición de la planta a eliminar
-                    }
-                }
-            }
-            for (int[] position : eliminatePlants) {
-                plants[position[0]][position[1]] = null;
-            }
+    public void update(long currentTime){
+        for (int row = 0; row<5 ; row++){
+            handleRow(row,currentTime);
+        }
+        if (currentTime - lastgenerate > autoGenerate) {
+            suns += 25;
+            brains += 50;
+            lastgenerate = currentTime;
+        }
+    }
 
-            ArrayList<Zombie> eliminateZombie = new ArrayList<>();
-            for (Zombie zombie : zombies[rowIndex]) {
-                if (zombie != null) {
-                    zombie.update();
-                    long currentTime = System.currentTimeMillis();
-                    if (zombie.getHp() <= 0 && !(zombie.getIcon().equals("dead"))) {
-                        zombie.die();
-                    } else if (zombie.getHp() <= 0 && currentTime - zombie.getDeadTime() > 2400) {
-                        zombie.remove();
-                        eliminateZombie.add(zombie);
-                    }
+    public void handleRow(int rowIndex,long currentTime) {
+        //plantas
+        ArrayList<int[]> eliminatePlants = new ArrayList<>();
+        for (int i = 0; i < plants[rowIndex].length; i++) {
+            Plant plant = plants[rowIndex][i];
+            if (plant != null) {
+                plant.update(currentTime);
+                if (plant.getHp() <= 0) {
+                    plant.die();
+                    eliminatePlants.add(new int[]{rowIndex, i}); // Agregar la posición de la planta a eliminar
                 }
             }
-            zombies[rowIndex].removeAll(eliminateZombie);
+        }
+        for (int[] position : eliminatePlants) {
+            plants[position[0]][position[1]] = null;
+            plantHitboxs[position[0]][position[1]]=null;
+        }
 
-
-            ArrayList<Pea> peasToEliminate = new ArrayList<>();
-            for (Pea p : peas[rowIndex]) {
-                if (p != null) {
-                    if (p.outOfBonds()) {
-                        peasToEliminate.add(p);
-                    } else {
-                        p.forward();
-                    }
+        //zombies
+        ArrayList<Zombie> eliminateZombie = new ArrayList<>();
+        for (Zombie zombie : zombies[rowIndex]) {
+            if (zombie != null) {
+                zombie.update(currentTime);
+                if (zombie.getHp() <= 0 && !(zombie.getIcon().equals("dead"))) {
+                    zombie.die();
+                } else if (zombie.getHp() <= 0 && currentTime - zombie.getDeadTime() > 2400) {
+                    zombie.remove();
+                    eliminateZombie.add(zombie);
                 }
             }
-            peas[rowIndex].removeAll(peasToEliminate);
+        }
+        zombies[rowIndex].removeAll(eliminateZombie);
 
-            ArrayList<Sun> sunsToRemove = new ArrayList<>();
-            for (Sun sun : activeSuns[rowIndex]) {
-                if (sun.getActive()) {
-                    sun.moveToPosition(10, 10);
-                    if (sun.getInPosition()) {
-                        sunsToRemove.add(sun);
-                        sun.remove();
-                        suns += sun.getSuns();
-                    }
-                }
-            }
-            activeSuns[rowIndex].removeAll(sunsToRemove);
-
-            if (LawnMowers[rowIndex] != null) {
-                if (LawnMowers[rowIndex].getOutOfBonds()) {
-                    LawnMowers[rowIndex].remove();
-                    LawnMowers[rowIndex] = null;
+        //proyectiles
+        ArrayList<Projectile> projectileToEliminate = new ArrayList<Projectile>();
+        for (Projectile projectile : projectiles[rowIndex]) {
+            if (projectile != null) {
+                if (projectile.isOutOfBonds()) {
+                    projectileToEliminate.add(projectile);
                 } else {
-                    LawnMowers[rowIndex].update();
+                    projectile.forward();
                 }
             }
+        }
+        projectiles[rowIndex].removeAll(projectileToEliminate);
 
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - lastgenerate > autoGenerate) {
-                suns += 25;
-                brains += 50;
-                lastgenerate = currentTime;
+        //Colectables
+        ArrayList<Collectable> collectablesToRemove = new ArrayList<>();
+        for (Collectable collectable : collectables[rowIndex]) {
+            if (collectable.isActive()) {
+                collectable.moveToPosition();
+                if (collectable.isInPosition()) {
+                    collectablesToRemove.add(collectable);
+                    collectable.remove();
+                    int value = collectable.getValue();
+                    if (collectable instanceof Sun){
+                        suns+=value;
+                    }
+                    else {
+                        brains+=value;
+                    }
+                }
             }
-            sunLabel.setText(String.valueOf(suns));
-            brainLabel.setText(String.valueOf(brains));
+        }
+        collectables[rowIndex].removeAll(collectablesToRemove);
 
-            try {
-                Thread.sleep(10); // Ajusta el intervalo de actualización según sea necesario
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
+        //lawnmowers
+        if (LawnMowers[rowIndex] != null) {
+            if (LawnMowers[rowIndex].getOutOfBonds()) {
+                LawnMowers[rowIndex].remove();
+                LawnMowers[rowIndex] = null;
+            } else {
+                LawnMowers[rowIndex].update();
             }
         }
     }
 
     public void createPlant(String type, int row, int column,JButton button){
         if (type.equals("peashooter") && suns >= 100){
-            plants[row][column] = new Peashooter(button,layeredPane,peas[row],zombies[row]);
+            plants[row][column] = new Peashooter(button,layeredPane, projectiles[row],zombies[row]);
             plantHitboxs[row][column] = plants[row][column].getHitbox();
             suns -= 100;
         }
         else if (type.equals("sunflower") && suns >= 50){
-            plants[row][column] = new Sunflower(button, layeredPane,activeSuns[row]);
+            plants[row][column] = new Sunflower(button, layeredPane, collectables[row]);
             plantHitboxs[row][column] = plants[row][column].getHitbox();
             suns -= 50;
         }
@@ -209,13 +189,20 @@ public class POOBvsZOMBIES {
         }
     }
 
-    public synchronized void pauseGame() {
-        paused = true;
+    public void sumSuns(int sunsGot) {
+        suns += sunsGot;
     }
 
-    public synchronized void resumeGame() {
-        paused = false;
-        notifyAll(); // Notifica a todos los hilos que pueden reanudar
+    public void sumBrains(int brainsGot) {
+        brains += brainsGot;
+    }
+
+    public int getSuns() {
+        return suns;
+    }
+
+    public int getBrains() {
+        return brains;
     }
 
     public synchronized void endGame() {

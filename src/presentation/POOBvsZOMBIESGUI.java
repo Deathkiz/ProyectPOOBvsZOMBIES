@@ -11,43 +11,57 @@ import java.util.*;
 
 public class POOBvsZOMBIESGUI extends JFrame {
     public static int WIDTH, HEIGHT;
-    private JLabel background;
     private JLayeredPane principalPanel;
+    //background y sus posibles imagenes
+    private JLabel background;
+    private ImageIcon menuBackground;
+    private ImageIcon gameBackground;
 
-    private JFrame framePvM;
+    //frame pvp
     private JFrame framePvP;
-    private JFrame frameMvM;
-
-    //private TreeMap<String, JButton> buttons;
+    //botones frame pvp
     private JButton PvPButton;
+    private JButton aceptarPvP;
+    private JButton cancelarPvP;
+    //informacion pvp
+    private String namePlayer11;
+    private String namePlayer2;
+    private JTextField nameForPlayer1;
+    private JTextField nameForPlayer2;
+
+    //frame pvm
+    private JFrame framePvM;
+    //botones frame pvm
     private JButton PvMButton;
-    private JButton MvMButton;
+    private JButton aceptarPvM;
+    private JButton cancelarPvM;
     private JButton zombiesOriginal;
     private JButton zombiesStrategic;
+    //informacion pvm
+    private String namePlayer1;
+    private JTextField nameForPlayer11;
+
+
+    //frame mvm
+    private JFrame frameMvM;
+    //botones frame mvm
+    private JButton MvMButton;
+    private JButton aceptarMvM;
+    private JButton cancelarMvM;
     private JButton zombiesOriginal2;
     private JButton zombiesStrategic2;
     private JButton plantsIntelligent;
     private JButton plantsStrategic;
-    private JButton aceptarPvP;
-    private JButton cancelarPvP;
-    private JButton aceptarPvM;
-    private JButton cancelarPvM;
-    private JButton aceptarMvM;
-    private JButton cancelarMvM;
-    private JButton aceptarChoose;
-    private JButton cancelarChoose;
 
-
-    private JTextField nameForPlayer1;
-    private JTextField nameForPlayer11;
-    private JTextField nameForPlayer2;
-    private String namePlayer11;
-    private String namePlayer1;
-    private String namePlayer2;
+    //informacion maquinas
     private int modeMachine = 0;
     private int modePlants = 0;
 
+    //frame choose
     private JFrame choose;
+    //botones frame choose
+    private JButton aceptarChoose;
+    private JButton cancelarChoose;
     private ColorButton peaShooter;
     private ColorButton sunflower;
     private ColorButton wallnut;
@@ -58,6 +72,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private ColorButton zombieBuckethead;
     private ColorButton ECIZombie;
     private ColorButton Brainstain;
+    //informacion frame choose
     private boolean usagePeashooter = true;
     private boolean usageSunflower = true;
     private boolean usageECIPlant = true;
@@ -69,24 +84,35 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private boolean usageECIZombie = true;
     private boolean usageBrainstain = true;
 
-    private int offsetX, offsetY;
+    //tipo de letra
+    private Font sizedFont;
 
+    //logica del juego
     private POOBvsZOMBIES GAME;
-    private JLayeredPane layeredPane;
-    private JPanel hitboxSystem;
+    private boolean isPaused = false;
+    private long totalPausedTime = 0; // Tiempo total acumulado en pausa
+    private long pauseStartTime = 0;
+    //malla de botones
+    private JPanel gridPanel;
     private ArrayList<JButton> positions;
+    //imagen y botones de menu de plantas
+    private JLabel plantLabel;
+    private JPanel plantMenuPanel;
     private ArrayList<JButton> plantOptions;
+    private JLabel sunLabel;
+
+    //imagen y boton de menu de zombies
+    private JLabel zombieLabel;
+    private JPanel zombieMenuPanel;
     private ArrayList<JButton> zombieOptions;
+    private JLabel brainLabel;
 
     private boolean activePlant = false;
     private boolean activeZombie = false;
     private String selectedPlant;
     private String selectedZombie;
-    private ImageIcon imageIcon;
-    private JLabel sunLabel;
-    private JLabel brainLabel;
 
-    private Font sizedFont;
+
 
     public POOBvsZOMBIESGUI() {
         setTitle("PoobVsZombies");
@@ -99,19 +125,22 @@ public class POOBvsZOMBIESGUI extends JFrame {
         setExtendedState(MAXIMIZED_BOTH);
         prepareElements();
         prepareActions();
+        revalidate();
+        repaint();
     }
 
     private void prepareElements() {
+        //preparaJlayeredPane y el fondo
         prepareElementsStart();
-        prepareElementsButtons();
-        frameForPvM();
+        //prepara botones primer menu (eleccion de modo) y sus frames respectivos
+        prepareMenuPrincipalButtons();
         frameForPvP();
+        frameForPvM();
         frameForMvM();
-        createChooseButtons();
+        //prepara frame de seleccion de zombies y plantas
         frameChoose();
-        fontOfSunsBrains();
-        prepareGame();
-
+        //prepara paneles y botones para el juego
+        prepareGame();//dividirlo
     }
 
     private void prepareElementsStart() {
@@ -129,6 +158,13 @@ public class POOBvsZOMBIESGUI extends JFrame {
         background = new JLabel();
         ImageIcon imageBackground = new ImageIcon("src/resources/FondoInicial.jpg");
         Image scaledImage = setSizeImageBackground(imageBackground);
+        ImageIcon imageMenuBackground = new ImageIcon(getClass().getResource("/resources/Menu.jpg"));
+        Image menuImage = setSizeImageBackground(imageMenuBackground);
+        menuBackground = new ImageIcon(menuImage);
+        ImageIcon imageGame = new ImageIcon("src/resources/Frontyard.jpg");
+        Image gameImage = setSizeImageBackground(imageGame);
+        gameBackground = new ImageIcon(gameImage);
+
         background.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         background.setMinimumSize(new Dimension(WIDTH, HEIGHT));
         background.setMaximumSize(new Dimension(WIDTH, HEIGHT));
@@ -137,50 +173,15 @@ public class POOBvsZOMBIESGUI extends JFrame {
         background.setOpaque(true);
     }
 
-    private void prepareElementsButtons() {
+    private void prepareMenuPrincipalButtons() {
         PvPButton = new JButton();
         PvMButton = new JButton();
         MvMButton = new JButton();
-        aceptarPvP = new JButton("Accept");
-        aceptarPvM = new JButton("Accept");
-        aceptarMvM = new JButton("Accept");
-        aceptarChoose = new JButton("Accept");
-        cancelarPvP = new JButton("Cancel");
-        cancelarPvM = new JButton("Cancel");
-        cancelarMvM = new JButton("Cancel");
-        cancelarChoose = new JButton("Cancel");
-        plantsIntelligent = new JButton("Plants Intelligent");
-        plantsStrategic = new JButton("Plants Strategic");
-        zombiesOriginal = new JButton("Zombies Original");
-        zombiesStrategic = new JButton("Zombies Strategic");
-        zombiesOriginal2 = new JButton("Zombies Original");
-        zombiesStrategic2 = new JButton("Zombies Strategic");
-
-        // Añadir botones al panel
-        prepareSizePrincipalButtons();
-
-        principalPanel.add(PvMButton, Integer.valueOf(1));
-        principalPanel.add(PvPButton, Integer.valueOf(1));
-        principalPanel.add(MvMButton, Integer.valueOf(3));
-        PvMButton.setVisible(false);
-        PvPButton.setVisible(false);
-        MvMButton.setVisible(false);
-    }
-
-    private void prepareSizePrincipalButtons() {
         preparePvPButton();
         preparePvMButton();
         prepareMvMButton();
     }
-    private void fontOfSunsBrains(){
 
-        try {
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/resources/Fonts/Hotel W00 Black.ttf"));
-            sizedFont = customFont.deriveFont(Font.PLAIN, (int) (HEIGHT*0.08*0.25));
-        } catch (FontFormatException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
     private void preparePvPButton() {
         PvPButton.setBounds( (int) (4.05*(WIDTH / 9)), (int) (1.46*(HEIGHT / 3.5)), (int) (WIDTH / 3.3), (int) (HEIGHT / 8));
         ImageIcon imagePvPButton = new ImageIcon(getClass().getResource("/resources/ButtonPvP.png"));
@@ -229,42 +230,67 @@ public class POOBvsZOMBIESGUI extends JFrame {
         MvMButton.setBorderPainted(false);
     }
 
+
+
     private void frameForPvP(){
+        //crear objetos
         framePvP = new JFrame();
         nameForPlayer11 = new JTextField("Name 1");
         nameForPlayer2 = new JTextField("Name 2");
+        aceptarPvP = new JButton("Accept");
+        cancelarPvP = new JButton("Cancel");
         JPanel panelFramePvP = new JPanel(new FlowLayout());
+
+        //editarlos
+        framePvP.setSize(WIDTH / 2, HEIGHT / 2);
+        framePvP.setLocationRelativeTo(null);
+
+        //agregarlos al panel y frame
         panelFramePvP.add(nameForPlayer11);
         panelFramePvP.add(nameForPlayer2);
         panelFramePvP.add(aceptarPvP);
         panelFramePvP.add(cancelarPvP);
         framePvP.add(panelFramePvP);
-        framePvP.setSize(WIDTH / 2, HEIGHT / 2);
-        framePvP.setLocationRelativeTo(null);
     }
 
     private void frameForPvM() {
+        //crear objetos
         framePvM = new JFrame("Player vs Machine");
         nameForPlayer1 = new JTextField("Name");
+        aceptarPvM = new JButton("Accept");
+        cancelarPvM = new JButton("Cancel");
+        zombiesOriginal = new JButton("Zombies Original");
+        zombiesStrategic = new JButton("Zombies Strategic");
 
+        //editarlos
         framePvM.setSize(WIDTH / 2, HEIGHT / 2);
         framePvM.setLocationRelativeTo(null);
 
+        //agregarlos al panel y frame
         JPanel panelFramePvM = new JPanel(new FlowLayout()); // Cambiado a FlowLayout
         panelFramePvM.add(nameForPlayer1);
         panelFramePvM.add(zombiesOriginal);
         panelFramePvM.add(zombiesStrategic);
         panelFramePvM.add(aceptarPvM);
         panelFramePvM.add(cancelarPvM);
-
         framePvM.add(panelFramePvM);
     }
 
     private void frameForMvM(){
+        //crear objetos
         frameMvM = new JFrame();
+        aceptarMvM = new JButton("Accept");
+        cancelarMvM = new JButton("Cancel");
+        plantsIntelligent = new JButton("Plants Intelligent");
+        plantsStrategic = new JButton("Plants Strategic");
+        zombiesOriginal2 = new JButton("Zombies Original");
+        zombiesStrategic2 = new JButton("Zombies Strategic");
+
+        //editarlos
         frameMvM.setSize(WIDTH / 2, HEIGHT / 2);
         frameMvM.setLocationRelativeTo(null);
 
+        //agregarlos al panel y frame
         JPanel panelFrameMvM = new JPanel(new FlowLayout());
         panelFrameMvM.add(plantsIntelligent);
         panelFrameMvM.add(plantsStrategic);
@@ -276,87 +302,84 @@ public class POOBvsZOMBIESGUI extends JFrame {
     }
 
     private void frameChoose(){
+        //crear objetos
         choose = new JFrame();
+        aceptarChoose = new JButton("Accept");
+        cancelarChoose = new JButton("Cancel");
+        JPanel panelChoose = new JPanel(new BorderLayout());
+        JPanel panelGrid = new JPanel(new GridLayout(2,5,10,10));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        createChooseButtons();
+
+        //editarlos
+        //frame
         choose.setSize(WIDTH / 2, HEIGHT / 2);
         choose.setLocationRelativeTo(null);
+        //paneles
+        panelChoose.setBackground(Color.decode("#582d17"));
+        panelGrid.setBackground(Color.decode("#582d17"));
+        buttonPanel.setBackground(Color.decode("#924e2a"));
+        //botones
+        aceptarChoose.setBackground(Color.decode("#6a3821"));
+        aceptarChoose.setForeground(Color.decode("#c79242"));
+        aceptarChoose.setBorderPainted(false);
+        cancelarChoose.setBackground(Color.decode("#6a3821"));
+        cancelarChoose.setForeground(Color.decode("#c79242"));
+        cancelarChoose.setBorderPainted(false);
 
-        JPanel panelChoose = new JPanel(new BorderLayout());
-
-
-        JPanel panelGrid = new JPanel(new GridLayout(2,5,10,10));
+        //agregarlos al panel y frame
+        //plantas
         panelGrid.add(sunflower);
         panelGrid.add(peaShooter);
         panelGrid.add(ECIPlant);
         panelGrid.add(wallnut);
         panelGrid.add(potatoMine);
+        //zombies
         panelGrid.add(zombie);
         panelGrid.add(zombieConehead);
         panelGrid.add(zombieBuckethead);
         panelGrid.add(ECIZombie);
         panelGrid.add(Brainstain);
-        panelChoose.add(panelGrid,BorderLayout.CENTER);
-        panelGrid.setBackground(Color.decode("#582d17"));
-
-        panelChoose.setBackground(Color.decode("#582d17"));
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        aceptarChoose.setBackground(Color.decode("#6a3821"));
-        aceptarChoose.setForeground(Color.decode("#c79242"));
-        cancelarChoose.setBackground(Color.decode("#6a3821"));
-        cancelarChoose.setForeground(Color.decode("#c79242"));
-        aceptarChoose.setBorderPainted(false);
-        cancelarChoose.setBorderPainted(false);
-
+        //aceptar cancelar
         buttonPanel.add(aceptarChoose);
         buttonPanel.add(cancelarChoose);
-        buttonPanel.setBackground(Color.decode("#924e2a"));
+        //paneles
+        panelChoose.add(panelGrid,BorderLayout.CENTER);
         panelChoose.add(buttonPanel, BorderLayout.SOUTH);
         panelChoose.setBackground(Color.decode("#582d17"));
+        //frame
         choose.add(panelChoose);
     }
 
     private void createChooseButtons(){
+        //plantas
         peaShooter = createColorButton("src/resources/peashooterSeedPacket.jpg", WIDTH/12, HEIGHT/6);
         sunflower = createColorButton("src/resources/SunflowerSeedPacket.jpg", WIDTH/12, HEIGHT/6);
         ECIPlant = createColorButton("src/resources/ECIPlantSeedPacket.jpg", WIDTH/12, HEIGHT/6);
         wallnut = createColorButton("src/resources/Wall-nutSeedPacket.jpg", WIDTH/12, HEIGHT/6);
         potatoMine = createColorButton("src/resources/PotatoMineSeedPacket.jpg", WIDTH/12, HEIGHT/6);
+
+        //zombies
         zombie = createColorButton("src/resources/ZombieSeedPacket.jpg", WIDTH/12, HEIGHT/6);
         zombieConehead = createColorButton("src/resources/ConeHeadSeedPacket.jpg", WIDTH/12, HEIGHT/6);
         zombieBuckethead = createColorButton("src/resources/BucketheadSeedPacket.jpg", WIDTH/12, HEIGHT/6);
         ECIZombie = createColorButton("src/resources/ZombieSeedPacket.jpg", WIDTH/12, HEIGHT/6);
         Brainstain = createColorButton("src/resources/ZombieSeedPacket.jpg", WIDTH/12, HEIGHT/6);
-
     }
 
+
     private void prepareGame(){
+        //Tipo de Letra
+        fontOfSunsBrains();
+
+        //grid del juego para plantas
+        //panel y arraylist para tener referencia sencilla a los botones
+        gridPanel = new JPanel(new GridLayout(5, 9));
         positions = new ArrayList<>();
-        layeredPane = new JLayeredPane();
-        layeredPane.setBounds(0, 0, WIDTH, HEIGHT);
-        layeredPane.setLayout(null);
-
-        hitboxSystem = new JPanel();
-        hitboxSystem.setBackground(Color.WHITE);
-        hitboxSystem.setBounds(0, 0, WIDTH, HEIGHT);
-        layeredPane.add(hitboxSystem, JLayeredPane.DEFAULT_LAYER);
-
-        JLabel imageLabel1 = new JLabel();
-        ImageIcon imageIcon1 = new ImageIcon("src/resources/plantMenu.jpg");
-        Image scaledImage1 = imageIcon1.getImage().getScaledInstance((int) (WIDTH*0.5), (int) (HEIGHT*0.1), Image.SCALE_SMOOTH);
-        imageLabel1.setIcon(new ImageIcon(scaledImage1));
-        imageLabel1.setBounds(0, 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
-        layeredPane.add(imageLabel1, JLayeredPane.PALETTE_LAYER);
-
-        JLabel imageLabel2 = new JLabel();
-        ImageIcon imageIcon2 = new ImageIcon("src/resources/zombieMenu.jpg");
-        Image scaledImage2 = imageIcon2.getImage().getScaledInstance((int) (WIDTH*0.5), (int) (HEIGHT*0.1), Image.SCALE_SMOOTH);
-        imageLabel2.setIcon(new ImageIcon(scaledImage2));
-        imageLabel2.setBounds((int) (WIDTH*0.5), 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
-        layeredPane.add(imageLabel2, JLayeredPane.PALETTE_LAYER);
-
-        // Malla de botones
-        JPanel gridPanel = new JPanel(new GridLayout(5, 9));
-        gridPanel.setOpaque(false); // Fondo transparente
+        //edicion del panel
+        gridPanel.setOpaque(false);
         gridPanel.setBounds((int) (WIDTH*0.05), (int) (HEIGHT*0.11), (int) (WIDTH*0.9), (int) (HEIGHT*0.85));
+        //crear y agregar los botones
         for (int i = 0; i < 45; i++) {
             JButton button = new JButton("");
             button.setContentAreaFilled(false);
@@ -365,26 +388,41 @@ public class POOBvsZOMBIESGUI extends JFrame {
             gridPanel.add(button);
             positions.add(button);
         }
-        layeredPane.add(gridPanel, JLayeredPane.PALETTE_LAYER);
+        gridPanel.setVisible(false);
+        principalPanel.add(gridPanel,Integer.valueOf(200));
 
-        // Imagen de fondo
-        JLabel imageLabel = new JLabel();
-        ImageIcon imageIcon = new ImageIcon("src/resources/Frontyard.jpg");
-        Image scaledImage = imageIcon.getImage().getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
-        imageLabel.setIcon(new ImageIcon(scaledImage));
-        imageLabel.setBounds(0, 0, WIDTH, HEIGHT);
-        layeredPane.add(imageLabel, JLayeredPane.PALETTE_LAYER);
+        //labels de imagen de fondo para menus de planta y zombie
+        //menu plantas
+        plantLabel = new JLabel();
+        ImageIcon imageIcon1 = new ImageIcon("src/resources/plantMenu.jpg");
+        Image scaledImage1 = imageIcon1.getImage().getScaledInstance((int) (WIDTH*0.5), (int) (HEIGHT*0.1), Image.SCALE_SMOOTH);
+        plantLabel.setIcon(new ImageIcon(scaledImage1));
+        plantLabel.setBounds(0, 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
+        plantLabel.setVisible(false);
+        principalPanel.add(plantLabel,Integer.valueOf(10));
+        //menu zombie
+        zombieLabel = new JLabel();
+        ImageIcon imageIcon2 = new ImageIcon("src/resources/zombieMenu.jpg");
+        Image scaledImage2 = imageIcon2.getImage().getScaledInstance((int) (WIDTH*0.5), (int) (HEIGHT*0.1), Image.SCALE_SMOOTH);
+        zombieLabel.setIcon(new ImageIcon(scaledImage2));
+        zombieLabel.setBounds((int) (WIDTH*0.5), 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
+        zombieLabel.setVisible(false);
+        principalPanel.add(zombieLabel, Integer.valueOf(10));
 
+        //Botones de los menus
+        //tamaño boton tanto planta como zombie
+        int buttonWidth = (int) (WIDTH * 0.4 / 8);
+        int buttonHeight = (int) (HEIGHT * 0.08);
 
-        plantOptions = new ArrayList<>();
-        JPanel plantMenuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,(int) (WIDTH*0.009),(int) (HEIGHT*0.01)));
-        plantMenuPanel.setOpaque(false); // Fondo transparente
+        //panel para plantas
+        plantMenuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,(int) (WIDTH*0.009),(int) (HEIGHT*0.01)));
+        plantMenuPanel.setOpaque(false);
         plantMenuPanel.setBounds(0, 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
+        //botones de plantas y su arrayList para facil acceso
+        plantOptions = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
             JButton button = new JButton("");
             button.setContentAreaFilled(false);
-            int buttonWidth = (int) (WIDTH * 0.4 / 8);
-            int buttonHeight = (int) (HEIGHT * 0.08);
             button.setBorderPainted(false);
             button.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
             if (i==1){
@@ -419,19 +457,23 @@ public class POOBvsZOMBIESGUI extends JFrame {
             plantMenuPanel.add(button);
             plantOptions.add(button);
         }
-        layeredPane.add(plantMenuPanel,JLayeredPane.MODAL_LAYER);
-
+        plantMenuPanel.setVisible(false);
+        principalPanel.add(plantMenuPanel,Integer.valueOf(200));
+        //label para mostrar cantidad de soles
         sunLabel = new JLabel();
         sunLabel.setBounds((int) (WIDTH*0.4/16),(int)(HEIGHT*0.075),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.08*0.25));
         sunLabel.setOpaque(false);
         sunLabel.setFont(sizedFont);
         sunLabel.setForeground(Color.decode("#1d1401"));
-        layeredPane.add(sunLabel,JLayeredPane.POPUP_LAYER);
+        sunLabel.setVisible(false);
+        principalPanel.add(sunLabel,Integer.valueOf(11));
 
-        zombieOptions = new ArrayList<>();
-        JPanel zombieMenuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,(int) (WIDTH*0.009),(int) (HEIGHT*0.01)));
+        //panel para zombies
+        zombieMenuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,(int) (WIDTH*0.009),(int) (HEIGHT*0.01)));
         zombieMenuPanel.setOpaque(false); // Fondo transparente
         zombieMenuPanel.setBounds((int) (WIDTH*0.5), 0, (int) (WIDTH*0.5), (int) (HEIGHT*0.1));
+        //botones de zombies y su arrayList para facil acceso
+        zombieOptions = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
             JButton button = new JButton();
             button.setContentAreaFilled(false);
@@ -469,14 +511,16 @@ public class POOBvsZOMBIESGUI extends JFrame {
             zombieMenuPanel.add(button);
             zombieOptions.add(button);
         }
-        layeredPane.add(zombieMenuPanel,JLayeredPane.MODAL_LAYER);
-
+        zombieMenuPanel.setVisible(false);
+        principalPanel.add(zombieMenuPanel,Integer.valueOf(200));
+        //label para mostrar cantidad de zombies
         brainLabel = new JLabel();
         brainLabel.setForeground(Color.decode("#1d1401"));
         brainLabel.setBounds((int) ((WIDTH*0.4/16)+ WIDTH/2),(int)(HEIGHT*0.075),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.08*0.25));
         brainLabel.setOpaque(false);
         brainLabel.setFont(sizedFont);
-        layeredPane.add(brainLabel,JLayeredPane.POPUP_LAYER);
+        brainLabel.setVisible(false);
+        principalPanel.add(brainLabel,Integer.valueOf(11));
     }
 
     private void prepareActions() {
@@ -485,48 +529,29 @@ public class POOBvsZOMBIESGUI extends JFrame {
         prepareActionsGame();
     }
 
-    private void game(){
-        setLayout(null);
-        add(layeredPane);
-        setVisible(true);
-        GAME = new POOBvsZOMBIES(150,250,positions,layeredPane,sunLabel,brainLabel);
-        int gameDuration = 10000;
-
-        // Crear un temporizador para finalizar el juego
-        javax.swing.Timer timer = new javax.swing.Timer(gameDuration, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GAME.endGame();
-                getContentPane().removeAll();
-                revalidate();
-                repaint();
-            }
-        });
-        timer.setRepeats(false); // Solo ejecuta la acción una vez
-        timer.start();
-
-    }
-
 
     private void prepareActionsStart() {
         background.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 background.removeMouseListener(this);
-                PvMButton.setVisible(true);
-                PvPButton.setVisible(true);
-                MvMButton.setVisible(true);
-                ImageIcon imageBackground = new ImageIcon(getClass().getResource("/resources/Menu.jpg"));
-                Image resizedImageBackground = imageBackground.getImage().getScaledInstance(WIDTH, HEIGHT,Image.SCALE_DEFAULT);
-                background.setIcon(new ImageIcon(resizedImageBackground));
+                principalPanel.add(PvMButton, Integer.valueOf(1));
+                principalPanel.add(PvPButton, Integer.valueOf(1));
+                principalPanel.add(MvMButton, Integer.valueOf(1));
+                background.setIcon(menuBackground);
                 background.setOpaque(true);
-                revalidate();
-                repaint();
             }
         });
     }
 
     private void prepareActionsMenuButtons(){
+        prepareActionsPVPFrame();
+        prepareActionsPVMFrame();
+        prepareActionsMVMFrame();
+        prepareActionsChooseFrame();
+    }
+
+    private void prepareActionsPVPFrame(){
         PvPButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -563,7 +588,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 framePvP.dispose();
             }
         });
+    }
 
+    private void prepareActionsPVMFrame(){
         PvMButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -608,7 +635,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 framePvM.dispose();
             }
         });
+    }
 
+    private void prepareActionsMVMFrame(){
         MvMButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -666,16 +695,16 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 frameMvM.dispose();
             }
         });
+    }
 
-
+    private void prepareActionsChooseFrame(){
         aceptarChoose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 choose.dispose();
-                getContentPane().removeAll();
+                visibleMenu(false);
+                visibleGame(true);
                 game();
-                revalidate();
-                repaint();
             }
         });
 
@@ -713,16 +742,13 @@ public class POOBvsZOMBIESGUI extends JFrame {
     }
 
     private void prepareActionsGame() {
-        // Acción para los botones de plantas
+        // Acción para los botones del menu de plantas
         for (int i = 0; i < plantOptions.size(); i++) {
             final int index = i;
             JButton button = plantOptions.get(i);
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(index == 0){
-                        GAME.pauseGame();
-                    }
                     // Establecer planta activa y seleccionada según el índice
                     if (index == 1) {
                         activePlant = true;
@@ -745,16 +771,13 @@ public class POOBvsZOMBIESGUI extends JFrame {
         }
 
 
-        // Acción para los botones de zombis
+        // Acción para los botones del menu de zombis
         for (int i = 0; i < zombieOptions.size(); i++) {
             final int index = i;
             JButton button = zombieOptions.get(i);
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (index == 0){
-                        GAME.resumeGame();
-                    }
                     // Establecer zombi activo y seleccionado según el índice
                     if (index == 1) {
                         activeZombie = true;
@@ -776,7 +799,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
             });
         }
 
-        // Acción para los botones de posiciones
+        // Acción para los botones de la grid
         for (int i = 0; i < positions.size(); i++) {
             final int index = i;
             JButton button = positions.get(i);
@@ -794,16 +817,14 @@ public class POOBvsZOMBIESGUI extends JFrame {
                     if (zombiePositions.contains(index)) {
                         if (activeZombie) {
                             handleZombieAction(button, row); // Manejar acción del zombi
+                            activeZombie = false;
                         }
                     }
                     // Acción si es una planta
                     else if (activePlant) {
                         handlePlantAction(button, row, column); // Manejar acción de la planta
+                        activePlant = false;
                     }
-
-                    // Resetear flags después de realizar la acción
-                    activeZombie = false;
-                    activePlant = false;
                 }
             });
         }
@@ -833,6 +854,35 @@ public class POOBvsZOMBIESGUI extends JFrame {
         }
     }
 
+    private void visibleGame(boolean flag){
+        //manejar plantas
+        for (JButton button: positions){
+            button.setIcon(null);
+        }
+
+        gridPanel.setVisible(flag);
+
+        plantLabel.setVisible(flag);
+        plantMenuPanel.setVisible(flag);
+        sunLabel.setVisible(flag);
+
+        zombieLabel.setVisible(flag);
+        zombieMenuPanel.setVisible(flag);
+        brainLabel.setVisible(flag);
+    }
+
+    private void visibleMenu(boolean flag){
+        if (flag){
+            background.setIcon(menuBackground);
+        }
+        else {
+            background.setIcon(gameBackground);
+        }
+        PvPButton.setVisible(flag);
+        PvMButton.setVisible(flag);
+        MvMButton.setVisible(flag);
+    }
+
     private Image setSizeImageBackground(ImageIcon imagePrincipal) {
         Image image = imagePrincipal.getImage();
         return image.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
@@ -842,6 +892,73 @@ public class POOBvsZOMBIESGUI extends JFrame {
         ImageIcon icon = new ImageIcon(imagePath);
         Image image = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ColorButton(new ImageIcon(image)); // Return ColorButton instance
+    }
+
+    private void fontOfSunsBrains(){
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/resources/Fonts/Hotel W00 Black.ttf"));
+            sizedFont = customFont.deriveFont(Font.PLAIN, (int) (HEIGHT*0.08*0.25));
+        } catch (FontFormatException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void game(){
+        GAME = new POOBvsZOMBIES(150,250,positions,principalPanel);
+        int gameDuration = 1000000;
+
+        new Thread(() -> {
+            long startTime = System.currentTimeMillis();
+            long lastUpdateTime = startTime;
+            long currentTime = startTime;
+            long frameTime = 1000 / 60; // Tiempo en milisegundos por cuadro (16.67 ms)
+
+            while (currentTime - startTime < gameDuration) {
+                currentTime = System.currentTimeMillis();
+
+                // Actualizar el juego solo si ha pasado el tiempo correspondiente (60 FPS)
+                if (currentTime - lastUpdateTime >= frameTime) {
+                    // Actualiza el juego
+                    GAME.update(currentTime - totalPausedTime);
+                    revalidate();
+                    repaint();
+                    sunLabel.setText(String.valueOf(GAME.getSuns()));
+                    brainLabel.setText(String.valueOf(GAME.getBrains()));
+                    lastUpdateTime = currentTime;
+                }
+
+                try {
+                    // Espera el tiempo restante hasta el siguiente cuadro (si el ciclo va muy rápido)
+                    long elapsedTime = currentTime - lastUpdateTime;
+                    if (elapsedTime < frameTime) {
+                        Thread.sleep(frameTime - elapsedTime); // Pausa para mantener 60 FPS
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return; // Salir del ciclo si ocurre una interrupción
+                }
+            }
+
+            System.out.println("Juego terminado");
+        }).start();
+    }
+
+    private void gameUpdate() {
+    }
+
+    public synchronized void pauseGame() {
+        if (!isPaused) {
+            isPaused = true;
+            pauseStartTime = System.currentTimeMillis(); // Marca el inicio de la pausa
+        }
+    }
+
+    public synchronized void resumeGame() {
+        if (isPaused) {
+            isPaused = false;
+            totalPausedTime += System.currentTimeMillis() - pauseStartTime;
+            notify(); // Reanuda el ciclo del juego
+        }
     }
 
     public static void main(String[] args) {

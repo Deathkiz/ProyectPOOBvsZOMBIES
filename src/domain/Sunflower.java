@@ -7,9 +7,9 @@ import java.util.ArrayList;
 public class Sunflower extends Plant{
     private long lastActionTime;
     private static final long ACTION_INTERVAL = 25000;
-    private ArrayList<Sun> suns;
+    private ArrayList<Collectable> suns;
 
-    public Sunflower(JButton button, JLayeredPane layeredPane, ArrayList<Sun> suns) {
+    public Sunflower(JButton button, JLayeredPane layeredPane, ArrayList<Collectable> suns) {
         super.hp = 300;
         super.button = button;
         super.layeredPane = layeredPane;
@@ -22,13 +22,11 @@ public class Sunflower extends Plant{
         this.lastActionTime = System.currentTimeMillis();
     }
 
-    public void update() {
-        long currentTime = System.currentTimeMillis();
+    public void update(long currentTime) {
         if (currentTime - lastActionTime >= ACTION_INTERVAL) {
             lastActionTime = currentTime;
             createSun();
         }
-
     }
 
     private void createSun(){

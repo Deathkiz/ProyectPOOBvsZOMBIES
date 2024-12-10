@@ -3,19 +3,16 @@ package domain;
 import javax.swing.*;
 import java.awt.*;
 
-public class Sun {
+public class Sun extends Collectable{
     private JButton button;
     private ImageIcon image;
     private JLayeredPane layeredPane;
-    private boolean inPosition;
-    private boolean active;
-    private int suns;
 
     public Sun(int suns, JLayeredPane layeredPane, JButton button) {
         this.layeredPane = layeredPane;
         inPosition = false;
         active = false;
-        this.suns = suns;
+        value = suns;
         Point buttonLocationOnScreen = button.getLocationOnScreen();
         Point layeredPaneLocationOnScreen = layeredPane.getLocationOnScreen();
 
@@ -39,8 +36,6 @@ public class Sun {
 
         // Agregar el JLabel al JLayeredPane en la capa DRAG_LAYER
         layeredPane.add(this.button, JLayeredPane.DRAG_LAYER);
-        layeredPane.revalidate();
-        layeredPane.repaint();
 
 
         this.button.addActionListener(e -> {
@@ -49,9 +44,10 @@ public class Sun {
 
     }
 
-    public boolean getActive(){return active;}
+    public void moveToPosition() {
+        int targetX = 10;
+        int targetY = 10;
 
-    public void moveToPosition(int targetX, int targetY) {
         int currentX = button.getX();
         int currentY = button.getY();
 
@@ -77,9 +73,6 @@ public class Sun {
 
             // Mover el botón a la nueva posición
             button.setBounds(currentX, currentY, button.getWidth(), button.getHeight());
-
-            // Repintar el panel para actualizar la interfaz gráfica
-            layeredPane.repaint();
         } else {
             inPosition = true; // Marcar que ya está en posición
         }
@@ -92,10 +85,4 @@ public class Sun {
             layeredPane.repaint();
         });
     }
-
-    public int getSuns() {
-        return suns;
-    }
-
-    public boolean getInPosition(){return inPosition;}
 }

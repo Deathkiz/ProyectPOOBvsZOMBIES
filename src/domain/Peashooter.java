@@ -7,12 +7,11 @@ import java.util.ArrayList;
 public class Peashooter extends Plant{
     private static final long speed = 10;
     private static final long ACTION_INTERVAL = 1500;
-    private ArrayList<Pea> Peas;
+    private ArrayList<Projectile> Peas;
     private long lastActionTime;
-    private long lastPeaMove;
     private ArrayList<Zombie> zombies;
 
-    public Peashooter(JButton button, JLayeredPane layeredPane, ArrayList<Pea> rowPeas, ArrayList<Zombie> zombies) {
+    public Peashooter(JButton button, JLayeredPane layeredPane, ArrayList<Projectile> rowPeas, ArrayList<Zombie> zombies) {
         super.hp = 300;
         super.layeredPane = layeredPane;
         super.button = button;
@@ -23,11 +22,10 @@ public class Peashooter extends Plant{
         button.setIcon(buttonIcon);
         createHitbox();
         this.lastActionTime = System.currentTimeMillis();
-        this.lastPeaMove = System.currentTimeMillis();
     }
 
-    public void update() {
-        long currentTime = System.currentTimeMillis();// Obtener el tiempo actual en nanosegundos
+    @Override
+    public void update(long currentTime) {
         if (currentTime - lastActionTime >= ACTION_INTERVAL) {
             attack();
             lastActionTime = currentTime;

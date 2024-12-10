@@ -22,7 +22,7 @@ public abstract class Zombie {
 
     public Rectangle getHitbox() {return hitbox;}
 
-    public abstract void update();
+    public abstract void update(long currentTime);
 
     public abstract void die();
 

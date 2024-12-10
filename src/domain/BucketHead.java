@@ -51,12 +51,11 @@ public class BucketHead extends Zombie{
         label.setBounds(layeredPane.getWidth(), y, width, height);
         super.hitbox = new Rectangle((int) (layeredPane.getWidth() + width * 0.7), relativeY, (int) width / 5, button.getHeight());
         layeredPane.add(label, JLayeredPane.DRAG_LAYER);
-        layeredPane.repaint();
     }
 
 
-    public void update() {
-        if (hp>100){
+    public void update(long currentTime) {
+        if (hp>0){
             int position = -1;
             for (int i = 0; i<hitboxs.length && position<0;i++){
                 if (hitboxs[i] != null){
@@ -66,65 +65,30 @@ public class BucketHead extends Zombie{
                     }
                 }
             }
-
-            if (attack && !icon.equals("atacando")) {
-                label.setIcon(attackIcon);
-                icon = "atacando";
-            } else if ((!attack) && !icon.equals("caminando")) {
-                label.setIcon(walkingIcon);
-                icon = "caminando";
+            if (hp>100){
+                if (attack && !icon.equals("atacando")) {
+                    label.setIcon(attackIcon);
+                    icon = "atacando";
+                } else if ((!attack) && !icon.equals("caminando")) {
+                    label.setIcon(walkingIcon);
+                    icon = "caminando";
+                }
             }
-
-            long currentTime;
+            else {
+                if (attack && !icon.equals("atacandoSinCubeta")) {
+                    label.setIcon(attackBucketLessIcon);
+                    icon = "atacandoSinCubeta";
+                } else if ((!attack) && !icon.equals("caminandoSinCubeta")) {
+                    label.setIcon(walkingBucketLessIcon);
+                    icon = "caminandoSinCubeta";
+                }
+            }
             if (position >= 0) {
-                currentTime = System.currentTimeMillis();
                 if (currentTime-lastAttack >= 500){
                     attackZombie(position);
                     lastAttack = currentTime;
                 }
             } else {
-                currentTime = System.currentTimeMillis();
-                if (currentTime-lastMovement >= 100){
-                    movement(distance);
-                    lastMovement = currentTime;
-                }
-            }
-
-            if (lawnMower!= null){
-                if (hitbox.intersects(lawnMower.getHitbox())){
-                    lawnMower.activate();
-                }
-            }
-            attack = false;
-        }
-        else if (hp>0){
-            int position = -1;
-            for (int i = 0; i<hitboxs.length && position<0;i++){
-                if (hitboxs[i] != null){
-                    if (hitboxs[i].intersects(hitbox)){
-                        attack = true;
-                        position = i;
-                    }
-                }
-            }
-
-            if (attack && !icon.equals("atacandoSinCubeta")) {
-                label.setIcon(attackBucketLessIcon);
-                icon = "atacandoSinCubeta";
-            } else if ((!attack) && !icon.equals("caminandoSinCubeta")) {
-                label.setIcon(walkingBucketLessIcon);
-                icon = "caminandoSinCubeta";
-            }
-
-            long currentTime;
-            if (position >= 0) {
-                currentTime = System.currentTimeMillis();
-                if (currentTime-lastAttack >= 500){
-                    attackZombie(position);
-                    lastAttack = currentTime;
-                }
-            } else {
-                currentTime = System.currentTimeMillis();
                 if (currentTime-lastMovement >= 100){
                     movement(distance);
                     lastMovement = currentTime;

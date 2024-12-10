@@ -31,7 +31,7 @@ public abstract class Plant {
         return hitbox;
     }
 
-    public abstract void update();
+    public abstract void update(long currentTime);
 
     public void die(){
         button.setIcon(null);

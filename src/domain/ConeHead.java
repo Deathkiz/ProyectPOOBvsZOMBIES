@@ -118,8 +118,8 @@ public class ConeHead extends Zombie{
         plants[position].damage(100);
     }
 
-    public void die(){
-        deadTime = System.currentTimeMillis();
+    public void die(long currentTime){
+        deadTime = currentTime;
         hitbox = new Rectangle(0,0,0,0);
         label.setIcon(bodyDieIcon);
         icon = "dead";

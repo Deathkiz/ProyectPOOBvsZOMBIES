@@ -83,8 +83,8 @@ public class POOBvsZOMBIES {
             if (zombie != null) {
                 zombie.update(currentTime);
                 if (zombie.getHp() <= 0 && !(zombie.getIcon().equals("dead"))) {
-                    zombie.die();
-                } else if (zombie.getHp() <= 0 && currentTime - zombie.getDeadTime() > 2400) {
+                    zombie.die(currentTime);
+                } else if (zombie.getHp() <= 0 && currentTime - zombie.getDeadTime() > 2000) {
                     zombie.remove();
                     eliminateZombie.add(zombie);
                 }
@@ -205,10 +205,25 @@ public class POOBvsZOMBIES {
         return brains;
     }
 
-    public synchronized void endGame() {
-        gameOver = true;
-        paused = false;
-        notifyAll();
-        JOptionPane.showMessageDialog(null, "¡El juego ha terminado!", "Fin del juego", JOptionPane.INFORMATION_MESSAGE);
+    public void clear(){
+        for (LawnMower lawnMower : LawnMowers){
+            lawnMower.remove();
+        }
+        for (ArrayList<Zombie> rowZombies:zombies){
+            for (Zombie zombie:rowZombies){
+                zombie.remove();
+            }
+        }
+        for (ArrayList<Collectable> rowCollectables:collectables){
+            for (Collectable collectable:rowCollectables){
+                collectable.remove();
+            }
+        }
+
+        for (ArrayList<Projectile> rowProjectiles:projectiles){
+            for (Projectile projectile:rowProjectiles){
+                projectile.remove();
+            }
+        }
     }
 }

@@ -45,6 +45,9 @@ public class Brainstein extends Zombie{
             lastActionTime = currentTime;
             createBrain();
         }
+        if (hp<=0) {
+            icon = "dead";
+        }
     }
 
     private void createBrain(){
@@ -52,12 +55,12 @@ public class Brainstein extends Zombie{
     }
 
     @Override
-    public void die() {
-
+    public void die(long currentTime) {
+        hitbox.setBounds(0,0,0,0);
     }
 
     @Override
     public void remove() {
-
+        button.setIcon(null);
     }
 }

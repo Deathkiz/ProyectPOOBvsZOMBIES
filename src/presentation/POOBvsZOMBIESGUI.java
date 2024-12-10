@@ -89,12 +89,14 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
     //logica del juego
     private POOBvsZOMBIES GAME;
-    private boolean isPaused = false;
+    private volatile boolean isPaused = false;
+    private volatile boolean endGame = false;
     private long totalPausedTime = 0; // Tiempo total acumulado en pausa
     private long pauseStartTime = 0;
     //malla de botones
     private JPanel gridPanel;
     private ArrayList<JButton> positions;
+    private JLabel timeLabel;
     //imagen y botones de menu de plantas
     private JLabel plantLabel;
     private JPanel plantMenuPanel;
@@ -516,11 +518,22 @@ public class POOBvsZOMBIESGUI extends JFrame {
         //label para mostrar cantidad de zombies
         brainLabel = new JLabel();
         brainLabel.setForeground(Color.decode("#1d1401"));
-        brainLabel.setBounds((int) ((WIDTH*0.4/16)+ WIDTH/2),(int)(HEIGHT*0.075),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.08*0.25));
+        brainLabel.setBounds((int) ((WIDTH*0.4/16)+ WIDTH/2),(int)(HEIGHT*0.075),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.02));
         brainLabel.setOpaque(false);
         brainLabel.setFont(sizedFont);
         brainLabel.setVisible(false);
         principalPanel.add(brainLabel,Integer.valueOf(11));
+
+        timeLabel = new JLabel();
+        timeLabel.setForeground(Color.decode("#1d1401"));
+        timeLabel.setBackground(Color.WHITE);
+        timeLabel.setBounds((int) (WIDTH/2)-100,(int)(HEIGHT*0.96),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.02));
+        timeLabel.setOpaque(true);
+        timeLabel.setFont(sizedFont);
+        timeLabel.setVisible(false);
+        timeLabel.setVerticalAlignment(SwingConstants.CENTER);
+        timeLabel.setVerticalAlignment(SwingConstants.CENTER);
+        principalPanel.add(timeLabel,Integer.valueOf(11));
     }
 
     private void prepareActions() {
@@ -704,6 +717,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 choose.dispose();
                 visibleMenu(false);
                 visibleGame(true);
+                endGame = false;
                 game();
             }
         });
@@ -749,6 +763,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    if (index == 0){
+                        pauseGame();
+                    }
                     // Establecer planta activa y seleccionada según el índice
                     if (index == 1) {
                         activePlant = true;
@@ -766,6 +783,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
                         activePlant = true;
                         selectedPlant = "potatoMine";
                     }
+                    else if (index == 6){
+                        endGame();
+                    }
                 }
             });
         }
@@ -778,6 +798,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    if (index == 0){
+                        resumeGame();
+                    }
                     // Establecer zombi activo y seleccionado según el índice
                     if (index == 1) {
                         activeZombie = true;
@@ -864,6 +887,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
         zombieLabel.setVisible(flag);
         zombieMenuPanel.setVisible(flag);
         brainLabel.setVisible(flag);
+
+        timeLabel.setVisible(flag);
     }
 
     private void visibleMenu(boolean flag){
@@ -899,7 +924,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
     }
 
     private void game() {
-        GAME = new POOBvsZOMBIES(150, 250, positions, principalPanel);
+        GAME = new POOBvsZOMBIES(10000, 10000, positions, principalPanel);
         int gameDuration = 1000000;
         totalPausedTime = 0;
         pauseStartTime = 0;
@@ -910,9 +935,11 @@ public class POOBvsZOMBIESGUI extends JFrame {
             long currentTime = startTime;
             long frameTime = 1000 / 60; // Tiempo en milisegundos por cuadro (16.67 ms)
 
-            while (currentTime - startTime - totalPausedTime< gameDuration) {
+            while (currentTime - startTime - totalPausedTime < gameDuration) {
                 currentTime = System.currentTimeMillis();
-
+                if (endGame){
+                    break;
+                }
                 // Si el juego está en pausa, solo ajusta el tiempo en pausa
                 if (isPaused) {
                     if (pauseStartTime == 0) {
@@ -930,6 +957,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                     repaint();
                     sunLabel.setText(String.valueOf(GAME.getSuns()));
                     brainLabel.setText(String.valueOf(GAME.getBrains()));
+                    timeLabel.setText(String.valueOf((gameDuration-currentTime+startTime+totalPausedTime)/1000));
                     lastUpdateTime = currentTime;
                 }
 
@@ -945,7 +973,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 }
             }
 
-            System.out.println("Juego terminado");
+            visibleGame(false);
+            visibleMenu(true);
         }).start();
     }
 
@@ -955,6 +984,11 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
     public void resumeGame() {
         isPaused = false;
+    }
+
+    public void endGame(){
+        endGame = true;
+        GAME.clear();
     }
 
     public static void main(String[] args) {

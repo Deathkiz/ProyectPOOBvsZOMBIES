@@ -838,12 +838,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
             // Lógica para ECIZombie
         } else if ("brainstein".equals(selectedZombie)) {
             if (button.getIcon() == null) {
-                ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/PeaShooter.gif"));
-                gifIcon = new ImageIcon(gifIcon.getImage().getScaledInstance(
-                        (int) (button.getSize().getWidth() * 0.7),
-                        (int) (button.getSize().getHeight() * 0.7),
-                        Image.SCALE_DEFAULT));
-                button.setIcon(gifIcon);
+                GAME.createZombie(selectedZombie, row, button);
             }
         }
     }
@@ -903,9 +898,11 @@ public class POOBvsZOMBIESGUI extends JFrame {
         }
     }
 
-    private void game(){
-        GAME = new POOBvsZOMBIES(150,250,positions,principalPanel);
+    private void game() {
+        GAME = new POOBvsZOMBIES(150, 250, positions, principalPanel);
         int gameDuration = 1000000;
+        totalPausedTime = 0;
+        pauseStartTime = 0;
 
         new Thread(() -> {
             long startTime = System.currentTimeMillis();
@@ -913,12 +910,21 @@ public class POOBvsZOMBIESGUI extends JFrame {
             long currentTime = startTime;
             long frameTime = 1000 / 60; // Tiempo en milisegundos por cuadro (16.67 ms)
 
-            while (currentTime - startTime < gameDuration) {
+            while (currentTime - startTime - totalPausedTime< gameDuration) {
                 currentTime = System.currentTimeMillis();
 
-                // Actualizar el juego solo si ha pasado el tiempo correspondiente (60 FPS)
+                // Si el juego está en pausa, solo ajusta el tiempo en pausa
+                if (isPaused) {
+                    if (pauseStartTime == 0) {
+                        pauseStartTime = currentTime; // Registrar inicio de la pausa
+                    }
+                    continue; // Salta el resto del ciclo si está en pausa
+                } else if (pauseStartTime != 0) {
+                    // Salió de la pausa, actualizar el tiempo total pausado
+                    totalPausedTime += currentTime - pauseStartTime;
+                    pauseStartTime = 0;
+                }
                 if (currentTime - lastUpdateTime >= frameTime) {
-                    // Actualiza el juego
                     GAME.update(currentTime - totalPausedTime);
                     revalidate();
                     repaint();
@@ -928,7 +934,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 }
 
                 try {
-                    // Espera el tiempo restante hasta el siguiente cuadro (si el ciclo va muy rápido)
+                    // Espera el tiempo restante hasta el siguiente cuadro
                     long elapsedTime = currentTime - lastUpdateTime;
                     if (elapsedTime < frameTime) {
                         Thread.sleep(frameTime - elapsedTime); // Pausa para mantener 60 FPS
@@ -943,22 +949,12 @@ public class POOBvsZOMBIESGUI extends JFrame {
         }).start();
     }
 
-    private void gameUpdate() {
+    public void pauseGame() {
+        isPaused = true;
     }
 
-    public synchronized void pauseGame() {
-        if (!isPaused) {
-            isPaused = true;
-            pauseStartTime = System.currentTimeMillis(); // Marca el inicio de la pausa
-        }
-    }
-
-    public synchronized void resumeGame() {
-        if (isPaused) {
-            isPaused = false;
-            totalPausedTime += System.currentTimeMillis() - pauseStartTime;
-            notify(); // Reanuda el ciclo del juego
-        }
+    public void resumeGame() {
+        isPaused = false;
     }
 
     public static void main(String[] args) {

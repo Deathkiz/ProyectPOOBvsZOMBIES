@@ -180,8 +180,8 @@ public class POOBvsZOMBIES {
             brains -= 200;
         }
         else if (type.equals("brainstein") && brains>=50){
-            //zombies[row].add(new BucketHead(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));
-            //brains -= 200;
+            zombies[row].add(new Brainstein(button,layeredPane,collectables[row]));
+            brains -= 200;
         }
         else if (type.equals("ECIZombie") && brains>=250){
             //zombies[row].add(new BucketHead(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));

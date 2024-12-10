@@ -855,10 +855,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
 
     private void handleZombieAction(JButton button,int row) {
-        if ("basic".equals(selectedZombie) || "coneHead".equals(selectedZombie) || "bucketHead".equals(selectedZombie)) {
+        if ("basic".equals(selectedZombie) || "coneHead".equals(selectedZombie) || "bucketHead".equals(selectedZombie) || "ECIZombie".equals(selectedZombie)) {
             GAME.createZombie(selectedZombie, row, button);
-        } else if ("ECIZombie".equals(selectedZombie)) {
-            // Lógica para ECIZombie
         } else if ("brainstein".equals(selectedZombie)) {
             if (button.getIcon() == null) {
                 GAME.createZombie(selectedZombie, row, button);
@@ -924,7 +922,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
     }
 
     private void game() {
-        GAME = new POOBvsZOMBIES(10000, 10000, positions, principalPanel);
+        GAME = new POOBvsZOMBIES(75, 10000, positions, principalPanel);
         int gameDuration = 1000000;
         totalPausedTime = 0;
         pauseStartTime = 0;

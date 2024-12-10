@@ -25,7 +25,7 @@ public class Wallnut extends Plant{
     }
 
     @Override
-    public void update(long currentTime) {
+    public void update(long currentTime,int actualSuns) {
         if (hp <= 2500 && icon.equals("normal")){
             button.setIcon(cracked);
             icon = "cracked";

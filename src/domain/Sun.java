@@ -8,7 +8,7 @@ public class Sun extends Collectable{
     private ImageIcon image;
     private JLayeredPane layeredPane;
 
-    public Sun(int suns, JLayeredPane layeredPane, JButton button) {
+    public Sun(int suns,int size, JLayeredPane layeredPane, JButton button) {
         this.layeredPane = layeredPane;
         inPosition = false;
         active = false;
@@ -22,10 +22,20 @@ public class Sun extends Collectable{
         // Tamaño del botón
         Dimension buttonSize = button.getSize();
 
-        // Configurar la imagen y el JLabel
         ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/Sun.gif"));
-        int labelWidth = (int) (buttonSize.getWidth()*0.5);
-        int labelHeight = (int) (buttonSize.getHeight()*0.5);
+        // Configurar la imagen y el JLabel
+
+        int labelWidth;
+        int labelHeight;
+        //tamaño por defecto
+        labelWidth = (int) (buttonSize.getWidth()*0.5);
+        labelHeight = (int) (buttonSize.getHeight()*0.5);
+        //tamaño especial
+        if (size == 2){
+            labelWidth = (int) (buttonSize.getWidth()*0.75);
+            labelHeight = (int) (buttonSize.getHeight()*0.75);
+        }
+
         image = new ImageIcon(gifIcon.getImage().getScaledInstance(labelWidth, labelHeight, Image.SCALE_DEFAULT));
         this.button = new JButton(image);
         this.button.setContentAreaFilled(false);

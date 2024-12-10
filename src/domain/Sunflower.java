@@ -22,7 +22,7 @@ public class Sunflower extends Plant{
         this.lastActionTime = System.currentTimeMillis();
     }
 
-    public void update(long currentTime) {
+    public void update(long currentTime,int actualSuns) {
         if (currentTime - lastActionTime >= ACTION_INTERVAL) {
             lastActionTime = currentTime;
             createSun();
@@ -30,7 +30,7 @@ public class Sunflower extends Plant{
     }
 
     private void createSun(){
-        suns.add(new Sun(25,layeredPane,button));
+        suns.add(new Sun(25,1,layeredPane,button));
     }
 
 }

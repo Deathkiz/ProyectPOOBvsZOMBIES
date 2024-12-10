@@ -25,7 +25,7 @@ public class Peashooter extends Plant{
     }
 
     @Override
-    public void update(long currentTime) {
+    public void update(long currentTime,int actualSuns) {
         if (currentTime - lastActionTime >= ACTION_INTERVAL) {
             attack();
             lastActionTime = currentTime;

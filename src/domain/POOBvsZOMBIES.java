@@ -19,13 +19,8 @@ public class POOBvsZOMBIES {
     private int brains;
     private final long autoGenerate = 10000;
     private long lastgenerate;
-    private volatile boolean paused;
-    private volatile boolean gameOver;
-
     public POOBvsZOMBIES(int suns, int brains, ArrayList<JButton> positions,JLayeredPane principalPane) {
         this.layeredPane = principalPane;
-        this.gameOver = false;
-        this.paused = false;
         plants = new Plant[5][8];
         LawnMowers = new LawnMower[5];
         collectables = (ArrayList<Collectable>[]) new ArrayList[5];
@@ -65,7 +60,7 @@ public class POOBvsZOMBIES {
         for (int i = 0; i < plants[rowIndex].length; i++) {
             Plant plant = plants[rowIndex][i];
             if (plant != null) {
-                plant.update(currentTime);
+                plant.update(currentTime,suns);
                 if (plant.getHp() <= 0) {
                     plant.die();
                     eliminatePlants.add(new int[]{rowIndex, i}); // Agregar la posición de la planta a eliminar
@@ -159,9 +154,9 @@ public class POOBvsZOMBIES {
             //suns -= 25;
         }
         else if (type.equals("ECIPlant") && suns >= 75){
-            //plants[row][column] = new ECIPlant(button, layeredPane);
-            //plantHitboxs[row][column] = plants[row][column].getHitbox();
-            //suns -= 75;
+            plants[row][column] = new ECIPlant(button, layeredPane, collectables[row]);
+            plantHitboxs[row][column] = plants[row][column].getHitbox();
+            suns -= 75;
         }
     }
 
@@ -185,7 +180,7 @@ public class POOBvsZOMBIES {
         }
         else if (type.equals("ECIZombie") && brains>=250){
             //zombies[row].add(new BucketHead(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));
-            //brains -= 200;
+            //brains -= 250;
         }
     }
 

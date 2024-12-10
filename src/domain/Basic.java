@@ -12,6 +12,7 @@ public class Basic extends Zombie{
     private ImageIcon attackIcon;
     private ImageIcon bodyDieIcon;
     private ImageIcon headDieIcon;
+    private ImageIcon kaboomIcon;
     private long lastMovement;
     private long lastAttack;
 
@@ -34,6 +35,8 @@ public class Basic extends Zombie{
         this.bodyDieIcon = new ImageIcon(dieIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
         ImageIcon headDieIcon = new ImageIcon(getClass().getResource("/resources/zombieHead.gif"));
         this.headDieIcon = new ImageIcon(headDieIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
+        ImageIcon ashIcon = new ImageIcon(getClass().getResource("/resources/BoomDie.gif"));
+        this.kaboomIcon = new ImageIcon(ashIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
 
         this.label = new JLabel(walkingIcon);
         Point buttonLocationOnScreen = button.getLocationOnScreen();
@@ -108,6 +111,13 @@ public class Basic extends Zombie{
         head.setBounds(label.getBounds());
         head.setIcon(headDieIcon);
         layeredPane.add(head,JLayeredPane.DRAG_LAYER);
+    }
+
+    public void kaboom(long currentTime){
+        deadTime = currentTime;
+        hitbox = new Rectangle(0,0,0,0);
+        label.setIcon(kaboomIcon);
+        icon = "dead";
     }
 
     public void remove() {

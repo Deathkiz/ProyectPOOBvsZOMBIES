@@ -63,10 +63,12 @@ public class POOBvsZOMBIES {
                 plant.update(currentTime,suns);
                 if (plant.getHp() <= 0) {
                     plant.die();
-                    eliminatePlants.add(new int[]{rowIndex, i}); // Agregar la posición de la planta a eliminar
+                    eliminatePlants.add(new int[]{rowIndex, i});
                 }
             }
         }
+
+
         for (int[] position : eliminatePlants) {
             plants[position[0]][position[1]] = null;
             plantHitboxs[position[0]][position[1]]=null;
@@ -77,9 +79,7 @@ public class POOBvsZOMBIES {
         for (Zombie zombie : zombies[rowIndex]) {
             if (zombie != null) {
                 zombie.update(currentTime);
-                if (zombie.getHp() <= 0 && !(zombie.getIcon().equals("dead"))) {
-                    zombie.die(currentTime);
-                } else if (zombie.getHp() <= 0 && currentTime - zombie.getDeadTime() > 2000) {
+                if (zombie.getHp() <= 0 && currentTime - zombie.getDeadTime() > 2000) {
                     zombie.remove();
                     eliminateZombie.add(zombie);
                 }
@@ -149,9 +149,9 @@ public class POOBvsZOMBIES {
             suns -= 50;
         }
         else if (type.equals("potatoMine") && suns >= 25){
-            //plants[row][column] = new PotatoMine(button, layeredPane);
-            //plantHitboxs[row][column] = plants[row][column].getHitbox();
-            //suns -= 25;
+            plants[row][column] = new PotatoMine(button, layeredPane,zombies[row]);
+            plantHitboxs[row][column] = plants[row][column].getHitbox();
+            suns -= 25;
         }
         else if (type.equals("ECIPlant") && suns >= 75){
             plants[row][column] = new ECIPlant(button, layeredPane, collectables[row]);

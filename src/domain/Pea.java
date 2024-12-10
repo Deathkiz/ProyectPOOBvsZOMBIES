@@ -80,6 +80,9 @@ public class Pea extends Projectile{
                 zombie1 = zombies.get(i);
                 zombie1.damage(attack);
                 remove();
+                if (zombie1.getHp() <= 0 && !(zombie1.getIcon().equals("dead"))) {
+                    zombie1.die(System.currentTimeMillis());
+                }
                 outOfBonds = true;
                 break;
             }

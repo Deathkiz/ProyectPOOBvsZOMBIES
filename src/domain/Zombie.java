@@ -26,6 +26,8 @@ public abstract class Zombie {
 
     public abstract void die(long currentTime);
 
+    public abstract void kaboom(long currentTime);
+
     public long getDeadTime(){return deadTime;}
 
     public abstract void remove();

@@ -15,6 +15,7 @@ public class Brainstein extends Zombie{
     public Brainstein(JButton button, JLayeredPane layeredPane, ArrayList<Collectable> brains) {
         super.hp = 300;
         this.button = button;
+        icon = "existe";
         super.layeredPane = layeredPane;
         this.brains = brains;
 

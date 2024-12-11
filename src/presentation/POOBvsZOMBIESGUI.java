@@ -729,30 +729,87 @@ public class POOBvsZOMBIESGUI extends JFrame {
             }
         });
 
-        JButton[] buttons = {peaShooter, sunflower, wallnut, ECIPlant, potatoMine,
-                zombie, zombieConehead, zombieBuckethead, ECIZombie, Brainstain};
+        peaShooter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usagePeashooter = !usagePeashooter;
+                toggleButtonState(peaShooter, usagePeashooter);
+            }
+        });
 
-        boolean[] usageFlags = {usagePeashooter, usageSunflower, usageWallnut, usageECIPlant,
-                usagePotatoMine, usageZombie, usageZombieConehead,
-                usageZombieBuckethead, usageECIZombie, usageBrainstain};
+        sunflower.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usageSunflower = !usageSunflower;
+                toggleButtonState(sunflower, usageSunflower);
+            }
+        });
 
-        for (int i = 0; i < buttons.length; i++) {
-            final int index = i; // Necesario para usar en el ActionListener
-            buttons[i].addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    usageFlags[index] = !usageFlags[index]; // Cambia el estado de uso
-                    JButton button = (JButton) e.getSource(); // Obtiene el botón que disparó el evento
+        wallnut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usageWallnut = !usageWallnut;
+                toggleButtonState(wallnut, usageWallnut);
+            }
+        });
 
-                    // Cambia el color de fondo basado en el estado de uso
-                    if (usageFlags[index]) {
-                        ((ColorButton) button).setBackgroundColor(Color.decode("#144806")); // Cambia a verde
-                    } else {
-                        ((ColorButton) button).setBackgroundColor(Color.decode("#480707")); // Cambia a rojo
-                    }
-                }
-            });
-        }
+        ECIPlant.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usageECIPlant = !usageECIPlant;
+                toggleButtonState(ECIPlant, usageECIPlant);
+            }
+        });
+
+        potatoMine.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usagePotatoMine = !usagePotatoMine;
+                toggleButtonState(potatoMine, usagePotatoMine);
+            }
+        });
+
+// Listeners para los zombies
+        zombie.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usageZombie = !usageZombie;
+                toggleButtonState(zombie, usageZombie);
+            }
+        });
+
+        zombieConehead.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usageZombieConehead = !usageZombieConehead;
+                toggleButtonState(zombieConehead, usageZombieConehead);
+            }
+        });
+
+        zombieBuckethead.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usageZombieBuckethead = !usageZombieBuckethead;
+                toggleButtonState(zombieBuckethead, usageZombieBuckethead);
+            }
+        });
+
+        ECIZombie.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usageECIZombie = !usageECIZombie;
+                toggleButtonState(ECIZombie, usageECIZombie);
+            }
+        });
+
+        Brainstain.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usageBrainstain = !usageBrainstain;
+                toggleButtonState(Brainstain, usageBrainstain);
+            }
+        });
+
     }
 
     private void prepareActionsGame() {
@@ -856,17 +913,23 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
     private void handleZombieAction(JButton button,int row) {
         if ("basic".equals(selectedZombie) || "coneHead".equals(selectedZombie) || "bucketHead".equals(selectedZombie) || "ECIZombie".equals(selectedZombie)) {
-            GAME.createZombie(selectedZombie, row, button);
+            if (!isPaused){
+                GAME.createZombie(selectedZombie, row, button);
+            }
         } else if ("brainstein".equals(selectedZombie)) {
             if (button.getIcon() == null) {
-                GAME.createZombie(selectedZombie, row, button);
+                if (!isPaused){
+                    GAME.createZombie(selectedZombie, row, button);
+                }
             }
         }
     }
 
     private void handlePlantAction(JButton button, int row, int column) {
         if (button.getIcon() == null) {
-            GAME.createPlant(selectedPlant,row,column,button);
+            if (!isPaused){
+                GAME.createPlant(selectedPlant,row,column,button);
+            }
         }
     }
 
@@ -912,6 +975,15 @@ public class POOBvsZOMBIESGUI extends JFrame {
         return new ColorButton(new ImageIcon(image)); // Return ColorButton instance
     }
 
+    private void toggleButtonState(ColorButton button, boolean usageFlag) {
+        if (usageFlag) {
+            (button).setBackgroundColor(Color.decode("#144806")); // Verde
+        } else {
+            (button).setBackgroundColor(Color.decode("#480707")); // Rojo
+        }
+    }
+
+
     private void fontOfSunsBrains(){
         try {
             Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/resources/Fonts/Hotel W00 Black.ttf"));
@@ -922,7 +994,14 @@ public class POOBvsZOMBIESGUI extends JFrame {
     }
 
     private void game() {
-        GAME = new POOBvsZOMBIES(75, 10000, positions, principalPanel);
+        boolean[] usagePlants = {usageSunflower,usagePeashooter,usageECIPlant,usageWallnut,usagePotatoMine};
+        boolean[] usageZombies = { usageZombie,usageZombieConehead,usageZombieBuckethead,usageECIZombie, usageBrainstain};
+        for (boolean b : usagePlants){
+            System.out.println(b);
+        }for (boolean b : usageZombies){
+            System.out.println(b);
+        }
+        GAME = new POOBvsZOMBIES(10000, 10000, positions, principalPanel,usagePlants,usageZombies);
         int gameDuration = 1000000;
         totalPausedTime = 0;
         pauseStartTime = 0;

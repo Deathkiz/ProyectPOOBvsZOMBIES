@@ -9,7 +9,7 @@ public abstract class Projectile {
     protected boolean outOfBonds;
     protected int maxWidth;
 
-    public abstract void forward();
+    public abstract void forward(long currentTime);
 
     public abstract void remove();
 

@@ -4,22 +4,22 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Pea extends Projectile{
+public class POOmba extends Projectile{
     private JLabel label;
     private ImageIcon image;
     private JLayeredPane layeredPane;
-    private ArrayList<Zombie> zombies;
+    private ArrayList<Plant> plants;
 
 
-    public Pea(int attack, JLayeredPane layeredPane, JButton button, ArrayList<Zombie> zombies) {
+    public POOmba(int attack, JLayeredPane layeredPane, JLabel label, ArrayList<Plant> plants) {
         super.attack = attack;
         this.layeredPane = layeredPane;
         super.outOfBonds = false;
-        this.zombies = zombies;
+        this.plants = plants;
         this.hitbox = new Rectangle();
-        maxWidth = layeredPane.getWidth();
+        maxWidth = 0;
         // Obtener la posición absoluta del botón
-        Point buttonLocationOnScreen = button.getLocationOnScreen();
+        Point buttonLocationOnScreen = label.getLocationOnScreen();
         Point layeredPaneLocationOnScreen = layeredPane.getLocationOnScreen();
 
         // Calcular la posición relativa del botón dentro del JLayeredPane
@@ -28,10 +28,10 @@ public class Pea extends Projectile{
         distance = layeredPane.getWidth()/200;
 
         // Tamaño del botón
-        Dimension buttonSize = button.getSize();
+        Dimension buttonSize = label.getSize();
 
         // Configurar la imagen y el JLabel
-        ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/ProjectilePea.png"));
+        ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/POOmba.png"));
         int labelWidth = (int) (buttonSize.getWidth() / 5);
         int labelHeight = (int) (buttonSize.getHeight() / 5);
         image = new ImageIcon(gifIcon.getImage().getScaledInstance(labelWidth, labelHeight, Image.SCALE_DEFAULT));
@@ -52,11 +52,11 @@ public class Pea extends Projectile{
         int currentX = label.getX();
         int currentY = label.getY();
         // Calcular la nueva posición (mover hacia la derecha)
-        int newX = currentX + distance;
+        int newX = currentX - distance;
         // Actualizar la posición del JLabel
         label.setBounds(newX, currentY, label.getWidth(), label.getHeight());
         hitbox.setBounds(newX,hitbox.y,hitbox.width,hitbox.height);
-        if (getX() > maxWidth){
+        if (getX() < maxWidth){
             outOfBonds = true;
         }
         attack(currentTime);
@@ -71,16 +71,13 @@ public class Pea extends Projectile{
     }
 
     public void attack(long currentTime){
-        Zombie zombie1 = null;
-        for (int i = 0; i < zombies.size(); i++) {
-            Rectangle hitbox = zombies.get(i).getHitbox();
+        Plant plant = null;
+        for (int i = 0; i < plants.size(); i++) {
+            Rectangle hitbox = plants.get(i).getHitbox();
             if (this.hitbox.intersects(hitbox)) {
-                zombie1 = zombies.get(i);
-                zombie1.damage(attack);
+                plant = plants.get(i);
+                plant.damage(attack);
                 remove();
-                if (zombie1.getHp() <= 0 && !(zombie1.getIcon().equals("dead"))) {
-                    zombie1.die(currentTime);
-                }
                 outOfBonds = true;
                 break;
             }
@@ -91,4 +88,3 @@ public class Pea extends Projectile{
         return label.getX();
     }
 }
-

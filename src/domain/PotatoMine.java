@@ -15,7 +15,7 @@ public class PotatoMine extends Plant{
     private ImageIcon explosiveIcon;
 
     public PotatoMine(JButton button, JLayeredPane layeredPane, ArrayList<Zombie> zombies) {
-        super.hp = 300;
+        super.hp = 100;
         super.button = button;
         super.layeredPane = layeredPane;
         this.active = false;

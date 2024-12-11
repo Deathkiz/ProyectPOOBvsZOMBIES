@@ -32,8 +32,8 @@ public class POOmba extends Projectile{
 
         // Configurar la imagen y el JLabel
         ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/POOmba.png"));
-        int labelWidth = (int) (buttonSize.getWidth() / 5);
-        int labelHeight = (int) (buttonSize.getHeight() / 5);
+        int labelWidth = (int) (buttonSize.getWidth() / 3);
+        int labelHeight = (int) (buttonSize.getHeight() / 3);
         image = new ImageIcon(gifIcon.getImage().getScaledInstance(labelWidth, labelHeight, Image.SCALE_DEFAULT));
         this.label = new JLabel(image);
 
@@ -56,18 +56,16 @@ public class POOmba extends Projectile{
         // Actualizar la posición del JLabel
         label.setBounds(newX, currentY, label.getWidth(), label.getHeight());
         hitbox.setBounds(newX,hitbox.y,hitbox.width,hitbox.height);
-        if (getX() < maxWidth){
+        if (getX() < maxWidth-label.getWidth()){
             outOfBonds = true;
         }
         attack(currentTime);
     }
 
     public void remove() {
-        SwingUtilities.invokeLater(() -> {
-            layeredPane.remove(label);
-            layeredPane.revalidate();
-            layeredPane.repaint();
-        });
+        layeredPane.remove(label);
+        layeredPane.revalidate();
+        layeredPane.repaint();
     }
 
     public void attack(long currentTime){

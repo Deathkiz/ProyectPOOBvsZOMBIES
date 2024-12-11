@@ -63,11 +63,9 @@ public class Pea extends Projectile{
     }
 
     public void remove() {
-        SwingUtilities.invokeLater(() -> {
-            layeredPane.remove(label);
-            layeredPane.revalidate();
-            layeredPane.repaint();
-        });
+        layeredPane.remove(label);
+        layeredPane.revalidate();
+        layeredPane.repaint();
     }
 
     public void attack(long currentTime){

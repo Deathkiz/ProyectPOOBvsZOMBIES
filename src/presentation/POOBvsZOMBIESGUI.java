@@ -996,11 +996,6 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private void game() {
         boolean[] usagePlants = {usageSunflower,usagePeashooter,usageECIPlant,usageWallnut,usagePotatoMine};
         boolean[] usageZombies = { usageZombie,usageZombieConehead,usageZombieBuckethead,usageECIZombie, usageBrainstain};
-        for (boolean b : usagePlants){
-            System.out.println(b);
-        }for (boolean b : usageZombies){
-            System.out.println(b);
-        }
         GAME = new POOBvsZOMBIES(10000, 10000, positions, principalPanel,usagePlants,usageZombies);
         int gameDuration = 1000000;
         totalPausedTime = 0;

@@ -16,7 +16,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private JLabel background;
     private ImageIcon menuBackground;
     private ImageIcon gameBackground;
-
+    private int suns;
+    private int brains;
+    private long time;
     //frame pvp
     private JFrame framePvP;
     //botones frame pvp
@@ -73,9 +75,14 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private JButton plantsIntelligent;
     private JButton plantsStrategic;
 
+    private JTextField sunsTextField2;
+    private JLabel brainsText2;
+    private JTextField brainsTextField2;
+    private JLabel timesText2;
+    private JTextField timesTextField2;
     //informacion maquinas
-    private int modeMachine = 0;
-    private int modePlants = 0;
+    private int modeMachine = 1;
+    private int modePlants = 1;
 
     //frame choose
     private JFrame choose;
@@ -154,7 +161,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private boolean activeZombie = false;
     private String selectedPlant;
     private String selectedZombie;
-
+    private JLabel sunsText2;
 
 
     public POOBvsZOMBIESGUI() {
@@ -684,6 +691,46 @@ public class POOBvsZOMBIESGUI extends JFrame {
         modeZombiesS1.setFont(sizedFontAngulatte);
         modeZombiesS1.setForeground(Color.decode("#c9ad60"));
 
+        sunsText2 = new JLabel("Introduce the suns:");
+        sunsText2.setBounds((int) (WIDTH/2*0.05),(int) (HEIGHT/2*0.5),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.2));
+        sunsText2.setOpaque(false);
+        sunsText2.setFont(sizedFontAngulatte);
+        sunsText2.setForeground(Color.decode("#c9ad60"));
+
+        sunsTextField2 = new JTextField();
+        sunsTextField2.setBounds((int) (WIDTH/2*0.05),(int) (HEIGHT/2*0.65),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        sunsTextField2.setBorder(BorderFactory.createLineBorder(Color.decode("#cab469"), 3));
+        sunsTextField2.setBackground(Color.decode("#6a481b"));
+        sunsTextField2.setFont(sizedFontAugust);
+        sunsTextField2.setForeground(Color.decode("#e5d9db"));
+
+
+        brainsText2 = new JLabel("Introduce the brains:");
+        brainsText2.setBounds((int) (WIDTH/2*0.35),(int) (HEIGHT/2*0.5),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        brainsText2.setOpaque(false);
+        brainsText2.setFont(sizedFontAngulatte);
+        brainsText2.setForeground(Color.decode("#c9ad60"));
+
+        brainsTextField2 = new JTextField();
+        brainsTextField2.setBounds((int) (WIDTH/2*0.35),(int) (HEIGHT/2*0.65),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        brainsTextField2.setBorder(BorderFactory.createLineBorder(Color.decode("#cab469"), 3));
+        brainsTextField2.setBackground(Color.decode("#6a481b"));
+        brainsTextField2.setFont(sizedFontAugust);
+        brainsTextField2.setForeground(Color.decode("#e5d9db"));
+
+
+        timesText2 = new JLabel("Introduce the time:");
+        timesText2.setBounds((int) (WIDTH/2*0.65),(int) (HEIGHT/2*0.5),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.2));
+        timesText2.setOpaque(false);
+        timesText2.setFont(sizedFontAngulatte);
+        timesText2.setForeground(Color.decode("#c9ad60"));
+
+        timesTextField2 = new JTextField();
+        timesTextField2.setBounds((int) (WIDTH/2*0.65),(int) (HEIGHT/2*0.65),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        timesTextField2.setBorder(BorderFactory.createLineBorder(Color.decode("#cab469"), 3));
+        timesTextField2.setBackground(Color.decode("#6a481b"));
+        timesTextField2.setFont(sizedFontAugust);
+        timesTextField2.setForeground(Color.decode("#e5d9db"));
 
 
         //agregarlos al panel y frame
@@ -702,6 +749,14 @@ public class POOBvsZOMBIESGUI extends JFrame {
         panelFrameMvM.add(modePlantsS, JLayeredPane.DEFAULT_LAYER);
         panelFrameMvM.add(plantsStrategic, JLayeredPane.DEFAULT_LAYER);
         panelFrameMvM.add(aceptarMvM,JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(sunsText2,JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(sunsTextField2,JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(brainsText2,JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(brainsTextField2,JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(timesText2,JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(timesTextField2,JLayeredPane.DEFAULT_LAYER);
+
+
         frameMvM.add(panelFrameMvM);
     }
 
@@ -989,15 +1044,30 @@ public class POOBvsZOMBIESGUI extends JFrame {
         aceptarPvP.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                namePlayer11 = nameForPlayer11.getText();
-                namePlayer2 = nameForPlayer2.getText();
-                framePvP.dispose();
-                choose.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                choose.setVisible(true);
+                if (isEntero(sunsTextField1.getText()) && isEntero(brainsTextField1.getText()) && isEntero(timesTextField1.getText()) && !nameForPlayer11.getText().isEmpty() && !nameForPlayer2.getText().isEmpty()){
+                    framePvP.dispose();
+                    choose.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                    suns = Integer.parseInt(sunsTextField1.getText());
+                    brains = Integer.parseInt(brainsTextField1.getText());
+                    time = Long.parseLong(timesTextField1.getText());
+                    namePlayer11 = nameForPlayer11.getText();
+                    namePlayer2 = nameForPlayer2.getText();
+                    choose.setVisible(true);
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "Por favor, ingresa valores válidos en todos los campos.", "Error de validación", JOptionPane.ERROR_MESSAGE
+                    );
+                }
             }
         });
 
         cancelarPvP.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                framePvP.dispose();
+            }
+        });
+        xButtonFromPvP.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 framePvP.dispose();
@@ -1031,6 +1101,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 zombiesStrategic.setIcon(new ImageIcon(resizedImageZombiesButtonON));
             }
         });
+
+
         zombiesOriginal.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1039,13 +1111,26 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 zombiesStrategic.setIcon(new ImageIcon(resizedImageZombiesButtonOF));
             }
         });
+
+
         aceptarPvM.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                namePlayer1 = nameForPlayer1.getText();
-                framePvM.dispose();
-                choose.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                choose.setVisible(true);
+                if (isEntero(sunsTextField.getText()) && isEntero(brainsTextField.getText()) && isEntero(timesTextField.getText()) && !nameForPlayer1.getText().isEmpty()){
+                    framePvM.dispose();
+                    choose.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                    namePlayer1 = nameForPlayer1.getText();
+                    suns = Integer.parseInt(sunsTextField.getText());
+                    brains = Integer.parseInt(brainsTextField.getText());
+                    time = Long.parseLong(timesTextField.getText());
+                    choose.setVisible(true);
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "Por favor, ingresa valores válidos en todos los campos.", "Error de validación", JOptionPane.ERROR_MESSAGE
+                    );
+                }
+
+
             }
         });
 
@@ -1055,12 +1140,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 framePvM.dispose();
             }
         });
-        xButtonFromPvP.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                framePvP.dispose();
-            }
-        });
+
     }
 
     private void prepareActionsMVMFrame(){
@@ -1087,33 +1167,51 @@ public class POOBvsZOMBIESGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 modePlants = 1;
+                plantsStrategic.setIcon(new ImageIcon(resizedImageZombiesButtonON));
+                plantsIntelligent.setIcon(new ImageIcon(resizedImageZombiesButtonOF));
             }
         });
         plantsIntelligent.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 modePlants = 0;
+                plantsStrategic.setIcon(new ImageIcon(resizedImageZombiesButtonOF));
+                plantsIntelligent.setIcon(new ImageIcon(resizedImageZombiesButtonON));
             }
         });
         zombiesOriginal2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 modeMachine = 0;
+                zombiesOriginal.setIcon(new ImageIcon(resizedImageZombiesButtonON));
+                zombiesStrategic.setIcon(new ImageIcon(resizedImageZombiesButtonOF));
             }
         });
         zombiesStrategic2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 modeMachine = 1;
+                zombiesOriginal.setIcon(new ImageIcon(resizedImageZombiesButtonOF));
+                zombiesStrategic.setIcon(new ImageIcon(resizedImageZombiesButtonON));
             }
         });
         aceptarMvM.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frameMvM.dispose();
-                choose.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                choose.setVisible(true);
+                if (isEntero(sunsTextField2.getText()) && isEntero(brainsTextField2.getText()) && isEntero(timesTextField2.getText())){
+                    frameMvM.dispose();
+                    choose.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                    suns = Integer.parseInt(sunsTextField2.getText());
+                    brains = Integer.parseInt(brainsTextField2.getText());
+                    time = Long.parseLong(timesTextField2.getText());
+                    choose.setVisible(true);
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "Por favor, ingresa valores numéricos válidos en todos los campos.", "Error de validación", JOptionPane.ERROR_MESSAGE
+                    );
+                }
             }
+
         });
         cancelarMvM.addActionListener(new ActionListener() {
             @Override
@@ -1409,8 +1507,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private void game() {
         boolean[] usagePlants = {usageSunflower,usagePeashooter,usageECIPlant,usageWallnut,usagePotatoMine};
         boolean[] usageZombies = { usageZombie,usageZombieConehead,usageZombieBuckethead,usageECIZombie, usageBrainstain};
-        GAME = new POOBvsZOMBIES(10000, 10000, positions, principalPanel,usagePlants,usageZombies);
-        int gameDuration = 1000000;
+        GAME = new POOBvsZOMBIES(suns, brains, positions, principalPanel,usagePlants,usageZombies);
+        long gameDuration = time*1000;
         totalPausedTime = 0;
         pauseStartTime = 0;
 
@@ -1474,6 +1572,14 @@ public class POOBvsZOMBIESGUI extends JFrame {
     public void endGame(){
         endGame = true;
         GAME.clear();
+    }
+    private boolean isEntero(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     public static void main(String[] args) {

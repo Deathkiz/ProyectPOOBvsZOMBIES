@@ -22,12 +22,14 @@ public class POOBvsZOMBIES {
     private final long autoGenerate = 10000;
     private long lastgenerate;
     private long currentTime;
+    private boolean endGame;
 
 
     public POOBvsZOMBIES(int suns, int brains, ArrayList<JButton> positions,JLayeredPane principalPane, boolean[] usagePlants, boolean[] usageZombies) {
         this.layeredPane = principalPane;
         this.usagePlants = usagePlants;
         this.usageZombies = usageZombies;
+        this.endGame = false;
         plants = new Plant[5][8];
         LawnMowers = new LawnMower[5];
         collectables = (ArrayList<Collectable>[]) new ArrayList[5];
@@ -87,6 +89,9 @@ public class POOBvsZOMBIES {
         for (Zombie zombie : zombies[rowIndex]) {
             if (zombie != null) {
                 zombie.update(currentTime);
+                if (zombie.endGame()){
+                    endGame = true;
+                }
                 if (zombie.getHp() <= 0 && currentTime - zombie.getDeadTime() > 2000) {
                     zombie.remove();
                     eliminateZombie.add(zombie);
@@ -208,9 +213,15 @@ public class POOBvsZOMBIES {
         return brains;
     }
 
+    public boolean getEndGame(){
+        return endGame;
+    }
+
     public void clear(){
         for (LawnMower lawnMower : LawnMowers){
-            lawnMower.remove();
+            if(lawnMower != null){
+                lawnMower.remove();
+            }
         }
         for (ArrayList<Zombie> rowZombies:zombies){
             for (Zombie zombie:rowZombies){

@@ -129,4 +129,11 @@ public class Basic extends Zombie{
         }
         layeredPane.repaint();
     }
+
+    public boolean endGame(){
+        if (hitbox.getX()<=-1){
+            return true;
+        }
+        return false;
+    }
 }

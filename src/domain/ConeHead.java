@@ -148,4 +148,11 @@ public class ConeHead extends Zombie{
         }
         layeredPane.repaint();
     }
+
+    public boolean endGame(){
+        if (hitbox.getX()<=0){
+            return true;
+        }
+        return false;
+    }
 }

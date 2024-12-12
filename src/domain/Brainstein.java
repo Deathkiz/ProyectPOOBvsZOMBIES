@@ -72,4 +72,8 @@ public class Brainstein extends Zombie{
     public void remove() {
         button.setIcon(null);
     }
+
+    public boolean endGame(){
+        return false;
+    }
 }

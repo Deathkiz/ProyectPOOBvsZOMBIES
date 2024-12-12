@@ -33,4 +33,6 @@ public abstract class Zombie {
     public abstract void remove();
 
     public String getIcon(){return icon;};
+
+    public abstract boolean endGame();
 }

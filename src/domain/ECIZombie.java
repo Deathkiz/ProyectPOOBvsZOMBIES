@@ -142,4 +142,11 @@ public class ECIZombie extends Zombie{
     private void bomb(long currentTime){
         projectiles.add(new POOmba(50,layeredPane,label,plants));
     }
+
+    public boolean endGame(){
+        if (hitbox.getX()<=0){
+            return true;
+        }
+        return false;
+    }
 }

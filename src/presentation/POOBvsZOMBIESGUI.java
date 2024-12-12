@@ -19,6 +19,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private int suns;
     private int brains;
     private long time;
+    private String gameType;
     //frame pvp
     private JFrame framePvP;
     //botones frame pvp
@@ -644,7 +645,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
         //editarlos
         frameMvM.setSize(WIDTH / 2, HEIGHT / 2);
         frameMvM.setLocationRelativeTo(null);
-
+        frameMvM.setUndecorated(true);
 
         modePlantsO = new JLabel("Plants Intelligent");
         modePlantsO.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.1),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
@@ -1053,6 +1054,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                     namePlayer11 = nameForPlayer11.getText();
                     namePlayer2 = nameForPlayer2.getText();
                     choose.setVisible(true);
+                    gameType = "pvp";
                 }
                 else {
                     JOptionPane.showMessageDialog(null, "Por favor, ingresa valores válidos en todos los campos.", "Error de validación", JOptionPane.ERROR_MESSAGE
@@ -1124,6 +1126,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                     brains = Integer.parseInt(brainsTextField.getText());
                     time = Long.parseLong(timesTextField.getText());
                     choose.setVisible(true);
+                    gameType = "pvm";
                 }
                 else {
                     JOptionPane.showMessageDialog(null, "Por favor, ingresa valores válidos en todos los campos.", "Error de validación", JOptionPane.ERROR_MESSAGE
@@ -1205,6 +1208,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                     brains = Integer.parseInt(brainsTextField2.getText());
                     time = Long.parseLong(timesTextField2.getText());
                     choose.setVisible(true);
+                    gameType = "mvm";
                 }
                 else {
                     JOptionPane.showMessageDialog(null, "Por favor, ingresa valores numéricos válidos en todos los campos.", "Error de validación", JOptionPane.ERROR_MESSAGE
@@ -1214,6 +1218,12 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
         });
         cancelarMvM.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frameMvM.dispose();
+            }
+        });
+        xButtonFromMvM.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frameMvM.dispose();
@@ -1507,7 +1517,17 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private void game() {
         boolean[] usagePlants = {usageSunflower,usagePeashooter,usageECIPlant,usageWallnut,usagePotatoMine};
         boolean[] usageZombies = { usageZombie,usageZombieConehead,usageZombieBuckethead,usageECIZombie, usageBrainstain};
-        GAME = new POOBvsZOMBIES(suns, brains, positions, principalPanel,usagePlants,usageZombies);
+        if (gameType.equals("pvp")){
+            GAME = new POOBvsZOMBIES(suns, brains, positions, principalPanel,usagePlants,usageZombies);
+        }
+        else if (gameType.equals("pvm")){
+            GAME = new POOBvsZOMBIES(suns, brains, positions, principalPanel,usagePlants,usageZombies);
+        }
+        else if(gameType.equals("mvm")){
+            GAME = new POOBvsZOMBIES(suns, brains, positions, principalPanel,usagePlants,usageZombies);
+        }
+
+
         long gameDuration = time*1000;
         totalPausedTime = 0;
         pauseStartTime = 0;
@@ -1543,6 +1563,9 @@ public class POOBvsZOMBIESGUI extends JFrame {
                     timeLabel.setText(String.valueOf((gameDuration-currentTime+startTime+totalPausedTime)/1000));
                     lastUpdateTime = currentTime;
                 }
+                if (GAME.getEndGame()){
+                    break;
+                }
 
                 try {
                     // Espera el tiempo restante hasta el siguiente cuadro
@@ -1555,7 +1578,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                     return; // Salir del ciclo si ocurre una interrupción
                 }
             }
-
+            GAME.clear();
             visibleGame(false);
             visibleMenu(true);
         }).start();

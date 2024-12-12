@@ -46,7 +46,7 @@ public class LawnMower {
         layeredPane.add(label, JLayeredPane.POPUP_LAYER);
     }
 
-    public void update(){
+    public void update(long currentTime){
         if (active){
             int currentX = label.getX();
             int currentY = label.getY();
@@ -61,6 +61,7 @@ public class LawnMower {
                 Rectangle zombieHitbox = zombie.getHitbox();
                 if (hitbox.intersects(zombieHitbox)){
                     zombie.setHp(0);
+                    zombie.die(currentTime);
                 }
             }
 

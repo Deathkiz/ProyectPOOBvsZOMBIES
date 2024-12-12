@@ -134,7 +134,7 @@ public class POOBvsZOMBIES {
                 LawnMowers[rowIndex].remove();
                 LawnMowers[rowIndex] = null;
             } else {
-                LawnMowers[rowIndex].update();
+                LawnMowers[rowIndex].update(currentTime);
             }
         }
     }

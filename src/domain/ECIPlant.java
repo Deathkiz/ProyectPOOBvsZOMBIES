@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class ECIPlant extends Plant{
     private long lastActionTime;
     private static final long ACTION_INTERVAL = 25000;
-    private int ACTION_USES = 2;
+    private int ACTION_USES = 3;
     private ArrayList<Collectable> suns;
 
     public ECIPlant(JButton button, JLayeredPane layeredPane, ArrayList<Collectable> suns) {

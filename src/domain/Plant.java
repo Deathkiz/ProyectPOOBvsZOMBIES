@@ -13,6 +13,8 @@ public abstract class Plant {
 
     public int getHp(){return hp;}
 
+    public void setHp(int hp){this.hp = hp;}
+
     public void createHitbox(){
         Point buttonLocationOnScreen = button.getLocationOnScreen();
         Point layeredPaneLocationOnScreen = layeredPane.getLocationOnScreen();

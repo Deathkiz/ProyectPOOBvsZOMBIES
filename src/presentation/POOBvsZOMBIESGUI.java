@@ -28,6 +28,10 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private String namePlayer2;
     private JTextField nameForPlayer1;
     private JTextField nameForPlayer2;
+    private JTextField nameForPlayer11;
+
+    private JLabel yourNamePvP1;
+    private JLabel yourNamePvP2;
 
     //frame pvm
     private JFrame framePvM;
@@ -37,9 +41,25 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private JButton cancelarPvM;
     private JButton zombiesOriginal;
     private JButton zombiesStrategic;
+
     //informacion pvm
+    private JLabel yourName;
+    private JLabel sunsText;
+    private JLabel brainsText;
+    private JLabel modeZombiesO;
+    private JLabel modeZombiesS;
     private String namePlayer1;
-    private JTextField nameForPlayer11;
+    private JLabel timesText;
+    private JTextField sunsTextField;
+    private JTextField brainsTextField;
+    private JTextField timesTextField;
+    private JLabel sunsText1;
+    private JTextField sunsTextField1;
+    private JLabel brainsText1;
+    private JTextField brainsTextField1;
+    private JLabel timesText1;
+    private JTextField timesTextField1;
+
 
 
     //frame mvm
@@ -86,6 +106,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
     //tipo de letra
     private Font sizedFont;
+    private Font sizedFontAngulatte;
+    private Font sizedFontAugust;
 
     //logica del juego
     private POOBvsZOMBIES GAME;
@@ -109,6 +131,25 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private ArrayList<JButton> zombieOptions;
     private JLabel brainLabel;
 
+    //Margenes de los modos de juego
+    private JLabel northBarrier;
+    private JLabel northBarrierFromPvP;
+    private JLabel northBarrierFromMvM;
+    private JLabel modeZombiesO1;
+    private JLabel modeZombiesS1;
+
+
+    private JLabel modePlantsO;
+    private JLabel modePlantsS;
+
+    //Boton de Salir
+    private JButton xButton;
+    private JButton xButtonFromPvP;
+    private JButton xButtonFromMvM;
+
+    //Imagenes para los frames de los modos de juego
+    private Image resizedImageZombiesButtonOF;
+    private Image resizedImageZombiesButtonON;
     private boolean activePlant = false;
     private boolean activeZombie = false;
     private String selectedPlant;
@@ -136,6 +177,13 @@ public class POOBvsZOMBIESGUI extends JFrame {
         prepareElementsStart();
         //prepara botones primer menu (eleccion de modo) y sus frames respectivos
         prepareMenuPrincipalButtons();
+        prepareBarriers();
+        prepareBottomX();
+        ImagesFromButtonsFrames();
+        prepareElementsForFrames();
+        prepareFontForModeFrames();
+        prepareBottomXFromPvP();
+        prepareBottomXFromMvM();
         frameForPvP();
         frameForPvM();
         frameForMvM();
@@ -183,7 +231,21 @@ public class POOBvsZOMBIESGUI extends JFrame {
         preparePvMButton();
         prepareMvMButton();
     }
+    private void prepareBarriers(){
+        northBarrier = new JLabel();
+        northBarrier.setBounds(0,0,WIDTH/2, (int) ((HEIGHT/2)*0.07));
+        northBarrier.setBackground(Color.decode("#60627f"));
+        northBarrier.setOpaque(true);
+        northBarrierFromPvP = new JLabel();
+        northBarrierFromPvP.setBounds(0,0,WIDTH/2, (int) ((HEIGHT/2)*0.07));
+        northBarrierFromPvP.setBackground(Color.decode("#60627f"));
+        northBarrierFromPvP.setOpaque(true);
+        northBarrierFromMvM = new JLabel();
+        northBarrierFromMvM.setBounds(0,0,WIDTH/2, (int) ((HEIGHT/2)*0.07));
+        northBarrierFromMvM.setBackground(Color.decode("#60627f"));
+        northBarrierFromMvM.setOpaque(true);
 
+    }
     private void preparePvPButton() {
         PvPButton.setBounds( (int) (4.05*(WIDTH / 9)), (int) (1.46*(HEIGHT / 3.5)), (int) (WIDTH / 3.3), (int) (HEIGHT / 8));
         ImageIcon imagePvPButton = new ImageIcon(getClass().getResource("/resources/ButtonPvP.png"));
@@ -234,72 +296,412 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
 
 
+
+    private void prepareFontForModeFrames(){
+
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/resources/Fonts/Angulatte W90 Bold.ttf"));
+            sizedFontAngulatte = customFont.deriveFont(Font.PLAIN, (int) (HEIGHT*0.08*0.3));
+            Font customFontAugust = Font.createFont(Font.TRUETYPE_FONT, new File("src/resources/Fonts/The August.otf"));
+            sizedFontAugust = customFontAugust.deriveFont(Font.PLAIN, (int) (HEIGHT*0.08*0.3));
+
+        } catch (FontFormatException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    private void prepareElementsForFrames(){
+        zombiesOriginal = new JButton();
+        zombiesOriginal.setBounds((int) (WIDTH/2*0.6),(int) (HEIGHT/2*0.25),(int) (WIDTH/2*0.2),(int) (HEIGHT/2*0.1));
+        zombiesOriginal.setIcon(new ImageIcon(resizedImageZombiesButtonON));
+        zombiesOriginal.setBorderPainted(false);
+        zombiesStrategic = new JButton();
+        zombiesStrategic.setBounds((int) (WIDTH/2*0.6),(int) (HEIGHT/2*0.45),(int) (WIDTH/2*0.2),(int) (HEIGHT/2*0.1));
+        zombiesStrategic.setIcon(new ImageIcon(resizedImageZombiesButtonOF));
+        zombiesStrategic.setBorderPainted(false);
+
+    }
+
+    private void ImagesFromButtonsFrames(){
+        ImageIcon imageZombiesOriginalButton = new ImageIcon(getClass().getResource("/resources/Buttons/ButtonZombiesOOF.jpg"));
+        resizedImageZombiesButtonOF = imageZombiesOriginalButton.getImage().getScaledInstance((int) (WIDTH/2*0.2),(int) (HEIGHT/2*0.1), Image.SCALE_SMOOTH);
+        ImageIcon imageZombiesOriginalButtonON = new ImageIcon(getClass().getResource("/resources/Buttons/ButtonZombiesOON.jpg"));
+        resizedImageZombiesButtonON = imageZombiesOriginalButtonON.getImage().getScaledInstance((int) (WIDTH/2*0.2),(int) (HEIGHT/2*0.1), Image.SCALE_SMOOTH);
+
+    }
     private void frameForPvP(){
         //crear objetos
         framePvP = new JFrame();
-        nameForPlayer11 = new JTextField("Name 1");
-        nameForPlayer2 = new JTextField("Name 2");
+        yourNamePvP1 = new JLabel("Introduce your name 1:");
+        yourNamePvP1.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.1),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        yourNamePvP1.setOpaque(false);
+        yourNamePvP1.setFont(sizedFontAngulatte);
+        yourNamePvP1.setForeground(Color.decode("#c9ad60"));
+
+        nameForPlayer11 = new JTextField();
+        nameForPlayer11.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.25),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        nameForPlayer11.setBorder(BorderFactory.createLineBorder(Color.decode("#cab469"), 3));
+        nameForPlayer11.setBackground(Color.decode("#6a481b"));
+        nameForPlayer11.setFont(sizedFontAugust);
+        nameForPlayer11.setForeground(Color.decode("#e5d9db"));
+
+        yourNamePvP2 = new JLabel("Introduce your name 2:");
+        yourNamePvP2.setBounds((int) (WIDTH/2*0.6),(int) (HEIGHT/2*0.1),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        yourNamePvP2.setOpaque(false);
+        yourNamePvP2.setFont(sizedFontAngulatte);
+        yourNamePvP2.setForeground(Color.decode("#c9ad60"));
+
+        nameForPlayer2 = new JTextField();
+        nameForPlayer2.setBounds((int) (WIDTH/2*0.6),(int) (HEIGHT/2*0.25),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        nameForPlayer2.setBorder(BorderFactory.createLineBorder(Color.decode("#cab469"), 3));
+        nameForPlayer2.setBackground(Color.decode("#6a481b"));
+        nameForPlayer2.setFont(sizedFontAugust);
+        nameForPlayer2.setForeground(Color.decode("#e5d9db"));
+
         aceptarPvP = new JButton("Accept");
         cancelarPvP = new JButton("Cancel");
-        JPanel panelFramePvP = new JPanel(new FlowLayout());
 
+        aceptarPvP.setFont(sizedFontAngulatte);
+        aceptarPvP.setBounds((int) ((WIDTH/4)- (WIDTH/4*0.25)),(int)(HEIGHT/2-(HEIGHT/2*0.12)),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        aceptarPvP.setBorder(BorderFactory.createLineBorder(Color.decode("#474a5e"), 3));
+        aceptarPvP.setContentAreaFilled(false);
+        aceptarPvP.setOpaque(true);
+        aceptarPvP.setForeground(Color.decode("#04970d"));
+        aceptarPvP.setBackground(Color.decode("#615d7b"));
+
+
+        sunsText1 = new JLabel("Introduce the suns:");
+        sunsText1.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.3),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        sunsText1.setOpaque(false);
+        sunsText1.setFont(sizedFontAngulatte);
+        sunsText1.setForeground(Color.decode("#c9ad60"));
+
+        sunsTextField1 = new JTextField();
+        sunsTextField1.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.45),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        sunsTextField1.setBorder(BorderFactory.createLineBorder(Color.decode("#cab469"), 3));
+        sunsTextField1.setBackground(Color.decode("#6a481b"));
+        sunsTextField1.setFont(sizedFontAugust);
+        sunsTextField1.setForeground(Color.decode("#e5d9db"));
+
+
+        brainsText1 = new JLabel("Introduce the brains:");
+        brainsText1.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.5),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        brainsText1.setOpaque(false);
+        brainsText1.setFont(sizedFontAngulatte);
+        brainsText1.setForeground(Color.decode("#c9ad60"));
+
+        brainsTextField1 = new JTextField();
+        brainsTextField1.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.65),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        brainsTextField1.setBorder(BorderFactory.createLineBorder(Color.decode("#cab469"), 3));
+        brainsTextField1.setBackground(Color.decode("#6a481b"));
+        brainsTextField1.setFont(sizedFontAugust);
+        brainsTextField1.setForeground(Color.decode("#e5d9db"));
+
+
+        timesText1 = new JLabel("Introduce the time:");
+        timesText1.setBounds((int) (WIDTH/2*0.6),(int) (HEIGHT/2*0.5),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        timesText1.setOpaque(false);
+        timesText1.setFont(sizedFontAngulatte);
+        timesText1.setForeground(Color.decode("#c9ad60"));
+
+        timesTextField1 = new JTextField();
+        timesTextField1.setBounds((int) (WIDTH/2*0.6),(int) (HEIGHT/2*0.65),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        timesTextField1.setBorder(BorderFactory.createLineBorder(Color.decode("#cab469"), 3));
+        timesTextField1.setBackground(Color.decode("#6a481b"));
+        timesTextField1.setFont(sizedFontAugust);
+        timesTextField1.setForeground(Color.decode("#e5d9db"));
+
+        JLayeredPane panelFramePvP = new JLayeredPane();
         //editarlos
         framePvP.setSize(WIDTH / 2, HEIGHT / 2);
         framePvP.setLocationRelativeTo(null);
+        framePvP.setUndecorated(true);
 
         //agregarlos al panel y frame
-        panelFramePvP.add(nameForPlayer11);
-        panelFramePvP.add(nameForPlayer2);
-        panelFramePvP.add(aceptarPvP);
-        panelFramePvP.add(cancelarPvP);
+        panelFramePvP.setBorder(BorderFactory.createLineBorder(Color.decode("#60627f"), 3));
+        panelFramePvP.setBackground(Color.decode("#2e2f3f"));
+        panelFramePvP.setOpaque(true);
+        panelFramePvP.add(northBarrierFromPvP,JLayeredPane.DEFAULT_LAYER);
+        panelFramePvP.add(xButtonFromPvP,JLayeredPane.PALETTE_LAYER);
+        panelFramePvP.add(yourNamePvP1,JLayeredPane.DEFAULT_LAYER);
+        panelFramePvP.add(nameForPlayer11, JLayeredPane.DEFAULT_LAYER);
+        panelFramePvP.add(yourNamePvP2, JLayeredPane.DEFAULT_LAYER);
+        panelFramePvP.add(nameForPlayer2, JLayeredPane.DEFAULT_LAYER);
+        panelFramePvP.add(sunsText1, JLayeredPane.DEFAULT_LAYER);
+        panelFramePvP.add(sunsTextField1, JLayeredPane.DEFAULT_LAYER);
+        panelFramePvP.add(brainsText1, JLayeredPane.DEFAULT_LAYER);
+        panelFramePvP.add(brainsTextField1, JLayeredPane.DEFAULT_LAYER);
+        panelFramePvP.add(timesText1, JLayeredPane.DEFAULT_LAYER);
+        panelFramePvP.add(timesTextField1, JLayeredPane.DEFAULT_LAYER);
+        panelFramePvP.add(aceptarPvP, JLayeredPane.DEFAULT_LAYER);
+
+
         framePvP.add(panelFramePvP);
     }
 
     private void frameForPvM() {
+
         //crear objetos
         framePvM = new JFrame("Player vs Machine");
-        nameForPlayer1 = new JTextField("Name");
+        nameForPlayer1 = new JTextField();
+        nameForPlayer1.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.25),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        nameForPlayer1.setBorder(BorderFactory.createLineBorder(Color.decode("#cab469"), 3));
+        nameForPlayer1.setBackground(Color.decode("#6a481b"));
+        nameForPlayer1.setFont(sizedFontAugust);
+        nameForPlayer1.setForeground(Color.decode("#e5d9db"));
         aceptarPvM = new JButton("Accept");
-        cancelarPvM = new JButton("Cancel");
-        zombiesOriginal = new JButton("Zombies Original");
-        zombiesStrategic = new JButton("Zombies Strategic");
+        aceptarPvM.setFont(sizedFontAngulatte);
+        aceptarPvM.setBounds((int) ((WIDTH/4)- (WIDTH/4*0.25)),(int)(HEIGHT/2-(HEIGHT/2*0.12)),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        aceptarPvM.setBorder(BorderFactory.createLineBorder(Color.decode("#474a5e"), 3));
+        aceptarPvM.setContentAreaFilled(false);
+        aceptarPvM.setOpaque(true);
+        aceptarPvM.setForeground(Color.decode("#04970d"));
+        aceptarPvM.setBackground(Color.decode("#615d7b"));
 
         //editarlos
         framePvM.setSize(WIDTH / 2, HEIGHT / 2);
         framePvM.setLocationRelativeTo(null);
+        framePvM.setUndecorated(true);
+
+        //Labels para Texto:
+        yourName = new JLabel("Introduce your name:");
+        yourName.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.1),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        yourName.setOpaque(false);
+        yourName.setFont(sizedFontAngulatte);
+        yourName.setForeground(Color.decode("#c9ad60"));
+
+        sunsText = new JLabel("Introduce the suns:");
+        sunsText.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.3),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        sunsText.setOpaque(false);
+        sunsText.setFont(sizedFontAngulatte);
+        sunsText.setForeground(Color.decode("#c9ad60"));
+
+        sunsTextField = new JTextField();
+        sunsTextField.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.45),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        sunsTextField.setBorder(BorderFactory.createLineBorder(Color.decode("#cab469"), 3));
+        sunsTextField.setBackground(Color.decode("#6a481b"));
+        sunsTextField.setFont(sizedFontAugust);
+        sunsTextField.setForeground(Color.decode("#e5d9db"));
+
+
+        brainsText = new JLabel("Introduce the brains:");
+        brainsText.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.5),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        brainsText.setOpaque(false);
+        brainsText.setFont(sizedFontAngulatte);
+        brainsText.setForeground(Color.decode("#c9ad60"));
+
+        brainsTextField = new JTextField();
+        brainsTextField.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.65),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        brainsTextField.setBorder(BorderFactory.createLineBorder(Color.decode("#cab469"), 3));
+        brainsTextField.setBackground(Color.decode("#6a481b"));
+        brainsTextField.setFont(sizedFontAugust);
+        brainsTextField.setForeground(Color.decode("#e5d9db"));
+
+
+        timesText = new JLabel("Introduce the time:");
+        timesText.setBounds((int) (WIDTH/2*0.6),(int) (HEIGHT/2*0.5),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        timesText.setOpaque(false);
+        timesText.setFont(sizedFontAngulatte);
+        timesText.setForeground(Color.decode("#c9ad60"));
+
+        timesTextField = new JTextField();
+        timesTextField.setBounds((int) (WIDTH/2*0.6),(int) (HEIGHT/2*0.65),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        timesTextField.setBorder(BorderFactory.createLineBorder(Color.decode("#cab469"), 3));
+        timesTextField.setBackground(Color.decode("#6a481b"));
+        timesTextField.setFont(sizedFontAugust);
+        timesTextField.setForeground(Color.decode("#e5d9db"));
+
+        modeZombiesO = new JLabel("Zombies Original");
+        modeZombiesO.setBounds((int) (WIDTH/2*0.6),(int) (HEIGHT/2*0.1),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        modeZombiesO.setOpaque(false);
+        modeZombiesO.setFont(sizedFontAngulatte);
+        modeZombiesO.setForeground(Color.decode("#c9ad60"));
+
+        modeZombiesS = new JLabel("Zombies Strategic");
+        modeZombiesS.setBounds((int) (WIDTH/2*0.6),(int) (HEIGHT/2*0.3),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        modeZombiesS.setOpaque(false);
+        modeZombiesS.setFont(sizedFontAngulatte);
+        modeZombiesS.setForeground(Color.decode("#c9ad60"));
 
         //agregarlos al panel y frame
-        JPanel panelFramePvM = new JPanel(new FlowLayout()); // Cambiado a FlowLayout
-        panelFramePvM.add(nameForPlayer1);
-        panelFramePvM.add(zombiesOriginal);
-        panelFramePvM.add(zombiesStrategic);
-        panelFramePvM.add(aceptarPvM);
-        panelFramePvM.add(cancelarPvM);
+        JLayeredPane panelFramePvM = new JLayeredPane();
+        panelFramePvM.setBorder(BorderFactory.createLineBorder(Color.decode("#60627f"), 3));
+        panelFramePvM.setBackground(Color.decode("#2e2f3f"));
+        panelFramePvM.setOpaque(true);
+        panelFramePvM.add(northBarrier,JLayeredPane.DEFAULT_LAYER);
+        panelFramePvM.add(xButton,JLayeredPane.PALETTE_LAYER);
+        panelFramePvM.add(yourName,JLayeredPane.DEFAULT_LAYER);
+        panelFramePvM.add(modeZombiesO,JLayeredPane.DEFAULT_LAYER);
+        panelFramePvM.add(modeZombiesS,JLayeredPane.DEFAULT_LAYER);
+        panelFramePvM.add(sunsText,JLayeredPane.DEFAULT_LAYER);
+        panelFramePvM.add(nameForPlayer1,JLayeredPane.DEFAULT_LAYER);
+        panelFramePvM.add(sunsTextField,JLayeredPane.DEFAULT_LAYER);
+        panelFramePvM.add(brainsText,JLayeredPane.DEFAULT_LAYER);
+        panelFramePvM.add(brainsTextField,JLayeredPane.DEFAULT_LAYER);
+        panelFramePvM.add(zombiesOriginal,JLayeredPane.PALETTE_LAYER);
+        panelFramePvM.add(zombiesStrategic,JLayeredPane.PALETTE_LAYER);
+        panelFramePvM.add(timesText,JLayeredPane.DEFAULT_LAYER);
+        panelFramePvM.add(timesTextField,JLayeredPane.DEFAULT_LAYER);
+        panelFramePvM.add(aceptarPvM, JLayeredPane.DEFAULT_LAYER);
         framePvM.add(panelFramePvM);
     }
+    private void prepareBottomX(){
+        xButton = new JButton();
 
+        //Imagen predeterminada
+        ImageIcon imageButtonX = new ImageIcon("src/resources/Buttons/XButton.png");
+        Image resizedImageButtonX = imageButtonX.getImage().getScaledInstance((int) ((HEIGHT/2)*0.07),(int) ((HEIGHT/2)*0.07),Image.SCALE_SMOOTH);
+
+        //Imagen Rollover
+        ImageIcon imageButtonXRollover = new ImageIcon("src/resources/Buttons/XButtonRollover.jpg");
+        Image resizedImageButtonXRollover = imageButtonXRollover.getImage().getScaledInstance((int) ((HEIGHT/2)*0.07),(int) ((HEIGHT/2)*0.07),Image.SCALE_SMOOTH);
+
+        //Tamaño Boton
+
+        xButton.setBounds((int) ((WIDTH/2)-((HEIGHT/2)*0.07)),0,(int) ((HEIGHT/2)*0.07),(int) ((HEIGHT/2)*0.07));
+
+        //Colocarlas en el boton
+        xButton.setIcon(new ImageIcon(resizedImageButtonX));
+        xButton.setRolloverIcon(new ImageIcon(resizedImageButtonXRollover));
+        xButton.setPressedIcon(new ImageIcon(resizedImageButtonX));
+        xButton.setOpaque(true);
+        xButton.setBorderPainted(false);
+        xButton.setRolloverEnabled(true);
+        xButton.setContentAreaFilled(false);
+    }
+    private void prepareBottomXFromPvP(){
+        xButtonFromPvP = new JButton();
+
+        //Imagen predeterminada
+        ImageIcon imageButtonX = new ImageIcon("src/resources/Buttons/XButton.png");
+        Image resizedImageButtonX = imageButtonX.getImage().getScaledInstance((int) ((HEIGHT/2)*0.07),(int) ((HEIGHT/2)*0.07),Image.SCALE_SMOOTH);
+
+        //Imagen Rollover
+        ImageIcon imageButtonXRollover = new ImageIcon("src/resources/Buttons/XButtonRollover.jpg");
+        Image resizedImageButtonXRollover = imageButtonXRollover.getImage().getScaledInstance((int) ((HEIGHT/2)*0.07),(int) ((HEIGHT/2)*0.07),Image.SCALE_SMOOTH);
+
+        //Tamaño Boton
+
+        xButtonFromPvP.setBounds((int) ((WIDTH/2)-((HEIGHT/2)*0.07)),0,(int) ((HEIGHT/2)*0.07),(int) ((HEIGHT/2)*0.07));
+
+        //Colocarlas en el boton
+        xButtonFromPvP.setIcon(new ImageIcon(resizedImageButtonX));
+        xButtonFromPvP.setRolloverIcon(new ImageIcon(resizedImageButtonXRollover));
+        xButtonFromPvP.setPressedIcon(new ImageIcon(resizedImageButtonX));
+        xButtonFromPvP.setOpaque(true);
+        xButtonFromPvP.setBorderPainted(false);
+        xButtonFromPvP.setRolloverEnabled(true);
+        xButtonFromPvP.setContentAreaFilled(false);
+    }
+    private void prepareBottomXFromMvM(){
+        xButtonFromMvM = new JButton();
+
+        //Imagen predeterminada
+        ImageIcon imageButtonX = new ImageIcon("src/resources/Buttons/XButton.png");
+        Image resizedImageButtonX = imageButtonX.getImage().getScaledInstance((int) ((HEIGHT/2)*0.07),(int) ((HEIGHT/2)*0.07),Image.SCALE_SMOOTH);
+
+        //Imagen Rollover
+        ImageIcon imageButtonXRollover = new ImageIcon("src/resources/Buttons/XButtonRollover.jpg");
+        Image resizedImageButtonXRollover = imageButtonXRollover.getImage().getScaledInstance((int) ((HEIGHT/2)*0.07),(int) ((HEIGHT/2)*0.07),Image.SCALE_SMOOTH);
+
+        //Tamaño Boton
+
+        xButtonFromMvM.setBounds((int) ((WIDTH/2)-((HEIGHT/2)*0.07)),0,(int) ((HEIGHT/2)*0.07),(int) ((HEIGHT/2)*0.07));
+
+        //Colocarlas en el boton
+        xButtonFromMvM.setIcon(new ImageIcon(resizedImageButtonX));
+        xButtonFromMvM.setRolloverIcon(new ImageIcon(resizedImageButtonXRollover));
+        xButtonFromMvM.setPressedIcon(new ImageIcon(resizedImageButtonX));
+        xButtonFromMvM.setOpaque(true);
+        xButtonFromMvM.setBorderPainted(false);
+        xButtonFromMvM.setRolloverEnabled(true);
+        xButtonFromMvM.setContentAreaFilled(false);
+    }
     private void frameForMvM(){
         //crear objetos
         frameMvM = new JFrame();
         aceptarMvM = new JButton("Accept");
+        aceptarMvM.setFont(sizedFontAngulatte);
+        aceptarMvM.setBounds((int) ((WIDTH/4)- (WIDTH/4*0.25)),(int)(HEIGHT/2-(HEIGHT/2*0.22)),(int) (WIDTH/2*0.25),(int) (HEIGHT/2*0.1));
+        aceptarMvM.setBorder(BorderFactory.createLineBorder(Color.decode("#474a5e"), 3));
+        aceptarMvM.setContentAreaFilled(false);
+        aceptarMvM.setOpaque(true);
+        aceptarMvM.setForeground(Color.decode("#04970d"));
+        aceptarMvM.setBackground(Color.decode("#615d7b"));
+
+
         cancelarMvM = new JButton("Cancel");
         plantsIntelligent = new JButton("Plants Intelligent");
         plantsStrategic = new JButton("Plants Strategic");
-        zombiesOriginal2 = new JButton("Zombies Original");
-        zombiesStrategic2 = new JButton("Zombies Strategic");
 
         //editarlos
         frameMvM.setSize(WIDTH / 2, HEIGHT / 2);
         frameMvM.setLocationRelativeTo(null);
 
+
+        modePlantsO = new JLabel("Plants Intelligent");
+        modePlantsO.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.1),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        modePlantsO.setOpaque(false);
+        modePlantsO.setFont(sizedFontAngulatte);
+        modePlantsO.setForeground(Color.decode("#c9ad60"));
+
+        modePlantsS = new JLabel("Plants Strategic");
+        modePlantsS.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.3),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        modePlantsS.setOpaque(false);
+        modePlantsS.setFont(sizedFontAngulatte);
+        modePlantsS.setForeground(Color.decode("#c9ad60"));
+
+        plantsIntelligent = new JButton();
+        plantsIntelligent.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.25),(int) (WIDTH/2*0.2),(int) (HEIGHT/2*0.1));
+        plantsIntelligent.setIcon(new ImageIcon(resizedImageZombiesButtonON));
+        plantsIntelligent.setBorderPainted(false);
+        plantsStrategic = new JButton();
+        plantsStrategic.setBounds((int) (WIDTH/2*0.1),(int) (HEIGHT/2*0.45),(int) (WIDTH/2*0.2),(int) (HEIGHT/2*0.1));
+        plantsStrategic.setIcon(new ImageIcon(resizedImageZombiesButtonOF));
+        plantsStrategic.setBorderPainted(false);
+
+
+
+        zombiesOriginal2 = new JButton();
+        zombiesOriginal2.setBounds((int) (WIDTH/2*0.6),(int) (HEIGHT/2*0.25),(int) (WIDTH/2*0.2),(int) (HEIGHT/2*0.1));
+        zombiesOriginal2.setIcon(new ImageIcon(resizedImageZombiesButtonON));
+        zombiesOriginal2.setBorderPainted(false);
+        zombiesStrategic2 = new JButton();
+        zombiesStrategic2.setBounds((int) (WIDTH/2*0.6),(int) (HEIGHT/2*0.45),(int) (WIDTH/2*0.2),(int) (HEIGHT/2*0.1));
+        zombiesStrategic2.setIcon(new ImageIcon(resizedImageZombiesButtonOF));
+        zombiesStrategic2.setBorderPainted(false);
+
+
+        modeZombiesO1 = new JLabel("Zombies Original");
+        modeZombiesO1.setBounds((int) (WIDTH/2*0.6),(int) (HEIGHT/2*0.1),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        modeZombiesO1.setOpaque(false);
+        modeZombiesO1.setFont(sizedFontAngulatte);
+        modeZombiesO1.setForeground(Color.decode("#c9ad60"));
+
+        modeZombiesS1 = new JLabel("Zombies Strategic");
+        modeZombiesS1.setBounds((int) (WIDTH/2*0.6),(int) (HEIGHT/2*0.3),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
+        modeZombiesS1.setOpaque(false);
+        modeZombiesS1.setFont(sizedFontAngulatte);
+        modeZombiesS1.setForeground(Color.decode("#c9ad60"));
+
+
+
         //agregarlos al panel y frame
-        JPanel panelFrameMvM = new JPanel(new FlowLayout());
-        panelFrameMvM.add(plantsIntelligent);
-        panelFrameMvM.add(plantsStrategic);
-        panelFrameMvM.add(zombiesStrategic2);
-        panelFrameMvM.add(zombiesOriginal2);
-        panelFrameMvM.add(aceptarMvM);
-        panelFrameMvM.add(cancelarMvM);
+        JLayeredPane panelFrameMvM = new JLayeredPane();
+        panelFrameMvM.setBorder(BorderFactory.createLineBorder(Color.decode("#60627f"), 3));
+        panelFrameMvM.setBackground(Color.decode("#2e2f3f"));
+        panelFrameMvM.setOpaque(true);
+        panelFrameMvM.add(northBarrierFromMvM,JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(xButtonFromMvM,JLayeredPane.PALETTE_LAYER);
+        panelFrameMvM.add(modeZombiesO1, JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(zombiesOriginal2,JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(modeZombiesS1, JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(zombiesStrategic2, JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(modePlantsO, JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(plantsIntelligent, JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(modePlantsS, JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(plantsStrategic, JLayeredPane.DEFAULT_LAYER);
+        panelFrameMvM.add(aceptarMvM,JLayeredPane.DEFAULT_LAYER);
         frameMvM.add(panelFrameMvM);
     }
 
@@ -625,12 +1027,16 @@ public class POOBvsZOMBIESGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 modeMachine = 1;
+                zombiesOriginal.setIcon(new ImageIcon(resizedImageZombiesButtonOF));
+                zombiesStrategic.setIcon(new ImageIcon(resizedImageZombiesButtonON));
             }
         });
         zombiesOriginal.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 modeMachine = 0;
+                zombiesOriginal.setIcon(new ImageIcon(resizedImageZombiesButtonON));
+                zombiesStrategic.setIcon(new ImageIcon(resizedImageZombiesButtonOF));
             }
         });
         aceptarPvM.addActionListener(new ActionListener() {
@@ -642,10 +1048,17 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 choose.setVisible(true);
             }
         });
-        cancelarPvM.addActionListener(new ActionListener() {
+
+        xButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 framePvM.dispose();
+            }
+        });
+        xButtonFromPvP.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                framePvP.dispose();
             }
         });
     }

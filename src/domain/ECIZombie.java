@@ -144,7 +144,7 @@ public class ECIZombie extends Zombie{
     }
 
     public boolean endGame(){
-        if (hitbox.getX()<=0){
+        if (hitbox.getX()<=-1){
             return true;
         }
         return false;

@@ -146,7 +146,7 @@ public class BucketHead extends Zombie{
     }
 
     public boolean endGame(){
-        if (hitbox.getX()<=0){
+        if (hitbox.getX()<=-1){
             return true;
         }
         return false;

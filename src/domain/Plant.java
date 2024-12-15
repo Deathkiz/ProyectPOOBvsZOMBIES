@@ -2,12 +2,14 @@ package domain;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 
-public abstract class Plant {
+public abstract class Plant implements Serializable {
     protected int hp;
     protected JLayeredPane layeredPane;
     protected JButton button;
     protected Rectangle hitbox;
+    protected int cost;
 
     public void damage(int damage){hp -= damage;}
 
@@ -37,5 +39,9 @@ public abstract class Plant {
 
     public void die(){
         button.setIcon(null);
+    }
+
+    public int getCost(){
+        return cost;
     }
 }

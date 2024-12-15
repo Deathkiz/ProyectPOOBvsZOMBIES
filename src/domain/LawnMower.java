@@ -1,9 +1,10 @@
 package domain;
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class LawnMower {
+public class LawnMower implements Serializable {
     private JLabel label;
     private ImageIcon image;
     private JLayeredPane layeredPane;

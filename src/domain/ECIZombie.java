@@ -21,7 +21,7 @@ public class ECIZombie extends Zombie{
     private long rechargeTime = 3000;
 
     public ECIZombie(JButton button, JLayeredPane layeredPane, Rectangle[] hitboxs, Plant[] plants, LawnMower lawnMower, ArrayList<Projectile> projectiles){
-        super.hp = 100;
+        super.hp = 200;
         super.layeredPane = layeredPane;
         super.hitboxs = hitboxs;
         super.plants = plants;
@@ -32,7 +32,7 @@ public class ECIZombie extends Zombie{
         this.lastMovement = System.currentTimeMillis();
         this.lastAttack = System.currentTimeMillis();
         this.projectiles = projectiles;
-
+        super.cost = 250;
         ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/zombie.gif"));
         this.walkingIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
         ImageIcon attackIcon = new ImageIcon(getClass().getResource("/resources/zombieAttack.gif"));

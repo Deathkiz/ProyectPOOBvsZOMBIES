@@ -1,6 +1,8 @@
 package domain;
 
-public abstract class Collectable {
+import java.io.Serializable;
+
+public abstract class Collectable  implements Serializable {
     protected boolean inPosition;
     protected boolean active;
     protected int value;

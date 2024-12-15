@@ -27,6 +27,7 @@ public class ConeHead extends Zombie{
         this.attack = false;
         super.icon = "caminando";
         super.lawnMower = lawnMower;
+        super.cost = 150;
         this.lastMovement = System.currentTimeMillis();
         this.lastAttack = System.currentTimeMillis();
         ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/ConeheadZombie.gif"));

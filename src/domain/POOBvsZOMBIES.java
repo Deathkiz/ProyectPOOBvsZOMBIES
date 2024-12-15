@@ -2,10 +2,11 @@ package domain;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class POOBvsZOMBIES {
+public class POOBvsZOMBIES implements Serializable {
     private JLayeredPane layeredPane;
     private boolean[] usagePlants;
     private boolean[] usageZombies;
@@ -15,15 +16,17 @@ public class POOBvsZOMBIES {
     private ArrayList<Projectile>[] projectiles;
     private ArrayList<Collectable>[] collectables;
     private LawnMower[] LawnMowers;
-    private int[][] rows;
-    private int maxWidth;
     private int suns;
     private int brains;
     private final long autoGenerate = 10000;
     private long lastgenerate;
     private long currentTime;
     private boolean endGame;
-
+    private String resultMatch = null;
+    private long gameDuration;
+    private long startTime;
+    private long pauseTime;
+    private boolean exportado = false;
 
     public POOBvsZOMBIES(int suns, int brains, ArrayList<JButton> positions,JLayeredPane principalPane, boolean[] usagePlants, boolean[] usageZombies) {
         this.layeredPane = principalPane;
@@ -91,6 +94,7 @@ public class POOBvsZOMBIES {
                 zombie.update(currentTime);
                 if (zombie.endGame()){
                     endGame = true;
+                    resultMatch = "THE ZOMBIES ATE YOUR BRAINS";
                 }
                 if (zombie.getHp() <= 0 && currentTime - zombie.getDeadTime() > 2000) {
                     zombie.remove();
@@ -143,6 +147,22 @@ public class POOBvsZOMBIES {
             }
         }
     }
+    public String result(){
+        if (resultMatch == null){
+            if (scorePlant() > scoreZombie()){
+                resultMatch = "Ganaron las plantas";
+            }
+            else if (scorePlant() < scoreZombie()){
+                resultMatch = "Ganaron los zombies";
+            }
+            else{
+                resultMatch = "Empate";
+            }
+        }
+
+
+        return resultMatch;
+    }
 
     public void createPlant(String type, int row, int column,JButton button){
 
@@ -173,6 +193,76 @@ public class POOBvsZOMBIES {
         }
     }
 
+    public void deletePlant(int row, int column) {
+        plants[row][column].setHp(0);
+    }
+    public void exportGame(long gameDuration, long startTime, long pauseTime, POOBvsZOMBIES game) throws FileNotFoundException, IOException{
+        this.gameDuration = gameDuration;
+        this.startTime = startTime;
+        this.pauseTime = pauseTime;
+        exportado = true;
+        File tempFile = new File("POOBvsZOMBIES", ".dat");
+        FileOutputStream fileOutputStream = new FileOutputStream(tempFile.getName());
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(game);
+        objectOutputStream.close();
+
+    }
+
+    public int scorePlant(){
+        int scorePlants = 0;
+        for (int i = 0; i < plants.length; i++ ){
+            for (int j = 0; j < plants[i].length; j++ ){
+                if (plants[i][j] != null){
+                    scorePlants +=plants[i][j].getCost();
+                }
+            }
+        }
+
+
+        scorePlants = (int) ((scorePlants+ suns)*1.5) ;
+
+        return scorePlants;
+    }
+
+    public long getGameDuration(){
+        return gameDuration;
+    }
+
+    public long getStartTime(){
+        return startTime;
+    }
+
+    public long getCurrentTime(){
+        return currentTime;
+    }
+
+    public long getPauseTime(){
+        return pauseTime;
+    }
+    public int scoreZombie(){
+        int scoreZombies = 0;
+        for (int i = 0; i < zombies.length; i++ ){
+            for (int j = 0; j < zombies[i].size(); j++ ){
+                if (zombies[i].get(j) != null){
+                    scoreZombies +=zombies[i].get(j).getCost();
+                }
+            }
+        }
+
+
+        scoreZombies = (int) ((scoreZombies+ brains)) ;
+
+        return scoreZombies;
+    }
+
+    public static POOBvsZOMBIES importFile(File archivo) throws ClassNotFoundException, IOException{
+        FileInputStream fileInputStream = new FileInputStream(archivo.getName());
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        POOBvsZOMBIES game = (POOBvsZOMBIES) objectInputStream.readObject();
+        objectInputStream.close();
+        return game;
+    }
 
     public void createZombie(String type, int row, JButton button){
         if (type.equals("basic") && brains >= 100 && usageZombies[0]) {
@@ -193,9 +283,11 @@ public class POOBvsZOMBIES {
         }
         else if (type.equals("brainstein") && brains>=50  && usageZombies[4]){
             zombies[row].add(new Brainstein(button,layeredPane,collectables[row]));
-            brains -= 200;
+            brains -= 50;
         }
     }
+
+
 
     public void sumSuns(int sunsGot) {
         suns += sunsGot;

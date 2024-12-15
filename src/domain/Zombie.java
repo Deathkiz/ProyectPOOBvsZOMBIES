@@ -2,8 +2,9 @@ package domain;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 
-public abstract class Zombie {
+public abstract class Zombie implements Serializable {
     protected int hp;
     protected JLayeredPane layeredPane;
     protected Rectangle[] hitboxs;
@@ -12,6 +13,7 @@ public abstract class Zombie {
     protected Rectangle hitbox;
     protected String icon;
     protected long deadTime;
+    protected int cost;
 
 
     public void damage(int damage){hp -= damage;}
@@ -35,4 +37,8 @@ public abstract class Zombie {
     public String getIcon(){return icon;};
 
     public abstract boolean endGame();
+
+    public int getCost(){
+        return cost;
+    }
 }

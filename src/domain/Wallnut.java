@@ -13,6 +13,7 @@ public class Wallnut extends Plant{
         super.hp = 4000;
         super.button = button;
         super.layeredPane = layeredPane;
+        super.cost = 50;
         icon = "normal";
         ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/WallNut.gif"));
         normal = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 0.7), (int) (button.getSize().getHeight() * 0.7), Image.SCALE_DEFAULT));

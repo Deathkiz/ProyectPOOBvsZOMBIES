@@ -1,8 +1,9 @@
 package domain;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public abstract class Projectile {
+public abstract class Projectile  implements Serializable {
     protected Rectangle hitbox;
     protected int attack;
     protected int distance;

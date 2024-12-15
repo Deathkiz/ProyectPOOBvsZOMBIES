@@ -17,6 +17,7 @@ public class Peashooter extends Plant{
         super.button = button;
         this.Peas = rowPeas;
         this.zombies = zombies;
+        super.cost = 100;
         ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/PeaShooter.gif"));
         ImageIcon buttonIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 0.7), (int) (button.getSize().getHeight() * 0.7), Image.SCALE_DEFAULT));
         button.setIcon(buttonIcon);

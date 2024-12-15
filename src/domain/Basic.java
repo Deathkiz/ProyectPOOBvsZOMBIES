@@ -25,6 +25,7 @@ public class Basic extends Zombie{
         this.attack = false;
         super.icon = "caminando";
         super.lawnMower = lawnMower;
+        super.cost = 100;
         this.lastMovement = System.currentTimeMillis();
         this.lastAttack = System.currentTimeMillis();
         ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/zombie.gif"));

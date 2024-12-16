@@ -42,6 +42,12 @@ public class ZombieMachine {
         }
 
         else {
+            for (int i = 0; i<5 ; i++){
+                if (!game.findBrainstein(i) && brains>=50){
+                    game.machineCreateZombie(i,4);
+                    brains -= 50;
+                }
+            }
             if (currentTime - startTime <= 60000) {
                 if (currentTime - lastZombie >= cooldown && brains >= 150) {
                     int row = random.nextInt(5);

@@ -1681,7 +1681,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
         } else if (gameType.equals("pvm")) {
             GAME = new POOBvsZOMBIES(suns, brains, positions, principalPanel, usagePlants, usageZombies,modeMachine);
         } else if (gameType.equals("mvm")) {
-            GAME = new POOBvsZOMBIES(suns, brains, positions, principalPanel, usagePlants, usageZombies);
+            GAME = new POOBvsZOMBIES(suns, brains, positions, principalPanel, usagePlants, usageZombies,modeMachine,modePlants);
         }
 
         gameDuration = time*1000;

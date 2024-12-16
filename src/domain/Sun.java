@@ -8,10 +8,10 @@ public class Sun extends Collectable{
     private ImageIcon image;
     private JLayeredPane layeredPane;
 
-    public Sun(int suns,int size, JLayeredPane layeredPane, JButton button) {
+    public Sun(int suns,int size, JLayeredPane layeredPane, JButton button, boolean modeMachine) {
         this.layeredPane = layeredPane;
         inPosition = false;
-        active = false;
+        active = modeMachine;
         value = suns;
         Point buttonLocationOnScreen = button.getLocationOnScreen();
         Point layeredPaneLocationOnScreen = layeredPane.getLocationOnScreen();

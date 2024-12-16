@@ -29,6 +29,7 @@ public class POOBvsZOMBIES implements Serializable {
     private long startTime;
     private long pauseTime;
     private ZombieMachine zombieMachine;
+    private PlantMachine plantMachine;
 
     public POOBvsZOMBIES(int suns, int brains, ArrayList<JButton> positions,JLayeredPane principalPane, boolean[] usagePlants, boolean[] usageZombies) {
         this.layeredPane = principalPane;
@@ -48,7 +49,7 @@ public class POOBvsZOMBIES implements Serializable {
         }
         lastgenerate = System.currentTimeMillis();
         lastHorde = System.currentTimeMillis();
-
+        this.startTime = System.currentTimeMillis();
         this.suns = suns;
         this.brains = brains;
         plantHitboxs = new Rectangle[5][8];
@@ -90,6 +91,37 @@ public class POOBvsZOMBIES implements Serializable {
         zombieMachine = new ZombieMachine(modeZombies,this);
     }
 
+    public POOBvsZOMBIES(int suns, int brains, ArrayList<JButton> positions,JLayeredPane principalPane, boolean[] usagePlants, boolean[] usageZombies, int modeZombies,int modePlants) {
+        this.layeredPane = principalPane;
+        this.usagePlants = usagePlants;
+        this.usageZombies = usageZombies;
+        this.positions = positions;
+        this.endGame = false;
+        plants = new Plant[5][8];
+        LawnMowers = new LawnMower[5];
+        collectables = (ArrayList<Collectable>[]) new ArrayList[5];
+        zombies = (ArrayList<Zombie>[]) new ArrayList[5];
+        projectiles = (ArrayList<Projectile>[]) new ArrayList[5];
+        for (int i = 0; i < 5; i++) {
+            zombies[i] = new ArrayList<>();
+            projectiles[i] = new ArrayList<>();
+            collectables[i] = new ArrayList<>();
+        }
+        lastgenerate = System.currentTimeMillis();
+        lastHorde = System.currentTimeMillis();
+
+        this.suns = suns;
+        this.brains = brains;
+        plantHitboxs = new Rectangle[5][8];
+        ArrayList<Integer> buttonPosition = new ArrayList<>(Arrays.asList(0, 9, 18, 27, 36));
+        for (int i = 0; i < 5; i++) {
+            JButton button = positions.get(buttonPosition.get(i));
+            LawnMowers[i] = new LawnMower(layeredPane, button, zombies[i]);
+        }
+        zombieMachine = new ZombieMachine(modeZombies,this);
+        plantMachine = new PlantMachine(modePlants,this);
+    }
+
     public void update(long currentTime){
         this.currentTime = currentTime;
         createHordeZombie(currentTime);
@@ -103,6 +135,9 @@ public class POOBvsZOMBIES implements Serializable {
         }
         if (zombieMachine != null){
             zombieMachine.makeDecision(brains,currentTime);
+        }
+        if (plantMachine != null){
+            plantMachine.makeDecision(suns);
         }
     }
 
@@ -205,31 +240,32 @@ public class POOBvsZOMBIES implements Serializable {
     }
 
     public void createPlant(String type, int row, int column,JButton button){
-
-        if (type.equals("sunflower") && suns >= 50 && usagePlants[0]){
-            plants[row][column] = new Sunflower(button, layeredPane, collectables[row]);
-            plantHitboxs[row][column] = plants[row][column].getHitbox();
-            suns -= 50;
-        }
-        else if (type.equals("peashooter") && suns >= 100 && usagePlants[1]){
-            plants[row][column] = new Peashooter(button,layeredPane, projectiles[row],zombies[row]);
-            plantHitboxs[row][column] = plants[row][column].getHitbox();
-            suns -= 100;
-        }
-        else if (type.equals("ECIPlant") && suns >= 75 && usagePlants[2]){
-            plants[row][column] = new ECIPlant(button, layeredPane, collectables[row]);
-            plantHitboxs[row][column] = plants[row][column].getHitbox();
-            suns -= 75;
-        }
-        else if (type.equals("wall-nut") && suns >= 50 && usagePlants[3]){
-            plants[row][column] = new Wallnut(button, layeredPane);
-            plantHitboxs[row][column] = plants[row][column].getHitbox();
-            suns -= 50;
-        }
-        else if (type.equals("potatoMine") && suns >= 25 && usagePlants[4]){
-            plants[row][column] = new PotatoMine(button, layeredPane,zombies[row]);
-            plantHitboxs[row][column] = plants[row][column].getHitbox();
-            suns -= 25;
+        if (plantMachine == null && plants[row][column]==null){
+            if (type.equals("sunflower") && suns >= 50 && usagePlants[0]){
+                plants[row][column] = new Sunflower(button, layeredPane, collectables[row],false);
+                plantHitboxs[row][column] = plants[row][column].getHitbox();
+                suns -= 50;
+            }
+            else if (type.equals("peashooter") && suns >= 100 && usagePlants[1]){
+                plants[row][column] = new Peashooter(button,layeredPane, projectiles[row],zombies[row]);
+                plantHitboxs[row][column] = plants[row][column].getHitbox();
+                suns -= 100;
+            }
+            else if (type.equals("ECIPlant") && suns >= 75 && usagePlants[2]){
+                plants[row][column] = new ECIPlant(button, layeredPane, collectables[row],true);
+                plantHitboxs[row][column] = plants[row][column].getHitbox();
+                suns -= 75;
+            }
+            else if (type.equals("wall-nut") && suns >= 50 && usagePlants[3]){
+                plants[row][column] = new Wallnut(button, layeredPane);
+                plantHitboxs[row][column] = plants[row][column].getHitbox();
+                suns -= 50;
+            }
+            else if (type.equals("potatoMine") && suns >= 25 && usagePlants[4]){
+                plants[row][column] = new PotatoMine(button, layeredPane,zombies[row]);
+                plantHitboxs[row][column] = plants[row][column].getHitbox();
+                suns -= 25;
+            }
         }
     }
 
@@ -283,41 +319,105 @@ public class POOBvsZOMBIES implements Serializable {
                 zombies[row].add(new ECIZombie(button, layeredPane, plantHitboxs[row], plants[row], LawnMowers[row], projectiles[row]));
                 brains -= 250;
             } else if (type.equals("brainstein") && brains >= 50 && usageZombies[4]) {
-                zombies[row].add(new Brainstein(button, layeredPane, collectables[row]));
+                zombies[row].add(new Brainstein(button, layeredPane, collectables[row],false));
                 brains -= 50;
             }
         }
     }
 
     public void createHordeZombie(long currentTime) {
-        if (currentTime-lastHorde >= 60000){
-            // Lista de posiciones posibles para colocar zombies
-            ArrayList<Integer> zombiePositions = new ArrayList<>(Arrays.asList(8, 17, 26, 35, 44));
-            // Determinar cuántos zombies se van a generar (cantidad aleatoria)
-            Random random = new Random();
-            int hordeSize = random.nextInt(5)+1;
+        if (currentTime-startTime <= 61000){
+            if (currentTime-lastHorde >= 30000){
+                // Lista de posiciones posibles para colocar zombies
+                ArrayList<Integer> zombiePositions = new ArrayList<>(Arrays.asList(8, 17, 26, 35, 44));
+                // Determinar cuántos zombies se van a generar (cantidad aleatoria)
+                Random random = new Random();
+                int hordeSize = random.nextInt(5)+1;
 
-            for (int i = 0; i < hordeSize; i++) {
-                // Elegir una posición aleatoria de la lista de posiciones
-                int randomIndex = random.nextInt(zombiePositions.size());
-                int position = zombiePositions.get(randomIndex);
+                for (int i = 0; i < hordeSize; i++) {
+                    // Elegir una posición aleatoria de la lista de posiciones
+                    int randomIndex = random.nextInt(zombiePositions.size());
+                    int position = zombiePositions.get(randomIndex);
 
-                // Determinar el tipo de zombie aleatoriamente (según usageZombies)
-                int zombieType = random.nextInt(4); // Índice aleatorio para el array usageZombies
-                if (zombieType == 0 && usageZombies[0]) {
-                    zombies[randomIndex].add(new Basic(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
+                    // Determinar el tipo de zombie aleatoriamente (según usageZombies)
+                    int zombieType = random.nextInt(4); // Índice aleatorio para el array usageZombies
+                    if (zombieType == 0 && usageZombies[0]) {
+                        zombies[randomIndex].add(new Basic(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
+                    }
+                    else if (zombieType == 1  && usageZombies[1]){
+                        zombies[randomIndex].add(new ConeHead(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
+                    }
+                    else if (zombieType == 2 && usageZombies[2]){
+                        zombies[randomIndex].add(new BucketHead(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
+                    }
+                    else if (zombieType == 3  && usageZombies[3]){
+                        zombies[randomIndex].add(new ECIZombie(positions.get(position),layeredPane, plantHitboxs[randomIndex],plants[randomIndex],LawnMowers[randomIndex],projectiles[randomIndex]));
+                    }
                 }
-                else if (zombieType == 1  && usageZombies[1]){
-                    zombies[randomIndex].add(new ConeHead(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
-                }
-                else if (zombieType == 2 && usageZombies[2]){
-                    zombies[randomIndex].add(new BucketHead(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
-                }
-                else if (zombieType == 3  && usageZombies[3]){
-                    zombies[randomIndex].add(new ECIZombie(positions.get(position),layeredPane, plantHitboxs[randomIndex],plants[randomIndex],LawnMowers[randomIndex],projectiles[randomIndex]));
-                }
+                lastHorde = currentTime;
             }
-            lastHorde = currentTime;
+        }
+        else if (currentTime-startTime <= 121000){
+            if (currentTime-lastHorde >= 30000){
+                // Lista de posiciones posibles para colocar zombies
+                ArrayList<Integer> zombiePositions = new ArrayList<>(Arrays.asList(8, 17, 26, 35, 44));
+                // Determinar cuántos zombies se van a generar (cantidad aleatoria)
+                Random random = new Random();
+                int hordeSize = random.nextInt(4)+3;
+
+                for (int i = 0; i < hordeSize; i++) {
+                    // Elegir una posición aleatoria de la lista de posiciones
+                    int randomIndex = random.nextInt(zombiePositions.size());
+                    int position = zombiePositions.get(randomIndex);
+
+                    // Determinar el tipo de zombie aleatoriamente (según usageZombies)
+                    int zombieType = random.nextInt(4); // Índice aleatorio para el array usageZombies
+                    if (zombieType == 0 && usageZombies[0]) {
+                        zombies[randomIndex].add(new Basic(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
+                    }
+                    else if (zombieType == 1  && usageZombies[1]){
+                        zombies[randomIndex].add(new ConeHead(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
+                    }
+                    else if (zombieType == 2 && usageZombies[2]){
+                        zombies[randomIndex].add(new BucketHead(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
+                    }
+                    else if (zombieType == 3  && usageZombies[3]){
+                        zombies[randomIndex].add(new ECIZombie(positions.get(position),layeredPane, plantHitboxs[randomIndex],plants[randomIndex],LawnMowers[randomIndex],projectiles[randomIndex]));
+                    }
+                }
+                lastHorde = currentTime;
+            }
+        }
+        else {
+            if (currentTime-lastHorde >= 30000){
+                // Lista de posiciones posibles para colocar zombies
+                ArrayList<Integer> zombiePositions = new ArrayList<>(Arrays.asList(8, 17, 26, 35, 44));
+                // Determinar cuántos zombies se van a generar (cantidad aleatoria)
+                Random random = new Random();
+                int hordeSize = random.nextInt(4)+5;
+
+                for (int i = 0; i < hordeSize; i++) {
+                    // Elegir una posición aleatoria de la lista de posiciones
+                    int randomIndex = random.nextInt(zombiePositions.size());
+                    int position = zombiePositions.get(randomIndex);
+
+                    // Determinar el tipo de zombie aleatoriamente (según usageZombies)
+                    int zombieType = random.nextInt(4); // Índice aleatorio para el array usageZombies
+                    if (zombieType == 0 && usageZombies[0]) {
+                        zombies[randomIndex].add(new Basic(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
+                    }
+                    else if (zombieType == 1  && usageZombies[1]){
+                        zombies[randomIndex].add(new ConeHead(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
+                    }
+                    else if (zombieType == 2 && usageZombies[2]){
+                        zombies[randomIndex].add(new BucketHead(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
+                    }
+                    else if (zombieType == 3  && usageZombies[3]){
+                        zombies[randomIndex].add(new ECIZombie(positions.get(position),layeredPane, plantHitboxs[randomIndex],plants[randomIndex],LawnMowers[randomIndex],projectiles[randomIndex]));
+                    }
+                }
+                lastHorde = currentTime;
+            }
         }
     }
 
@@ -341,11 +441,42 @@ public class POOBvsZOMBIES implements Serializable {
             brains -= 250;
         }
         else if (zombieType == 4 && brains >= 50 && usageZombies[4]){
-            zombies[row].add(new Brainstein(buttonRow,layeredPane,collectables[row]));
+            zombies[row].add(new Brainstein(buttonRow,layeredPane,collectables[row],zombieMachine!=null));
             brains -= 50;
         }
     }
 
+    public void machineCreatePlant(int row,int column, int type){
+        if (plants[row][column]==null){
+            int index = row * 9 + column;
+            JButton button = positions.get(index);
+            if (type == 0 && suns >= 50 && usagePlants[0]) {
+                plants[row][column] = new Sunflower(button,layeredPane,collectables[row],plantMachine!=null);
+                plantHitboxs[row][column] = plants[row][column].getHitbox();
+                suns -= 50;
+            }
+            else if (type == 1 && suns >= 100 && usagePlants[1]) {
+                plants[row][column] = new Peashooter(button,layeredPane,projectiles[row],zombies[row]);
+                plantHitboxs[row][column] = plants[row][column].getHitbox();
+                suns -= 100;
+            }
+            else if (type == 2 && suns >= 75 && usagePlants[2]) {
+                plants[row][column] = new ECIPlant(button,layeredPane,collectables[row],plantMachine!=null);
+                plantHitboxs[row][column] = plants[row][column].getHitbox();
+                suns -= 75;
+            }
+            else if (type == 3 && suns >= 50 && usagePlants[3]){
+                plants[row][column] = new Wallnut(button,layeredPane);
+                plantHitboxs[row][column] = plants[row][column].getHitbox();
+                suns -= 25;
+            }
+            else if (type == 4 && suns >= 25 && usagePlants[4]){
+                plants[row][column] = new PotatoMine(button,layeredPane,zombies[row]);
+                plantHitboxs[row][column] = plants[row][column].getHitbox();
+                suns -= 25;
+            }
+        }
+    }
 
     public int getSuns() {
         return suns;
@@ -357,6 +488,23 @@ public class POOBvsZOMBIES implements Serializable {
 
     public boolean getEndGame(){
         return endGame;
+    }
+
+    public Plant[][] getPlants() {
+        return plants;
+    }
+
+    public boolean hasZombie(int row) {
+        return !zombies[row].isEmpty();
+    }
+
+    public boolean findBrainstein(int row){
+        for (Zombie zombie:zombies[row]){
+            if (zombie instanceof Brainstein){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void clear(){
@@ -382,7 +530,5 @@ public class POOBvsZOMBIES implements Serializable {
             }
         }
     }
-
-
 
 }

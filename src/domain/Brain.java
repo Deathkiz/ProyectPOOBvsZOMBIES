@@ -9,10 +9,10 @@ public class Brain extends Collectable{
     private ImageIcon image;
     private JLayeredPane layeredPane;
 
-    public Brain(int brains, JLayeredPane layeredPane, JButton button) {
+    public Brain(int brains, JLayeredPane layeredPane, JButton button,boolean machineMode) {
         this.layeredPane = layeredPane;
         inPosition = false;
-        active = false;
+        active = machineMode;
         value = brains;
         Point buttonLocationOnScreen = button.getLocationOnScreen();
         Point layeredPaneLocationOnScreen = layeredPane.getLocationOnScreen();

@@ -252,7 +252,7 @@ public class POOBvsZOMBIES implements Serializable {
                 suns -= 100;
             }
             else if (type.equals("ECIPlant") && suns >= 75 && usagePlants[2]){
-                plants[row][column] = new ECIPlant(button, layeredPane, collectables[row],true);
+                plants[row][column] = new ECIPlant(button, layeredPane, collectables[row],false);
                 plantHitboxs[row][column] = plants[row][column].getHitbox();
                 suns -= 75;
             }

@@ -22,7 +22,7 @@ public class Brainstein extends Zombie{
         super.cost = 50;
         this.machineMode = machineMode;
 
-        ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/Sunflower.gif"));
+        ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/Brainstein.gif"));
         ImageIcon buttonIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 0.7), (int) (button.getSize().getHeight() * 0.7), Image.SCALE_DEFAULT));
         ImageIcon ashIcon = new ImageIcon(getClass().getResource("/resources/BoomDie.gif"));
         this.kaboomIcon = new ImageIcon(ashIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 0.7), (int) (button.getSize().getHeight() * 0.7), Image.SCALE_DEFAULT));

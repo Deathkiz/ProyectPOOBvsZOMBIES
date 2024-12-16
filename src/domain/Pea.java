@@ -89,4 +89,3 @@ public class Pea extends Projectile{
         return label.getX();
     }
 }
-

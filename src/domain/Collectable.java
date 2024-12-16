@@ -1,3 +1,4 @@
+
 package domain;
 
 import java.io.Serializable;
@@ -18,4 +19,3 @@ public abstract class Collectable  implements Serializable {
 
     public boolean isActive(){return active;}
 }
-

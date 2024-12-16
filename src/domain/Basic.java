@@ -49,7 +49,7 @@ public class Basic extends Zombie{
         label.setBounds(layeredPane.getWidth(), y, width, height);
         super.hitbox = new Rectangle((int) (layeredPane.getWidth() + width * 0.7), relativeY, (int) width / 5, button.getHeight());
         layeredPane.add(label, JLayeredPane.DRAG_LAYER);
-        }
+    }
 
 
     public void update(long currentTime) {

@@ -893,8 +893,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
         zombie = createColorButton("src/resources/ZombieSeedPacket.jpg", WIDTH/12, HEIGHT/6);
         zombieConehead = createColorButton("src/resources/ConeHeadSeedPacket.jpg", WIDTH/12, HEIGHT/6);
         zombieBuckethead = createColorButton("src/resources/BucketheadSeedPacket.jpg", WIDTH/12, HEIGHT/6);
-        ECIZombie = createColorButton("src/resources/ZombieSeedPacket.jpg", WIDTH/12, HEIGHT/6);
-        Brainstain = createColorButton("src/resources/ZombieSeedPacket.jpg", WIDTH/12, HEIGHT/6);
+        ECIZombie = createColorButton("src/resources/ECIZombieSeedPacket.jpg", WIDTH/12, HEIGHT/6);
+        Brainstain = createColorButton("src/resources/BrainsteinSeedPacket.jpg", WIDTH/12, HEIGHT/6);
     }
 
 
@@ -1029,12 +1029,12 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 button.setIcon(new ImageIcon(buton1));
             }
             if (i== 4){
-                ImageIcon image = new ImageIcon("src/resources/ZombieSeedPacket.jpg");
+                ImageIcon image = new ImageIcon("src/resources/ECIZombieSeedPacket.jpg");
                 Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
                 button.setIcon(new ImageIcon(buton1));
             }
             if (i== 5){
-                ImageIcon image = new ImageIcon("src/resources/ZombieSeedPacket.jpg");
+                ImageIcon image = new ImageIcon("src/resources/BrainsteinSeedPacket.jpg");
                 Image buton1 = image.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
                 button.setIcon(new ImageIcon(buton1));
             }
@@ -1058,7 +1058,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
         timeLabel.setBounds((int) (WIDTH/2)-(int) (WIDTH*0.4/16),(int)(HEIGHT*0.96),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.02));
         timeLabel.setFont(sizedFont);
         timeLabel.setVisible(false);
-        timeLabel.setOpaque(true);
+        timeLabel.setOpaque(false);
 
         principalPanel.add(timeLabel,Integer.valueOf(11));
 
@@ -1068,7 +1068,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
         plantScore.setBounds((int) (WIDTH*0.1),(int)(HEIGHT*0.96),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.02));
         plantScore.setFont(sizedFont);
         plantScore.setVisible(false);
-        plantScore.setOpaque(true);
+        plantScore.setOpaque(false);
 
         principalPanel.add(plantScore,Integer.valueOf(11));
 
@@ -1078,7 +1078,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
         zombieScore.setBounds((int) (WIDTH*0.9),(int)(HEIGHT*0.96),(int) (WIDTH*0.4/8),(int) (HEIGHT*0.02));
         zombieScore.setFont(sizedFont);
         zombieScore.setVisible(false);
-        zombieScore.setOpaque(true);
+        zombieScore.setOpaque(false);
 
         principalPanel.add(zombieScore,Integer.valueOf(11));
         principalPanel.add(finalMatchLabel, Integer.valueOf(401));
@@ -1087,16 +1087,17 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
         menuGame = new JButton();
         ImageIcon imageMenu = new ImageIcon("src/resources/Buttons/ButtonMenuGame.png");
-        Image resizedImageMenu = imageMenu.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
+        Image resizedImageMenu = imageMenu.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.04),Image.SCALE_SMOOTH);
         ImageIcon imageMenuRollover = new ImageIcon("src/resources/Buttons/ButtonMenuGameRollover.png");
-        Image resizedImageMenuRollover = imageMenuRollover.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.08),Image.SCALE_SMOOTH);
-        menuGame.setBounds((int) (WIDTH/2)+30,(int)(HEIGHT*0.96), (int) (WIDTH*0.4/8),(int) (HEIGHT*0.08));
+        Image resizedImageMenuRollover = imageMenuRollover.getImage().getScaledInstance((int) (WIDTH*0.4/8),(int) (HEIGHT*0.04),Image.SCALE_SMOOTH);
+        menuGame.setBounds((int) (WIDTH/2)+30,(int)(HEIGHT*0.96), (int) (WIDTH*0.4/8),(int) (HEIGHT*0.04));
         menuGame.setVisible(false);
         menuGame.setIcon(new ImageIcon(resizedImageMenu));
         menuGame.setBorderPainted(false);
         menuGame.setRolloverIcon(new ImageIcon(resizedImageMenuRollover));
         menuGame.setPressedIcon(new ImageIcon(resizedImageMenu));
-
+        menuGame.setContentAreaFilled(false);
+        menuGame.setFocusPainted(false);
         principalPanel.add(menuGame, Integer.valueOf(11));
 
         principalPanel.add(Shovel,JLayeredPane.DRAG_LAYER );

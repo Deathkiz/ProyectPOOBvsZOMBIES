@@ -33,9 +33,9 @@ public class ECIZombie extends Zombie{
         this.lastAttack = System.currentTimeMillis();
         this.projectiles = projectiles;
         super.cost = 250;
-        ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/ECIZombie.gif"));
+        ImageIcon gifIcon = new ImageIcon(getClass().getResource("/resources/zombie.gif"));
         this.walkingIcon = new ImageIcon(gifIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
-        ImageIcon attackIcon = new ImageIcon(getClass().getResource("/resources/ECIZombieAttack.gif"));
+        ImageIcon attackIcon = new ImageIcon(getClass().getResource("/resources/zombieAttack.gif"));
         this.attackIcon = new ImageIcon(attackIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));
         ImageIcon dieIcon = new ImageIcon(getClass().getResource("/resources/zombieDie.gif"));
         this.bodyDieIcon = new ImageIcon(dieIcon.getImage().getScaledInstance((int) (button.getSize().getWidth() * 1.3), (int) (button.getSize().getHeight() * 1.3), Image.SCALE_DEFAULT));

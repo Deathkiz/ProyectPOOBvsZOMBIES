@@ -90,8 +90,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private JLabel timesText2;
     private JTextField timesTextField2;
     //informacion maquinas
-    private int modeMachine = 1;
-    private int modePlants = 1;
+    private int modeMachine = 0;
+    private int modePlants = 0;
 
     //frame choose
     private JFrame choose;

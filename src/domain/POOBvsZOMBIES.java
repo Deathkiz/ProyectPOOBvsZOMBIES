@@ -5,9 +5,11 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 public class POOBvsZOMBIES implements Serializable {
     private JLayeredPane layeredPane;
+    private ArrayList<JButton> positions;
     private boolean[] usagePlants;
     private boolean[] usageZombies;
     private Plant[][] plants;
@@ -23,15 +25,16 @@ public class POOBvsZOMBIES implements Serializable {
     private long currentTime;
     private boolean endGame;
     private String resultMatch = null;
-    private long gameDuration;
+    private long lastHorde;
     private long startTime;
     private long pauseTime;
-    private boolean exportado = false;
+    private ZombieMachine zombieMachine;
 
     public POOBvsZOMBIES(int suns, int brains, ArrayList<JButton> positions,JLayeredPane principalPane, boolean[] usagePlants, boolean[] usageZombies) {
         this.layeredPane = principalPane;
         this.usagePlants = usagePlants;
         this.usageZombies = usageZombies;
+        this.positions = positions;
         this.endGame = false;
         plants = new Plant[5][8];
         LawnMowers = new LawnMower[5];
@@ -44,6 +47,7 @@ public class POOBvsZOMBIES implements Serializable {
             collectables[i] = new ArrayList<>();
         }
         lastgenerate = System.currentTimeMillis();
+        lastHorde = System.currentTimeMillis();
 
         this.suns = suns;
         this.brains = brains;
@@ -53,10 +57,42 @@ public class POOBvsZOMBIES implements Serializable {
             JButton button = positions.get(buttonPosition.get(i));
             LawnMowers[i] = new LawnMower(layeredPane, button, zombies[i]);
         }
+        zombieMachine = null;
+    }
+
+    public POOBvsZOMBIES(int suns, int brains, ArrayList<JButton> positions,JLayeredPane principalPane, boolean[] usagePlants, boolean[] usageZombies, int modeZombies) {
+        this.layeredPane = principalPane;
+        this.usagePlants = usagePlants;
+        this.usageZombies = usageZombies;
+        this.positions = positions;
+        this.endGame = false;
+        plants = new Plant[5][8];
+        LawnMowers = new LawnMower[5];
+        collectables = (ArrayList<Collectable>[]) new ArrayList[5];
+        zombies = (ArrayList<Zombie>[]) new ArrayList[5];
+        projectiles = (ArrayList<Projectile>[]) new ArrayList[5];
+        for (int i = 0; i < 5; i++) {
+            zombies[i] = new ArrayList<>();
+            projectiles[i] = new ArrayList<>();
+            collectables[i] = new ArrayList<>();
+        }
+        lastgenerate = System.currentTimeMillis();
+        lastHorde = System.currentTimeMillis();
+
+        this.suns = suns;
+        this.brains = brains;
+        plantHitboxs = new Rectangle[5][8];
+        ArrayList<Integer> buttonPosition = new ArrayList<>(Arrays.asList(0, 9, 18, 27, 36));
+        for (int i = 0; i < 5; i++) {
+            JButton button = positions.get(buttonPosition.get(i));
+            LawnMowers[i] = new LawnMower(layeredPane, button, zombies[i]);
+        }
+        zombieMachine = new ZombieMachine(modeZombies,this);
     }
 
     public void update(long currentTime){
         this.currentTime = currentTime;
+        createHordeZombie(currentTime);
         for (int row = 0; row<5 ; row++){
             handleRow(row,currentTime);
         }
@@ -64,6 +100,9 @@ public class POOBvsZOMBIES implements Serializable {
             suns += 25;
             brains += 50;
             lastgenerate = currentTime;
+        }
+        if (zombieMachine != null){
+            zombieMachine.makeDecision(brains,currentTime);
         }
     }
 
@@ -147,6 +186,7 @@ public class POOBvsZOMBIES implements Serializable {
             }
         }
     }
+
     public String result(){
         if (resultMatch == null){
             if (scorePlant() > scoreZombie()){
@@ -196,18 +236,6 @@ public class POOBvsZOMBIES implements Serializable {
     public void deletePlant(int row, int column) {
         plants[row][column].setHp(0);
     }
-    public void exportGame(long gameDuration, long startTime, long pauseTime, POOBvsZOMBIES game) throws FileNotFoundException, IOException{
-        this.gameDuration = gameDuration;
-        this.startTime = startTime;
-        this.pauseTime = pauseTime;
-        exportado = true;
-        File tempFile = new File("POOBvsZOMBIES", ".dat");
-        FileOutputStream fileOutputStream = new FileOutputStream(tempFile.getName());
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-        objectOutputStream.writeObject(game);
-        objectOutputStream.close();
-
-    }
 
     public int scorePlant(){
         int scorePlants = 0;
@@ -225,21 +253,6 @@ public class POOBvsZOMBIES implements Serializable {
         return scorePlants;
     }
 
-    public long getGameDuration(){
-        return gameDuration;
-    }
-
-    public long getStartTime(){
-        return startTime;
-    }
-
-    public long getCurrentTime(){
-        return currentTime;
-    }
-
-    public long getPauseTime(){
-        return pauseTime;
-    }
     public int scoreZombie(){
         int scoreZombies = 0;
         for (int i = 0; i < zombies.length; i++ ){
@@ -250,52 +263,89 @@ public class POOBvsZOMBIES implements Serializable {
             }
         }
 
-
         scoreZombies = (int) ((scoreZombies+ brains)) ;
 
         return scoreZombies;
     }
 
-    public static POOBvsZOMBIES importFile(File archivo) throws ClassNotFoundException, IOException{
-        FileInputStream fileInputStream = new FileInputStream(archivo.getName());
-        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-        POOBvsZOMBIES game = (POOBvsZOMBIES) objectInputStream.readObject();
-        objectInputStream.close();
-        return game;
+    public void createZombie(String type, int row, JButton button){
+        if (zombieMachine == null) {
+            if (type.equals("basic") && brains >= 100 && usageZombies[0]) {
+                zombies[row].add(new Basic(button, layeredPane, plantHitboxs[row], plants[row], LawnMowers[row]));
+                brains -= 100;
+            } else if (type.equals("coneHead") && brains >= 150 && usageZombies[1]) {
+                zombies[row].add(new ConeHead(button, layeredPane, plantHitboxs[row], plants[row], LawnMowers[row]));
+                brains -= 150;
+            } else if (type.equals("bucketHead") && brains >= 200 && usageZombies[2]) {
+                zombies[row].add(new BucketHead(button, layeredPane, plantHitboxs[row], plants[row], LawnMowers[row]));
+                brains -= 200;
+            } else if (type.equals("ECIZombie") && brains >= 250 && usageZombies[3]) {
+                zombies[row].add(new ECIZombie(button, layeredPane, plantHitboxs[row], plants[row], LawnMowers[row], projectiles[row]));
+                brains -= 250;
+            } else if (type.equals("brainstein") && brains >= 50 && usageZombies[4]) {
+                zombies[row].add(new Brainstein(button, layeredPane, collectables[row]));
+                brains -= 50;
+            }
+        }
     }
 
-    public void createZombie(String type, int row, JButton button){
-        if (type.equals("basic") && brains >= 100 && usageZombies[0]) {
-            zombies[row].add(new Basic(button, layeredPane, plantHitboxs[row], plants[row], LawnMowers[row]));
+    public void createHordeZombie(long currentTime) {
+        if (currentTime-lastHorde >= 60000){
+            // Lista de posiciones posibles para colocar zombies
+            ArrayList<Integer> zombiePositions = new ArrayList<>(Arrays.asList(8, 17, 26, 35, 44));
+            // Determinar cuántos zombies se van a generar (cantidad aleatoria)
+            Random random = new Random();
+            int hordeSize = random.nextInt(5)+1;
+
+            for (int i = 0; i < hordeSize; i++) {
+                // Elegir una posición aleatoria de la lista de posiciones
+                int randomIndex = random.nextInt(zombiePositions.size());
+                int position = zombiePositions.get(randomIndex);
+
+                // Determinar el tipo de zombie aleatoriamente (según usageZombies)
+                int zombieType = random.nextInt(4); // Índice aleatorio para el array usageZombies
+                if (zombieType == 0 && usageZombies[0]) {
+                    zombies[randomIndex].add(new Basic(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
+                }
+                else if (zombieType == 1  && usageZombies[1]){
+                    zombies[randomIndex].add(new ConeHead(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
+                }
+                else if (zombieType == 2 && usageZombies[2]){
+                    zombies[randomIndex].add(new BucketHead(positions.get(position), layeredPane, plantHitboxs[randomIndex], plants[randomIndex], LawnMowers[randomIndex]));
+                }
+                else if (zombieType == 3  && usageZombies[3]){
+                    zombies[randomIndex].add(new ECIZombie(positions.get(position),layeredPane, plantHitboxs[randomIndex],plants[randomIndex],LawnMowers[randomIndex],projectiles[randomIndex]));
+                }
+            }
+            lastHorde = currentTime;
+        }
+    }
+
+    public void machineCreateZombie(int row, int zombieType){
+        ArrayList<Integer> zombiePositions = new ArrayList<>(Arrays.asList(8, 17, 26, 35, 44));
+        JButton buttonRow = positions.get(zombiePositions.get(row));
+        if (zombieType == 0 && brains >= 100 && usageZombies[0]) {
+            zombies[row].add(new Basic(buttonRow, layeredPane, plantHitboxs[row], plants[row], LawnMowers[row]));
             brains -= 100;
         }
-        else if (type.equals("coneHead") && brains>=150  && usageZombies[1]){
-            zombies[row].add(new ConeHead(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));
+        else if (zombieType == 1 && brains >= 150 && usageZombies[1]){
+            zombies[row].add(new ConeHead(buttonRow, layeredPane, plantHitboxs[row], plants[row], LawnMowers[row]));
             brains -= 150;
         }
-        else if (type.equals("bucketHead") && brains>=200 && usageZombies[2]){
-            zombies[row].add(new BucketHead(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row]));
+        else if (zombieType == 2 && brains >= 200 && usageZombies[2]){
+            zombies[row].add(new BucketHead(buttonRow, layeredPane, plantHitboxs[row], plants[row], LawnMowers[row]));
             brains -= 200;
         }
-        else if (type.equals("ECIZombie") && brains>=250  && usageZombies[3]){
-            zombies[row].add(new ECIZombie(button,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row],projectiles[row]));
+        else if (zombieType == 3 && brains >= 250 && usageZombies[3]){
+            zombies[row].add(new ECIZombie(buttonRow,layeredPane, plantHitboxs[row],plants[row],LawnMowers[row],projectiles[row]));
             brains -= 250;
         }
-        else if (type.equals("brainstein") && brains>=50  && usageZombies[4]){
-            zombies[row].add(new Brainstein(button,layeredPane,collectables[row]));
+        else if (zombieType == 4 && brains >= 50 && usageZombies[4]){
+            zombies[row].add(new Brainstein(buttonRow,layeredPane,collectables[row]));
             brains -= 50;
         }
     }
 
-
-
-    public void sumSuns(int sunsGot) {
-        suns += sunsGot;
-    }
-
-    public void sumBrains(int brainsGot) {
-        brains += brainsGot;
-    }
 
     public int getSuns() {
         return suns;
@@ -332,4 +382,7 @@ public class POOBvsZOMBIES implements Serializable {
             }
         }
     }
+
+
+
 }

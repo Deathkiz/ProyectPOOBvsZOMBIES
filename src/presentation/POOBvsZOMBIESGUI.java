@@ -53,7 +53,6 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private JButton zombiesStrategic;
 
     private JButton menuGame;
-    private JButton importButton;
     //informacion pvm
     private JLabel yourName;
     private JLabel sunsText;
@@ -131,6 +130,10 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private POOBvsZOMBIES GAME;
     private volatile boolean isPaused = false;
     private volatile boolean endGame = false;
+    private long gameDuration;
+    private long startTime;
+    private long lastUpdateTime;
+    private long currentTime;
     private long totalPausedTime = 0; // Tiempo total acumulado en pausa
     private long pauseStartTime = 0;
     //malla de botones
@@ -152,12 +155,6 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private JLabel brainLabel;
 
 
-    private long startTime;
-    private long lastUpdateTime;
-    private long currentTime;
-    private long waitTime;
-
-
     //Margenes de los modos de juego
     private JLabel northBarrier;
     private JLabel northBarrierFromPvP;
@@ -165,13 +162,13 @@ public class POOBvsZOMBIESGUI extends JFrame {
     private JLabel modeZombiesO1;
     private JLabel modeZombiesS1;
 
-
     private JLabel modePlantsO;
     private JLabel modePlantsS;
-
-    private long gameDuration;
-
     private JLabel finalMatchLabel;
+
+    private JFrame pauseFrame;
+    private JButton continuar;
+    private JButton finish;
 
 
     //Boton de Salir
@@ -221,11 +218,31 @@ public class POOBvsZOMBIESGUI extends JFrame {
         frameForPvP();
         frameForPvM();
         frameForMvM();
+        prepareFramePause();
         //prepara frame de seleccion de zombies y plantas
         frameChoose();
         //prepara paneles y botones para el juego
         prepareGame();//dividirlo
     }
+
+
+    private void prepareFramePause(){
+        pauseFrame = new JFrame();
+        continuar = new JButton("Continuar");
+        finish = new JButton("Finalizar");
+
+        JPanel panel = new JPanel(new GridLayout(2, 1, 0, 10)); // 10 px de espacio vertical entre filas
+
+        // Agregar los botones al panel
+        panel.add(continuar);
+        panel.add(finish);
+
+        // Agregar el panel al frame
+        pauseFrame.add(panel);
+        pauseFrame.setSize(200, 150);
+        pauseFrame.setLocationRelativeTo(null); // Centrar en pantalla
+    }
+
     private void prepareShovel() {
         Shovel = new JButton("Shovel");
         Shovel.setBounds((int) (WIDTH/2- (WIDTH/2*0.5)),(int) (HEIGHT-(HEIGHT/2*0.1)),(int) (WIDTH/2*0.3),(int) (HEIGHT/2*0.2));
@@ -274,7 +291,6 @@ public class POOBvsZOMBIESGUI extends JFrame {
         preparePvPButton();
         preparePvMButton();
         prepareMvMButton();
-        prepareImportButton();
     }
     private void prepareBarriers(){
         northBarrier = new JLabel();
@@ -1101,7 +1117,6 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 principalPanel.add(PvMButton, Integer.valueOf(1));
                 principalPanel.add(PvPButton, Integer.valueOf(1));
                 principalPanel.add(MvMButton, Integer.valueOf(1));
-                principalPanel.add(importButton,Integer.valueOf(1));
                 background.setIcon(menuBackground);
                 background.setOpaque(true);
             }
@@ -1238,32 +1253,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
                 framePvM.dispose();
             }
         });
-        importButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Abrir archivo");
-                int seleccion = fileChooser.showSaveDialog(null);
-                if (seleccion == JFileChooser.APPROVE_OPTION) {
-                    File archivo = fileChooser.getSelectedFile();
-                    optionOpen(archivo);
-                }
-            }
-        });
 
-    }
-
-    private void optionOpen(File archivo){
-        try{
-            GAME = POOBvsZOMBIES.importFile(archivo);
-            visibleMenu(false);
-            visibleGame(true);
-            game();
-
-        }
-        catch (Exception e){
-            JOptionPane.showMessageDialog(null, e.getMessage());
-        }
     }
 
     private void prepareActionsMVMFrame(){
@@ -1461,9 +1451,6 @@ public class POOBvsZOMBIESGUI extends JFrame {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (index == 0){
-                        pauseGame();
-                    }
                     // Establecer planta activa y seleccionada según el índice
                     if (index == 1) {
                         activePlant = true;
@@ -1481,9 +1468,6 @@ public class POOBvsZOMBIESGUI extends JFrame {
                         activePlant = true;
                         selectedPlant = "potatoMine";
                     }
-                    else if (index == 6){
-                        endGame();
-                    }
                 }
             });
         }
@@ -1496,9 +1480,6 @@ public class POOBvsZOMBIESGUI extends JFrame {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (index == 0){
-                        resumeGame();
-                    }
                     // Establecer zombi activo y seleccionado según el índice
                     if (index == 1) {
                         activeZombie = true;
@@ -1562,12 +1543,25 @@ public class POOBvsZOMBIESGUI extends JFrame {
         menuGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
-                    GAME.exportGame(gameDuration, startTime, totalPausedTime, GAME);
-                }
-                catch (Exception h){
-                    JOptionPane.showMessageDialog(null, "Error al exportar el juego: " + h.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
+                pauseGame();
+                pauseFrame.setVisible(true);
+            }
+        });
+
+        continuar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pauseFrame.dispose();
+                resumeGame();
+            }
+        });
+
+        finish.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pauseFrame.dispose();
+                resumeGame();
+                endGame();
             }
         });
     }
@@ -1636,14 +1630,8 @@ public class POOBvsZOMBIESGUI extends JFrame {
         PvPButton.setVisible(flag);
         PvMButton.setVisible(flag);
         MvMButton.setVisible(flag);
-        importButton.setVisible(flag);
     }
-    private void prepareImportButton(){
-        importButton = new JButton("Importar");
-        importButton.setBounds(WIDTH/6,HEIGHT/2,(int) (WIDTH/2*0.2), (int) (HEIGHT/2*0.2));
-        importButton.setVisible(true);
 
-    }
 
     private Image setSizeImageBackground(ImageIcon imagePrincipal) {
         Image image = imagePrincipal.getImage();
@@ -1685,32 +1673,19 @@ public class POOBvsZOMBIESGUI extends JFrame {
         }
 
         endGame = false;
-
-        if (GAME == null) {
-            waitTime = 0;
-            boolean[] usagePlants = {usageSunflower, usagePeashooter, usageECIPlant, usageWallnut, usagePotatoMine};
-            boolean[] usageZombies = {usageZombie, usageZombieConehead, usageZombieBuckethead, usageECIZombie, usageBrainstain};
-            if (gameType.equals("pvp")) {
-                GAME = new POOBvsZOMBIES(suns, brains, positions, principalPanel, usagePlants, usageZombies);
-            } else if (gameType.equals("pvm")) {
-                GAME = new POOBvsZOMBIES(suns, brains, positions, principalPanel, usagePlants, usageZombies);
-            } else if (gameType.equals("mvm")) {
-                GAME = new POOBvsZOMBIES(suns, brains, positions, principalPanel, usagePlants, usageZombies);
-            }
-
-            gameDuration = time*1000;
-            totalPausedTime = 0;
-            pauseStartTime = 0;
-
+        boolean[] usagePlants = {usageSunflower, usagePeashooter, usageECIPlant, usageWallnut, usagePotatoMine};
+        boolean[] usageZombies = {usageZombie, usageZombieConehead, usageZombieBuckethead, usageECIZombie, usageBrainstain};
+        if (gameType.equals("pvp")) {
+            GAME = new POOBvsZOMBIES(suns, brains, positions, principalPanel, usagePlants, usageZombies);
+        } else if (gameType.equals("pvm")) {
+            GAME = new POOBvsZOMBIES(suns, brains, positions, principalPanel, usagePlants, usageZombies,modeMachine);
+        } else if (gameType.equals("mvm")) {
+            GAME = new POOBvsZOMBIES(suns, brains, positions, principalPanel, usagePlants, usageZombies);
         }
-        else{
-            currentTime = System.currentTimeMillis();
-            long currentTimeImport = GAME.getCurrentTime();
-            long pauseTimeImport = GAME.getPauseTime();
-            long startTimeImport = GAME.getStartTime();
-            gameDuration = GAME.getGameDuration();
-            waitTime = currentTime - currentTimeImport + pauseTimeImport;
-        }
+
+        gameDuration = time*1000;
+        totalPausedTime = 0;
+        pauseStartTime = 0;
 
 
 
@@ -1725,7 +1700,7 @@ public class POOBvsZOMBIESGUI extends JFrame {
 
 
 
-            while (currentTime - waitTime - startTime - totalPausedTime < gameDuration) {
+            while (currentTime - startTime - totalPausedTime < gameDuration) {
                 currentTime = System.currentTimeMillis();
                 if (endGame){
                     break;
@@ -1742,14 +1717,14 @@ public class POOBvsZOMBIESGUI extends JFrame {
                     pauseStartTime = 0;
                 }
                 if (currentTime - lastUpdateTime >= frameTime) {
-                    GAME.update(currentTime - waitTime - totalPausedTime);
+                    GAME.update(currentTime - totalPausedTime);
                     revalidate();
                     repaint();
                     sunLabel.setText(String.valueOf(GAME.getSuns()));
                     brainLabel.setText(String.valueOf(GAME.getBrains()));
                     plantScore.setText(String.valueOf((GAME.scorePlant())));
                     zombieScore.setText(String.valueOf((GAME.scoreZombie())));
-                    timeLabel.setText(String.valueOf((gameDuration-currentTime+startTime+totalPausedTime + waitTime)/1000));
+                    timeLabel.setText(String.valueOf((gameDuration-currentTime+startTime+totalPausedTime)/1000));
                     lastUpdateTime = currentTime;
                 }
                 if (GAME.getEndGame()){
@@ -1808,13 +1783,6 @@ public class POOBvsZOMBIESGUI extends JFrame {
         } catch (NumberFormatException e) {
             return false;
         }
-    }
-    private void importGame(){
-
-    }
-
-    private void exportGame(){
-
     }
 
     public static void main(String[] args) {

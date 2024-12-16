@@ -327,7 +327,7 @@ public class POOBvsZOMBIES implements Serializable {
 
     public void createHordeZombie(long currentTime) {
         if (currentTime-startTime <= 61000){
-            if (currentTime-lastHorde >= 30000){
+            if (currentTime-lastHorde >= 20000){
                 // Lista de posiciones posibles para colocar zombies
                 ArrayList<Integer> zombiePositions = new ArrayList<>(Arrays.asList(8, 17, 26, 35, 44));
                 // Determinar cuántos zombies se van a generar (cantidad aleatoria)
